@@ -38,18 +38,8 @@ void callback(char* topic, uint8_t* payload, unsigned int payload_length)
   DEBUG_LOG(1, "Control topic index");
   DEBUG_LOG(1, topic_idx);
 
-  if (topic_idx == 0) {  // topic is UPTIME_REQUEST
-    publish_uptime();
-    DEBUG_LOG(1, "UPTIME_REQUEST topic arrived");
-    //    DEBUG_LOG(1, (char) millis());
-  } else if (topic_idx == 1) {  // topic is MEMORY_REQUEST
-    publish_memory();
-    DEBUG_LOG(1, "MEMORY_REQUEST topic arrived");
-    //    DEBUG_LOG(1, (char) freeMemory());
-  } else if (topic_idx == 2) {  // LED_CONTROL
-  }
-
-  if (topic_idx == 0) {  // topic is dst_set
+  if (topic_idx == 0) {  // topic is DST_SET
+    DEBUG_LOG(1, "DST_SET topic arrived");
     byte integer = atoi(message);    // parse to int (will return 0 if not a valid int)
     if (integer == 1 && !daylight_summer_time) {
       adjustTime(SECS_PER_HOUR);     // move time forward one hour
@@ -59,28 +49,32 @@ void callback(char* topic, uint8_t* payload, unsigned int payload_length)
       daylight_summer_time = false;
     }
     publish_date();
-    date_string();
-    DEBUG_LOG(3, "dst set topic arrived");
+    date_string();    // date_string adds date to char_buffer
     DEBUG_LOG(3, char_buffer);
-  } else if (topic_idx == 1) {  // topic is time_request
+  } else if (topic_idx == 1) {  // topic is TIME_REQUEST
+    DEBUG_LOG(1, "TIME_REQUEST topic arrived");
     publish_date();
     date_string();
-    DEBUG_LOG(3, "time request topic arrived");
     DEBUG_LOG(3, char_buffer);
-  } else if (topic_idx == 2) {  // topic is state_request
+  } else if (topic_idx == 2) {  // topic is STATE_REQUEST
+    DEBUG_LOG(1, "STATE_REQUEST topic arrived");
     publish_relays_state();
-  } else if (topic_idx == 3) {  // topic is duration_request
+  } else if (topic_idx == 3) {  // topic is DURATION_REQUEST
+    DEBUG_LOG(1, "DURATION_REQUEST topic arrived");
     publish_relay_durations();
-  } else if (topic_idx == 4) {  // topic is timer_stop
+  } else if (topic_idx == 4) {  // topic is TIMER_STOP
+    DEBUG_LOG(1, "TIMER_STOP topic arrived");
     timer_stop();
-  } else if (topic_idx == 5) {  // topic is alarms_control
+  } else if (topic_idx == 5) {  // topic is ALARMS_CONTROL
+    DEBUG_LOG(1, "ALARMS_CONTROL topic arrived");
     // enable or disable alarms
     int integer = atoi(message);  //parse to int will return 0 if fails
     if (integer == 0)
       disable_alarms();
     else
       enable_alarms();
-  } else if (topic_idx == 6) {  // topic is relay_control
+  } else if (topic_idx == 6) {  // topic is RELAY_CONTROL
+    DEBUG_LOG(1, "RELAY_CONTROL topic arrived");
     // message should be of format relay,duration
     char *separated_message = strchr(message, COMMAND_SEPARATOR);
     // separated_message is of format ",duration"
@@ -101,7 +95,8 @@ void callback(char* topic, uint8_t* payload, unsigned int payload_length)
         relay_switch_on_with_timer(relay_ref, duration);
       }
     }  
-  } else if (topic_idx == 7) {  // topic is duration_control
+  } else if (topic_idx == 7) {  // topic is DURATION_CONTROL
+    DEBUG_LOG(1, "DURATION_CONTROL topic arrived");
     // message should be of format relay,duration
     char *separated_message = strchr(message, COMMAND_SEPARATOR);
     // separated_message is of format ",duration"
@@ -114,7 +109,7 @@ void callback(char* topic, uint8_t* payload, unsigned int payload_length)
       publish_relay_durations();
     }
   } else {  // unknown topic has arrived - ignore!!
-    DEBUG_LOG(3, "Unknown topic arrived");
+    DEBUG_LOG(1, "Unknown topic arrived");
   }
 
   // free memory assigned to message

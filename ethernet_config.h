@@ -14,5 +14,5 @@ IPAddress ip(192, 168, 1, 90);
 EthernetClient ethernet_client;
 
 
-#endif
+#endif   /* RELAYDUINOMQTTCONTROLLER_ETHERNET_CONFIG_H_ */
 

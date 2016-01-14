@@ -1,3 +1,7 @@
+#ifndef RELAYDUINOMQTTCONTROLLER_RELAY_CONFIG_H_
+#define RELAYDUINOMQTTCONTROLLER_RELAY_CONFIG_H_
+
+
 #include <Relayduino.h>
 
 // default times (minutes)
@@ -48,7 +52,7 @@ byte master_relay_on()
     debug(F("master on"));
 #endif
     prog_buffer[0] = '\0';
-    strcpy_P(prog_buffer, (PGM_P)pgm_read_word(&(STATUS_TOPICS[3])));
+    strcpy_P(prog_buffer, (PGM_P)pgm_read_word(&(STATUS_TOPICS[4])));
     mqtt_client.publish(prog_buffer, "M");
     return 1;
   }
@@ -62,23 +66,19 @@ byte relay_state(byte idx)
   return(digitalRead(RELAY_PINS_USED[idx]));
 }
 
-void relays_state()
+void publish_relays_state()
 {
   for (byte idx = 0; idx < ARRAY_SIZE(RELAY_PINS_USED); idx++) {
     if (digitalRead(RELAY_PINS_USED[idx])) {
-#if DEBUG
-      debug(F("relay on"));
-#endif
+      DEBUG_LOG(1, "relay on");
       prog_buffer[0] = '\0';
-      strcpy_P(prog_buffer, (PGM_P)pgm_read_word(&(STATUS_TOPICS[3])));
+      strcpy_P(prog_buffer, (PGM_P)pgm_read_word(&(STATUS_TOPICS[4])));
       char str[2];
       mqtt_client.publish(prog_buffer, itoa(idx+1, str, 10));
     } else {
-#if DEBUG
-      debug(F("relay off"));
-#endif
+      DEBUG_LOG(1, "relay off");
       prog_buffer[0] = '\0';
-      strcpy_P(prog_buffer, (PGM_P)pgm_read_word(&(STATUS_TOPICS[4])));
+      strcpy_P(prog_buffer, (PGM_P)pgm_read_word(&(STATUS_TOPICS[5])));
       char str[2];
       mqtt_client.publish(prog_buffer, itoa(idx+1, str, 10));
     }
@@ -91,11 +91,9 @@ byte relay_switch_off(byte idx)
   // only switch relay off if it is currently on
   if (relay_state(idx)) {
     digitalWrite(RELAY_PINS_USED[idx], LOW);
-#if DEBUG
-    debug(F("relay off"));
-#endif
+    DEBUG_LOG(1, "relay off");
     prog_buffer[0] = '\0';
-    strcpy_P(prog_buffer, (PGM_P)pgm_read_word(&(STATUS_TOPICS[4])));
+    strcpy_P(prog_buffer, (PGM_P)pgm_read_word(&(STATUS_TOPICS[5])));
     char str[2];
     mqtt_client.publish(prog_buffer, itoa(idx+1, str, 10));
 #if USE_MASTER_RELAY
@@ -129,11 +127,9 @@ byte relay_switch_on(byte idx)
 {
   if (!relay_state(idx)) {
     digitalWrite(RELAY_PINS_USED[idx], HIGH);
-#if DEBUG
-    debug(F("relay on"));
-#endif
+    DEBUG_LOG(1, "relay on");
     prog_buffer[0] = '\0';
-    strcpy_P(prog_buffer, (PGM_P)pgm_read_word(&(STATUS_TOPICS[3])));
+    strcpy_P(prog_buffer, (PGM_P)pgm_read_word(&(STATUS_TOPICS[4])));
     char str[2];
     mqtt_client.publish(prog_buffer, itoa(idx+1, str, 10));
 #if USE_MASTER_RELAY
@@ -181,3 +177,7 @@ void turn_on_relay_4()
   byte idx = 3;
   relay_switch_on_with_timer(idx, relay_durations[idx]);
 }
+
+
+#endif   /* RELAYDUINOMQTTCONTROLLER_RELAY_CONFIG_H_ */
+

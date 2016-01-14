@@ -53,7 +53,7 @@ void date_string()
 void publish_date()
 {
   prog_buffer[0] = '\0';
-  strcpy_P(prog_buffer, (char*)pgm_read_word(&(STATUS_TOPICS[1])));
+  strcpy_P(prog_buffer, (char*)pgm_read_word(&(STATUS_TOPICS[3])));
   date_string();  // date is stored in char_buffer
   mqtt_client.publish(prog_buffer, char_buffer);
 }
@@ -95,13 +95,13 @@ void sendNTPpacket(IPAddress &address)
 time_t getNtpTime()
 {
   while (Udp.parsePacket() > 0) ; // discard any previously received packets
-  Serial.println("Transmit NTP Request");
+  DEBUG_LOG(3, "Transmit NTP Request");
   sendNTPpacket(timeServer);
   uint32_t beginWait = millis();
   while (millis() - beginWait < 1500) {
     int size = Udp.parsePacket();
     if (size >= NTP_PACKET_SIZE) {
-      Serial.println("Receive NTP Response");
+      DEBUG_LOG(3, "Receive NTP Response");
       Udp.read(packetBuffer, NTP_PACKET_SIZE);  // read packet into the buffer
       unsigned long secsSince1900;
       // convert four bytes starting at location 40 to a long integer
@@ -112,11 +112,9 @@ time_t getNtpTime()
       return secsSince1900 - 2208988800UL + TZ_OFFSET_HOURS * SECS_PER_HOUR + TZ_OFFSET_MINUTES * SECS_PER_MIN;
     }
   }
-  Serial.println("No NTP Response :-(");
+  DEBUG_LOG(1, "No NTP Response :-(");
   return 0; // return 0 if unable to get the time
 }
-
-
 
 
 #endif  /* RELAYDUINOMQTTCONTROLLER_TIME_CONFIG_H_ */

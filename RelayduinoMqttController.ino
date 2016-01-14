@@ -36,7 +36,7 @@ void callback(char* topic, uint8_t* payload, unsigned int payload_length)
     }
   }
   DEBUG_LOG(1, "Control topic index");
-  //  DEBUG_LOG(1, topic_idx);
+  DEBUG_LOG(1, topic_idx);
 
   if (topic_idx == 0) {  // topic is UPTIME_REQUEST
     publish_uptime();
@@ -47,6 +47,74 @@ void callback(char* topic, uint8_t* payload, unsigned int payload_length)
     DEBUG_LOG(1, "MEMORY_REQUEST topic arrived");
     //    DEBUG_LOG(1, (char) freeMemory());
   } else if (topic_idx == 2) {  // LED_CONTROL
+  }
+
+  if (topic_idx == 0) {  // topic is dst_set
+    byte integer = atoi(message);    // parse to int (will return 0 if not a valid int)
+    if (integer == 1 && !daylight_summer_time) {
+      adjustTime(SECS_PER_HOUR);     // move time forward one hour
+      daylight_summer_time = true;
+    } else if (integer == 0 && daylight_summer_time) { 
+      adjustTime(-SECS_PER_HOUR);    // move time backward one hour
+      daylight_summer_time = false;
+    }
+    publish_date();
+    date_string();
+    DEBUG_LOG(3, "dst set topic arrived");
+    DEBUG_LOG(3, char_buffer);
+  } else if (topic_idx == 1) {  // topic is time_request
+    publish_date();
+    date_string();
+    DEBUG_LOG(3, "time request topic arrived");
+    DEBUG_LOG(3, char_buffer);
+  } else if (topic_idx == 2) {  // topic is state_request
+    publish_relays_state();
+  } else if (topic_idx == 3) {  // topic is duration_request
+    publish_relay_durations();
+  } else if (topic_idx == 4) {  // topic is timer_stop
+    timer_stop();
+  } else if (topic_idx == 5) {  // topic is alarms_control
+    // enable or disable alarms
+    int integer = atoi(message);  //parse to int will return 0 if fails
+    if (integer == 0)
+      disable_alarms();
+    else
+      enable_alarms();
+  } else if (topic_idx == 6) {  // topic is relay_control
+    // message should be of format relay,duration
+    char *separated_message = strchr(message, COMMAND_SEPARATOR);
+    // separated_message is of format ",duration"
+    if (separated_message != 0) {
+      byte relay_ref = atoi(message)-1;
+      ++separated_message;
+      int duration = atoi(separated_message);
+      if (duration == 0 ) {
+        if (relay_ref == 0 )
+          turn_on_relay_1();
+        else if (relay_ref == 1)
+          turn_on_relay_2();
+        else if (relay_ref == 2)
+          turn_on_relay_3();
+        else if (relay_ref == 3)
+          turn_on_relay_4();
+      } else { 
+        relay_switch_on_with_timer(relay_ref, duration);
+      }
+    }  
+  } else if (topic_idx == 7) {  // topic is duration_control
+    // message should be of format relay,duration
+    char *separated_message = strchr(message, COMMAND_SEPARATOR);
+    // separated_message is of format ",duration"
+    if (separated_message != 0) {
+      byte relay_ref = atoi(message)-1;
+      ++separated_message;
+      int duration = atoi(separated_message);
+      if (duration > 0)
+        relay_durations[relay_ref] = duration;
+      publish_relay_durations();
+    }
+  } else {  // unknown topic has arrived - ignore!!
+    DEBUG_LOG(3, "Unknown topic arrived");
   }
 
   // free memory assigned to message

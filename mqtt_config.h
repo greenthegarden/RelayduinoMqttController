@@ -1,6 +1,7 @@
 #ifndef RELAYDUINOMQTTCONTROLLER_MQTT_CONFIG_H_
 #define RELAYDUINOMQTTCONTROLLER_MQTT_CONFIG_H_
 
+
 #include <PubSubClient.h>
 
 // MQTT parameters
@@ -16,23 +17,25 @@ const char COMMAND_SEPARATOR      = ':';
 
 char message[BUFFER_SIZE];
 
-const char WIFLY_STATUS[]      PROGMEM = "relayduino/status/wifly";
-const char TIME_STATUS[]       PROGMEM = "relayduino/status/time";
+const char CONNECTED_STATUS[]  PROGMEM = "relayduino/status/connected";
+const char UPTIME_STATUS[]     PROGMEM = "relayduino/status/uptime";
 const char MEMORY_STATUS[]     PROGMEM = "relayduino/status/memory";
+const char TIME_STATUS[]       PROGMEM = "relayduino/status/time";
 const char RELAY_ON_STATUS[]   PROGMEM = "relayduino/status/relay_on";
 const char RELAY_OFF_STATUS[]  PROGMEM = "relayduino/status/relay_off";
 const char ALARM_STATUS[]      PROGMEM = "relayduino/status/alarm";
 const char ALARMS_STATUS[]     PROGMEM = "relayduino/status/alarms";
 const char DURATIONS_STATUS[]  PROGMEM = "relayduino/status/durations";
 
-PGM_P const STATUS_TOPICS[]    PROGMEM = {WIFLY_STATUS,     // idx = 0
-                                          TIME_STATUS,      // idx = 1
+PGM_P const STATUS_TOPICS[]    PROGMEM = {CONNECTED_STATUS, // idx = 0
+                                          UPTIME_STATUS,    // idx = 1
                                           MEMORY_STATUS,    // idx = 2
-                                          RELAY_ON_STATUS,  // idx = 3
-                                          RELAY_OFF_STATUS, // idx = 4
-                                          ALARM_STATUS,     // idx = 5
-                                          ALARMS_STATUS,    // idx = 6
-                                          DURATIONS_STATUS, // idx = 7
+                                          TIME_STATUS,      // idx = 3
+                                          RELAY_ON_STATUS,  // idx = 4
+                                          RELAY_OFF_STATUS, // idx = 5
+                                          ALARM_STATUS,     // idx = 6
+                                          ALARMS_STATUS,    // idx = 7
+                                          DURATIONS_STATUS, // idx = 8
                                           };
 
 
@@ -88,11 +91,6 @@ void publish_memory()
   mqtt_client.publish(prog_buffer, char_buffer);
 }
 
-
-
-
-
-
 boolean mqtt_connect()
 {
   DEBUG_LOG(1, "connecting to broker");
@@ -110,4 +108,5 @@ boolean mqtt_connect()
 }
 
 
-#endif
+#endif   /* RELAYDUINOMQTTCONTROLLER_MQTT_CONFIG_H_ */
+

@@ -1,6 +1,7 @@
 #ifndef RELAYDUINOMQTTCONTROLLER_CONFIG_H_
 #define RELAYDUINOMQTTCONTROLLER_CONFIG_H_
 
+
 #include "Debug.h"
 
 // external libraries
@@ -26,5 +27,5 @@ const int BAUD_RATE               = 9600;
 #include "relay_config.h"
 
 
+#endif   /* RELAYDUINOMQTTCONTROLLER_CONFIG_H_ */
 
-#endif

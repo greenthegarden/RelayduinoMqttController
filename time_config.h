@@ -33,23 +33,6 @@ void date_string()
      strcat(char_buffer, " DST");
 }
 
-//void time_set()
-//{
-//  if (!wifly_connected)
-//    wifly_connect();
-//
-//  if (wifly_connected) {
-//#if DEBUG
-//    debug(F("setting time"));
-//#endif
-//    // set time on Arduino
-//    setTime(WiFly.getTime());
-//    // adjust time to timezone
-//    adjustTime(TZ_OFFSET_HOURS * SECS_PER_HOUR + TZ_OFFSET_MINUTES * SECS_PER_MIN);
-//  }
-//}
-
-
 void publish_date()
 {
   prog_buffer[0] = '\0';
@@ -114,6 +97,15 @@ time_t getNtpTime()
   }
   DEBUG_LOG(1, "No NTP Response :-(");
   return 0; // return 0 if unable to get the time
+}
+
+void time_set()
+{
+  DEBUG_LOG(3, "IP number assigned by DHCP is ");
+  DEBUG_LOG(3, Ethernet.localIP());
+  Udp.begin(localPort);
+  DEBUG_LOG(3, "waiting for sync");
+  setSyncProvider(getNtpTime);
 }
 
 

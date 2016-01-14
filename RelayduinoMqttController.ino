@@ -138,12 +138,13 @@ void setup()
     digitalWrite(RELAY_PINS_USED[idx], LOW);
   }
   
-//  if (timeStatus() != timeSet)
-//    time_set();
-  date_string();
-
+  if (timeStatus() != timeSet) {
+    time_set();
+  }
   DEBUG_LOG(3, "Date: ");
+  date_string();
   DEBUG_LOG(3, char_buffer);
+  
   DEBUG_LOG(3, "Number of relays is ");
   DEBUG_LOG(3, ARRAY_SIZE(RELAY_PINS_USED));
 

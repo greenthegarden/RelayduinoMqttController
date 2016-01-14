@@ -5,8 +5,7 @@
 #include <PubSubClient.h>
 
 // MQTT parameters
-//byte mqtt_server_addr[]           = { 192, 168, 1, 55 };  // Pi eth0 interfaceß
-byte mqtt_server_addr[]           = { 192, 168, 42, 1 };    // Pi wlan interface
+byte mqtt_server_addr[]           = { 192, 168, 1, 55 };  // Pi eth0 interfaceß
 char mqtt_client_id[]             = "relayduino";
 const int MQTT_PORT               = 1883;
 #define MQTT_MAX_PACKET_SIZE        168
@@ -18,6 +17,7 @@ const char COMMAND_SEPARATOR      = ':';
 char message[BUFFER_SIZE];
 
 const char CONNECTED_STATUS[]  PROGMEM = "relayduino/status/connected";
+const char IP_ADDR_STATUS[]    PROGMEM = "relayduino/status/ip_addr";
 const char UPTIME_STATUS[]     PROGMEM = "relayduino/status/uptime";
 const char MEMORY_STATUS[]     PROGMEM = "relayduino/status/memory";
 const char TIME_STATUS[]       PROGMEM = "relayduino/status/time";
@@ -70,7 +70,7 @@ void publish_connected()
 {
   prog_buffer[0] = '\0';
   strcpy_P(prog_buffer, (char*)pgm_read_word(&(STATUS_TOPICS[0])));
-  mqtt_client.publish(prog_buffer, "connected");
+  mqtt_client.publish(prog_buffer, "");
 }
 
 void publish_uptime()
@@ -100,6 +100,9 @@ boolean mqtt_connect()
 #if USE_FREEMEM
     publish_memory();
 #endif
+    publish_date();
+//    publish_ip_addr();
+// add list
     // subscribe to topics
     mqtt_client.subscribe("relayduino/request/#");
     mqtt_client.subscribe("relayduino/control/#");

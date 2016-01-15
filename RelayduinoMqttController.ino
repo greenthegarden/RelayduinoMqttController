@@ -1,5 +1,23 @@
 #include "config.h"
 
+boolean mqtt_connect()
+{
+  DEBUG_LOG(1, "connecting to broker");
+  if (mqtt_client.connect(mqtt_client_id)) {
+    DEBUG_LOG(1, "  connected");
+    publish_connected();
+    publish_ip_address();
+#if USE_FREEMEM
+    publish_memory();
+#endif
+    publish_date();
+    // subscribe to topics (should have list)
+    mqtt_client.subscribe("relayduino/request/#");
+    mqtt_client.subscribe("relayduino/control/#");
+  }
+  return mqtt_client.connected();
+}
+
 void callback(char* topic, uint8_t* payload, unsigned int payload_length)
 {
   // handle message arrived
@@ -26,90 +44,115 @@ void callback(char* topic, uint8_t* payload, unsigned int payload_length)
   DEBUG_LOG(1, message);
 
   byte topic_idx = 0;
+  boolean request_topic_found = false;
+  boolean control_topic_found = false;
+
   // find if topic is matched
-  for (byte i = 0; i < ARRAY_SIZE(CONTROL_TOPICS); i++) {
+  // first check request topics
+  for (byte i = 0; i < ARRAY_SIZE(REQUEST_TOPICS); i++) {
     prog_buffer[0] = '\0';
-    strcpy_P(prog_buffer, (PGM_P)pgm_read_word(&(CONTROL_TOPICS[i])));
+    strcpy_P(prog_buffer, (PGM_P)pgm_read_word(&(REQUEST_TOPICS[i])));
     if (strcmp(topic, prog_buffer) == 0) {
       topic_idx = i;
+      request_topic_found = true;
       break;
     }
   }
-  DEBUG_LOG(1, "Control topic index");
-  DEBUG_LOG(1, topic_idx);
-
-  if (topic_idx == 0) {  // topic is DST_SET
-    DEBUG_LOG(1, "DST_SET topic arrived");
-    byte integer = atoi(message);    // parse to int (will return 0 if not a valid int)
-    if (integer == 1 && !daylight_summer_time) {
-      adjustTime(SECS_PER_HOUR);     // move time forward one hour
-      daylight_summer_time = true;
-    } else if (integer == 0 && daylight_summer_time) { 
-      adjustTime(-SECS_PER_HOUR);    // move time backward one hour
-      daylight_summer_time = false;
+  if (request_topic_found) {
+    if (topic_idx == 0) {  // topic is TIME_REQUEST
+      DEBUG_LOG(1, "TIME_REQUEST topic arrived");
+      publish_date();
+      date_string();
+      DEBUG_LOG(3, char_buffer);
+    } else {  // unknown request topic has arrived - ignore!!
+      DEBUG_LOG(1, "Unknown request topic arrived");
     }
-    publish_date();
-    date_string();    // date_string adds date to char_buffer
-    DEBUG_LOG(3, char_buffer);
-  } else if (topic_idx == 1) {  // topic is TIME_REQUEST
-    DEBUG_LOG(1, "TIME_REQUEST topic arrived");
-    publish_date();
-    date_string();
-    DEBUG_LOG(3, char_buffer);
-  } else if (topic_idx == 2) {  // topic is STATE_REQUEST
-    DEBUG_LOG(1, "STATE_REQUEST topic arrived");
-    publish_relays_state();
-  } else if (topic_idx == 3) {  // topic is DURATION_REQUEST
-    DEBUG_LOG(1, "DURATION_REQUEST topic arrived");
-    publish_relay_durations();
-  } else if (topic_idx == 4) {  // topic is TIMER_STOP
-    DEBUG_LOG(1, "TIMER_STOP topic arrived");
-    timer_stop();
-  } else if (topic_idx == 5) {  // topic is ALARMS_CONTROL
-    DEBUG_LOG(1, "ALARMS_CONTROL topic arrived");
-    // enable or disable alarms
-    int integer = atoi(message);  //parse to int will return 0 if fails
-    if (integer == 0)
-      disable_alarms();
-    else
-      enable_alarms();
-  } else if (topic_idx == 6) {  // topic is RELAY_CONTROL
-    DEBUG_LOG(1, "RELAY_CONTROL topic arrived");
-    // message should be of format relay,duration
-    char *separated_message = strchr(message, COMMAND_SEPARATOR);
-    // separated_message is of format ",duration"
-    if (separated_message != 0) {
-      byte relay_ref = atoi(message)-1;
-      ++separated_message;
-      int duration = atoi(separated_message);
-      if (duration == 0 ) {
-        if (relay_ref == 0 )
-          turn_on_relay_1();
-        else if (relay_ref == 1)
-          turn_on_relay_2();
-        else if (relay_ref == 2)
-          turn_on_relay_3();
-        else if (relay_ref == 3)
-          turn_on_relay_4();
-      } else { 
-        relay_switch_on_with_timer(relay_ref, duration);
+  } else {
+    // check control topics
+    topic_idx = 0;
+    // find if topic is matched
+    // check control topics
+    for (byte i = 0; i < ARRAY_SIZE(CONTROL_TOPICS); i++) {
+      prog_buffer[0] = '\0';
+      strcpy_P(prog_buffer, (PGM_P)pgm_read_word(&(CONTROL_TOPICS[i])));
+      if (strcmp(topic, prog_buffer) == 0) {
+        topic_idx = i;
+        control_topic_found = true;
+        break;
       }
-    }  
-  } else if (topic_idx == 7) {  // topic is DURATION_CONTROL
-    DEBUG_LOG(1, "DURATION_CONTROL topic arrived");
-    // message should be of format relay,duration
-    char *separated_message = strchr(message, COMMAND_SEPARATOR);
-    // separated_message is of format ",duration"
-    if (separated_message != 0) {
-      byte relay_ref = atoi(message)-1;
-      ++separated_message;
-      int duration = atoi(separated_message);
-      if (duration > 0)
-        relay_durations[relay_ref] = duration;
-      publish_relay_durations();
     }
-  } else {  // unknown topic has arrived - ignore!!
-    DEBUG_LOG(1, "Unknown topic arrived");
+
+    if (control_topic_found) {
+
+      DEBUG_LOG(1, "Control topic index");
+      DEBUG_LOG(1, topic_idx);
+
+//switch to case statements
+      if (topic_idx == 0) {  // topic is DST_SET
+        DEBUG_LOG(1, "DST_SET topic arrived");
+        byte integer = atoi(message);    // parse to int (will return 0 if not a valid int)
+        if (integer == 1 && !daylight_summer_time) {
+          adjustTime(SECS_PER_HOUR);     // move time forward one hour
+          daylight_summer_time = true;
+        } else if (integer == 0 && daylight_summer_time) {
+          adjustTime(-SECS_PER_HOUR);    // move time backward one hour
+          daylight_summer_time = false;
+        }
+        publish_date();
+        date_string();    // date_string adds date to char_buffer
+        DEBUG_LOG(3, char_buffer);
+      } else if (topic_idx == 1) {  // topic is RELAY_1_CONTROL
+        DEBUG_LOG(1, "RELAY_1_CONTROL topic arrived");
+        if (strcmp(message, "ON") == 0)
+          relay_switch_on(0);
+        else if (strcmp(message, "OFF") == 0)
+          relay_switch_off(0);
+      } else if (topic_idx == 2) {  // topic is RELAY_2_CONTROL
+        DEBUG_LOG(1, "RELAY_2_CONTROL topic arrived");
+        if (strcmp(message, "ON") == 0)
+          relay_switch_on(1);
+        else if (strcmp(message, "OFF") == 0)
+          relay_switch_off(1);
+      } else if (topic_idx == 3) {  // topic is RELAY_3_CONTROL
+        DEBUG_LOG(1, "RELAY_3_CONTROL topic arrived");
+        if (strcmp(message, "ON") == 0)
+          relay_switch_on(2);
+        else if (strcmp(message, "OFF") == 0)
+          relay_switch_off(2);
+      } else if (topic_idx == 4) {  // topic is RELAY_4_CONTROL
+        DEBUG_LOG(1, "RELAY_4_CONTROL topic arrived");
+        if (strcmp(message, "ON") == 0)
+          relay_switch_on(3);
+        else if (strcmp(message, "OFF") == 0)
+          relay_switch_off(3);
+      } else if (topic_idx == 5) {  // topic is RELAY_5_CONTROL
+        DEBUG_LOG(1, "RELAY_5_CONTROL topic arrived");
+        if (strcmp(message, "ON") == 0)
+          relay_switch_on(4);
+        else if (strcmp(message, "OFF") == 0)
+          relay_switch_off(4);
+      } else if (topic_idx == 6) {  // topic is RELAY_6_CONTROL
+        DEBUG_LOG(1, "RELAY_6_CONTROL topic arrived");
+        if (strcmp(message, "ON") == 0)
+          relay_switch_on(5);
+        else if (strcmp(message, "OFF") == 0)
+          relay_switch_off(5);
+      } else if (topic_idx == 7) {  // topic is RELAY_7_CONTROL
+        DEBUG_LOG(1, "RELAY_7_CONTROL topic arrived");
+        if (strcmp(message, "ON") == 0)
+          relay_switch_on(6);
+        else if (strcmp(message, "OFF") == 0)
+          relay_switch_off(6);
+      } else if (topic_idx == 8) {  // topic is RELAY_8_CONTROL
+        DEBUG_LOG(1, "RELAY_8_CONTROL topic arrived");
+        if (strcmp(message, "ON") == 0)
+          relay_switch_on(7);
+        else if (strcmp(message, "OFF") == 0)
+          relay_switch_off(7);
+      } else {  // unknown control topic has arrived - ignore!!
+        DEBUG_LOG(1, "Unknown control topic arrived");
+      }
+    }
   }
 
   // free memory assigned to message
@@ -129,7 +172,7 @@ void setup()
   delay(1500);
 
   // configure relay pins as outputs and set to LOW
-#if USE_MASTER_RELAY  
+#if USE_MASTER_RELAY
   pinMode(RELAY_MASTER, OUTPUT);
   digitalWrite(RELAY_MASTER, LOW);
 #endif
@@ -137,14 +180,14 @@ void setup()
     pinMode(RELAY_PINS_USED[idx], OUTPUT);
     digitalWrite(RELAY_PINS_USED[idx], LOW);
   }
-  
+
   if (timeStatus() != timeSet) {
     time_set();
   }
   DEBUG_LOG(3, "Date: ");
   date_string();
   DEBUG_LOG(3, char_buffer);
-  
+
   DEBUG_LOG(3, "Number of relays is ");
   DEBUG_LOG(3, ARRAY_SIZE(RELAY_PINS_USED));
 
@@ -158,14 +201,14 @@ void setup()
   alarm_refs_cnt++;
   alarm_refs[alarm_refs_cnt] = Alarm.alarmRepeat(dowWednesday, 18, 0, 0, turn_on_relay_1);
   alarm_refs_cnt++;
-    
+
   // Irrigation Zone 2: Flower beds
   // Set to Sunday and Wednesday evenings @ 1900
   alarm_refs[alarm_refs_cnt] = Alarm.alarmRepeat(dowSunday, 19, 0, 0, turn_on_relay_2);
   alarm_refs_cnt++;
   alarm_refs[alarm_refs_cnt] = Alarm.alarmRepeat(dowWednesday, 19, 0, 0, turn_on_relay_2);
   alarm_refs_cnt++;
-  
+
   // Irrigation Zone 3: Fruit trees
   // Set to Saturday morning @ 0730
   alarm_refs[alarm_refs_cnt] = Alarm.alarmRepeat(dowSaturday, 7, 30, 0, turn_on_relay_3);
@@ -173,7 +216,7 @@ void setup()
 
   // Relay 4: Vegetable beds
   // Set to everyday @ 0700
-  alarm_refs[alarm_refs_cnt] = Alarm.alarmRepeat(7, 0, 0, turn_on_relay_4); //alarm_refs_cnt++;  
+  alarm_refs[alarm_refs_cnt] = Alarm.alarmRepeat(7, 0, 0, turn_on_relay_4); //alarm_refs_cnt++;
 }
 
 /*--------------------------------------------------------------------------------------

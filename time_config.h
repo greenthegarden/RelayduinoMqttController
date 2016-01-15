@@ -36,7 +36,7 @@ void date_string()
 void publish_date()
 {
   prog_buffer[0] = '\0';
-  strcpy_P(prog_buffer, (char*)pgm_read_word(&(STATUS_TOPICS[3])));
+  strcpy_P(prog_buffer, (char*)pgm_read_word(&(STATUS_TOPICS[4])));
   date_string();  // date is stored in char_buffer
   mqtt_client.publish(prog_buffer, char_buffer);
 }

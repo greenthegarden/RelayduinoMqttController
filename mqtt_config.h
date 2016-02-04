@@ -24,17 +24,44 @@ const char IP_ADDR_STATUS[]    PROGMEM = "relayduino/status/ip_addr";
 const char UPTIME_STATUS[]     PROGMEM = "relayduino/status/uptime";
 const char MEMORY_STATUS[]     PROGMEM = "relayduino/status/memory";
 const char TIME_STATUS[]       PROGMEM = "relayduino/status/time";
-const char RELAY_ON_STATUS[]   PROGMEM = "relayduino/status/relay_on";
-const char RELAY_OFF_STATUS[]  PROGMEM = "relayduino/status/relay_off";
-const char ALARM_STATUS[]      PROGMEM = "relayduino/status/alarm";
-const char ALARMS_STATUS[]     PROGMEM = "relayduino/status/alarms";
-const char DURATIONS_STATUS[]  PROGMEM = "relayduino/status/durations";
+const char RELAY_1_STATUS[]    PROGMEM = "relayduino/status/relay_1";
+const char RELAY_2_STATUS[]    PROGMEM = "relayduino/status/relay_2";
+const char RELAY_3_STATUS[]    PROGMEM = "relayduino/status/relay_3";
+const char RELAY_4_STATUS[]    PROGMEM = "relayduino/status/relay_4";
+const char RELAY_5_STATUS[]    PROGMEM = "relayduino/status/relay_5";
+const char RELAY_6_STATUS[]    PROGMEM = "relayduino/status/relay_6";
+const char RELAY_7_STATUS[]    PROGMEM = "relayduino/status/relay_7";
+const char RELAY_8_STATUS[]    PROGMEM = "relayduino/status/relay_8";
+const char DURATION_1_STATUS[] PROGMEM = "relayduino/status/duration_1";
+const char DURATION_2_STATUS[] PROGMEM = "relayduino/status/duration_2";
+const char DURATION_3_STATUS[] PROGMEM = "relayduino/status/duration_3";
+const char DURATION_4_STATUS[] PROGMEM = "relayduino/status/duration_4";
+const char DURATION_5_STATUS[] PROGMEM = "relayduino/status/duration_5";
+const char DURATION_6_STATUS[] PROGMEM = "relayduino/status/duration_6";
+const char DURATION_7_STATUS[] PROGMEM = "relayduino/status/duration_7";
+const char DURATION_8_STATUS[] PROGMEM = "relayduino/status/duration_8";
 
-PGM_P const STATUS_TOPICS[]    PROGMEM = { CONNECTED_STATUS, // idx = 0
-                                           IP_ADDR_STATUS,   // idx = 1
-                                           UPTIME_STATUS,    // idx = 2
-                                           MEMORY_STATUS,    // idx = 3
-                                           TIME_STATUS,      // idx = 4
+PGM_P const STATUS_TOPICS[]    PROGMEM = { CONNECTED_STATUS,    // idx = 0
+                                           IP_ADDR_STATUS,      // idx = 1
+                                           UPTIME_STATUS,       // idx = 2
+                                           MEMORY_STATUS,       // idx = 3
+                                           TIME_STATUS,         // idx = 4
+                                           RELAY_1_STATUS,      // idx = 5
+                                           RELAY_2_STATUS,      // idx = 6
+                                           RELAY_3_STATUS,      // idx = 7
+                                           RELAY_4_STATUS,      // idx = 8
+                                           RELAY_5_STATUS,      // idx = 9
+                                           RELAY_6_STATUS,      // idx = 10
+                                           RELAY_7_STATUS,      // idx = 11
+                                           RELAY_8_STATUS,      // idx = 12
+                                           DURATION_1_STATUS,   // idx = 13
+                                           DURATION_2_STATUS,   // idx = 14
+                                           DURATION_3_STATUS,   // idx = 15
+                                           DURATION_4_STATUS,   // idx = 16
+                                           DURATION_5_STATUS,   // idx = 17
+                                           DURATION_6_STATUS,   // idx = 18
+                                           DURATION_7_STATUS,   // idx = 19
+                                           DURATION_8_STATUS,   // idx = 20
                                           };
 
 // Relayduino Input topics
@@ -70,6 +97,7 @@ PGM_P const REQUEST_TOPICS[]   PROGMEM = {TIME_REQUEST,          // idx = 0
 // Control topics
 
 const char DST_SET[]           PROGMEM = "all/control/dst";
+//elayduino/control/master
 
 const char RELAY_1_CONTROL[]   PROGMEM = "relayduino/control/relay_1";
 const char RELAY_2_CONTROL[]   PROGMEM = "relayduino/control/relay_2";
@@ -148,4 +176,3 @@ void publish_memory()
 
 
 #endif   /* RELAYDUINOMQTTCONTROLLER_MQTT_CONFIG_H_ */
-

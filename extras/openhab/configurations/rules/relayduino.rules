@@ -1,0 +1,153 @@
+import org.openhab.core.library.types.*
+import org.openhab.core.persistence.*
+import org.openhab.model.script.actions.*
+
+import org.joda.time.*
+
+// Based on code from https://github.com/openhab/openhab/wiki/Samples-Rules#irrigation-controller
+
+rule "Irrigation startup"
+when
+	System started
+then
+	postUpdate(Irrigation_StartTime, "03:00")
+
+//	sendCommand(Irrigation_Lawn, OFF)
+//	sendCommand(Irrigation_Vege, OFF)
+//	sendCommand(Irrigation_Back, OFF)
+//	sendCommand(Irrigation_Front, OFF)
+	sendCommand(Irrigation_Trees, OFF)
+end
+
+// water trees each Saturday morning for 3 hours
+rule "Water Trees"
+when
+	Time cron "0 0 0 * * ?"
+then
+	var DateTime startTime = parse(now.getYear() + "-" + now.getMonthOfYear() + "-" + now.getDayOfMonth() + "T" + Irrigation_StartTime.state + ":00")
+	var DateTime endTime
+	
+	// get the duration
+	var Number treesMins = Irrigation_TreesMin.state as DecimalType 
+end
+
+//rule "Irrigation run"
+//when
+//	Time cron "0 0 0 * * ?"
+//then
+//	if (Irrigation_Master.state == ON) {
+//	// get the scale factor - used to reduce the run times across the board
+//	var Number scaleFactor = Irrigation_ScaleFactor.state as DecimalType
+//
+//	// convert our start time to a joda.time.DateTime for today
+//	var DateTime startTime = parse(now.getYear() + "-" + now.getMonthOfYear() + "-" + now.getDayOfMonth() + "T" + Irrigation_StartTime.state + ":00")
+//	var DateTime endTime
+//
+//	// get the raw run times for each zone (in mins)
+//	var Number lawnMins = Irrigation_LawnMins.state as DecimalType
+//	var Number vegeMins = Irrigation_VegeMins.state as DecimalType
+//	var Number backMins = Irrigation_BackMins.state as DecimalType
+//	var Number frontMins = Irrigation_FrontMins.state as DecimalType
+//
+//	// convert to the actual run times (by applying the scale factor)
+//	var int lawnTime = ((lawnMins * scaleFactor) / 100).intValue
+//	var int vegeTime = ((vegeMins * scaleFactor) / 100).intValue
+//	var int backTime = ((backMins * scaleFactor) / 100).intValue
+//	var int frontTime = ((frontMins * scaleFactor) / 100).intValue
+//
+//	// turn on each zone in turn (with a minute gap between each zone activation)
+//	if (lawnTime > 0) {
+//		endTime = startTime.plusMinutes(lawnTime)
+//		createTimer(startTime) [| sendCommand(Irrigation_Lawn, ON) ]
+//		createTimer(endTime) [| sendCommand(Irrigation_Lawn, OFF) ]
+//		startTime = endTime.plusMinutes(1)
+//	}
+//
+//	if (vegeTime > 0) {
+//		endTime = startTime.plusMinutes(vegeTime)
+//		createTimer(startTime) [| sendCommand(Irrigation_Vege, ON) ]
+//		createTimer(endTime) [| sendCommand(Irrigation_Vege, OFF) ]         
+//		startTime = endTime.plusMinutes(1)
+//	}
+//
+//            if (backTime > 0) {
+//                endTime = startTime.plusMinutes(backTime)
+//                createTimer(startTime) [| sendCommand(Irrigation_Back, ON) ]
+//                createTimer(endTime) [| sendCommand(Irrigation_Back, OFF) ]
+//                startTime = endTime.plusMinutes(1)
+//            }
+//
+//            if (frontTime > 0) {
+//                endTime = startTime.plusMinutes(frontTime)
+//                createTimer(startTime) [| sendCommand(Irrigation_Front, ON) ]
+//                createTimer(endTime) [| sendCommand(Irrigation_Front, OFF) ]
+//                startTime = endTime.plusMinutes(1)
+//            }
+//        }   
+//    end
+
+rule "Disable irrigation if any rain"
+when
+	Item Weather_Rain changed or
+	Item Weather_TodayIcon changed or
+	Item Weather_TomorrowIcon changed
+then
+	// the rainfall threshold where we shutdown off irrigation
+	var rainThreshold = 1
+
+	// check for any rain in the last 24 hours
+	var rainInLast24Hours = Weather_Rain.maximumSince(now.minusHours(24), "rrd4j")
+
+	// default to the current rain value in case there is nothing in our history
+	var rain = Weather_Rain.state
+
+	if (rainInLast24Hours != null)
+		rain = rainInLast24Hours.state
+
+	// check if any rain is forecast
+	var rainToday = Weather_TodayIcon.state == "chanceflurries" ||
+                        Weather_TodayIcon.state == "chancerain" ||
+                        Weather_TodayIcon.state == "chancesleet" ||
+                        Weather_TodayIcon.state == "chancesnow" ||
+                        Weather_TodayIcon.state == "chancetstorms" ||
+                        Weather_TodayIcon.state == "flurries" ||                    
+                        Weather_TodayIcon.state == "rain" || 
+                        Weather_TodayIcon.state == "sleet" ||
+                        Weather_TodayIcon.state == "snow" ||
+                        Weather_TodayIcon.state == "tstorms"
+
+	var rainTomorrow = Weather_TomorrowIcon.state == "chanceflurries" ||
+                           Weather_TomorrowIcon.state == "chancerain" ||
+                           Weather_TomorrowIcon.state == "chancesleet" ||
+                           Weather_TomorrowIcon.state == "chancesnow" ||
+                           Weather_TomorrowIcon.state == "chancetstorms" ||
+                           Weather_TomorrowIcon.state == "flurries" ||
+                           Weather_TomorrowIcon.state == "rain" || 
+                           Weather_TomorrowIcon.state == "sleet" ||
+                           Weather_TomorrowIcon.state == "snow" ||
+                           Weather_TomorrowIcon.state == "tstorms"
+
+	// shutoff irrigation if there has been rain or rain is forecast
+	var logMessage = ""
+	if (rain > rainThreshold) {
+		logMessage = "Rain in the last 24 hours (" + rain + " mm) is above our threshold (" + rainThreshold + " mm) - irrigation disabled!"
+	} else if (rainToday) {
+		logMessage = "Rain is forecast for today - irrigation disabled!"
+	} else if (rainTomorrow) {
+		logMessage = "Rain is forecast for tomorrow - irrigation disabled!"
+	}
+
+	if (logMessage != "") {
+		if (Irrigation_Master.state == ON) {
+			logInfo("Irrigation", logMessage)
+			//send("ben.jones12@gmail.com", logMessage)
+			postUpdate(Irrigation_Master, OFF)
+		}
+	} else {
+		if (Irrigation_Master.state == OFF) {
+			logInfo("Irrigation", "No rain in the last 24 hours or any rain forecast - irrigation enabled!")
+			//send("ben.jones12@gmail.com", "No rain in the last 24 hours or any rain forecast - irrigation enabled!")
+			postUpdate(Irrigation_Master, ON)
+		}
+	}
+end

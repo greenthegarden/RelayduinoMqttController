@@ -1,0 +1,13 @@
+sitemap relayduino label="Relayduino Irrigation Controller"
+{
+	Frame {
+		Group item=Irrigation label="Irrigation" icon="water"
+	}
+	Frame label="Weather" {
+		Group item=Weather label="Weather"
+	}
+	Frame label="Date" {
+		Text item=Date
+	}
+}
+

@@ -9,5 +9,12 @@ sitemap relayduino label="Relayduino Irrigation Controller"
 	Frame label="Date" {
 		Text item=Date
 	}
+	Frame {
+		Text item=Irrigation_TreesMins icon="presence-on" visibility=[Irrigation_Master==ON] {
+        	Frame label="Irrigation Trees" {
+            	Setpoint item=Irrigation_TreesMins minValue=0 maxValue=600 step=5
+            }
+        }
+    }
 }
 

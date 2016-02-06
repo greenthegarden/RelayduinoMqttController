@@ -12,4 +12,5 @@ Strategies {
 Items {
 	// log all temperatures on every change
 	//Temperature* -> "temperatures"
+	Irrigation_Master, Irrigation_ScaleFactor, Irrigation_TreesMins, Irrigation_Trees : strategy = everyChange, restoreOnStartup
 }

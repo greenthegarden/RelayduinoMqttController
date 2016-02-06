@@ -11,13 +11,13 @@ Number      Irrigation_ScaleFactor  "Scale Factor [%d %%]"      <water>         
 //Number      Irrigation_VegeMins     "Vege Patch [%d mins]"      <water>         (Irrigation)
 //Number      Irrigation_BackMins     "Back Garden [%d mins]"     <water>         (Irrigation)
 //Number      Irrigation_FrontMins    "Front Garden [%d mins]"    <water>         (Irrigation)
-Number      Irrigation_TreesMin     "Trees [%d mins]"           <water>         (Irrigation)  {mqtt="<[airology:relayduino/control/duration_1:state:default]"}
+Number      Irrigation_TreesMins     "Trees [%d mins]"           <water>         (Irrigation)  {mqtt="<[airology:relayduino/control/duration_1:state:default]"}
 
 //Switch      Irrigation_Lawn         "Lawn Sprinkler"            <water>         (Irrigation)    { piface="irrigation:OUT:11" }
 //Switch      Irrigation_Vege         "Vege Patch"                <water>         (Irrigation)    { piface="irrigation:OUT:12" }
 //Switch      Irrigation_Back         "Back Garden"               <water>         (Irrigation)    { piface="irrigation:OUT:13" }
 //Switch      Irrigation_Front        "Front Garden"              <water>         (Irrigation)    { piface="irrigation:OUT:15" }
-Switch      Irrigation_Trees        "Front Garden"              <water>         (Irrigation)   {mqtt=">[airology:relayduino/control/relay_1:command:ON:1],>[airology:relayduino/control/relay_1:command:OFF:0],<[airology:relayduino/status/relay_1:state:MAP(1on0off.map)]"}
+Switch      Irrigation_Trees        "Trees"              <water>         (Irrigation)   {mqtt=">[airology:relayduino/control/relay_1:command:ON:1],>[airology:relayduino/control/relay_1:command:OFF:0],<[airology:relayduino/status/relay_1:state:MAP(1on0off.map)]"}
 
 
 Number   Weather_Temperature      "Temperature [%.1f °C]"       <temperature> (Weather) {weather="locationId=adelaide, type=temperature, property=current"}

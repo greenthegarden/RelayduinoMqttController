@@ -4,31 +4,55 @@ import org.openhab.model.script.actions.*
 
 import org.joda.time.*
 
-// Based on code from https://github.com/openhab/openhab/wiki/Samples-Rules#irrigation-controller
+import java.util.concurrent.locks.ReentrantLock
+
+var java.util.concurrent.locks.ReentrantLock lock1 = new java.util.concurrent.locks.ReentrantLock()
+
+
+// Based on code from
+// https://github.com/openhab/openhab/wiki/Samples-Rules#irrigation-controller
+// and
+// https://github.com/openhab/openhab/wiki/AlarmClock
+
 
 rule "Irrigation startup"
 when
 	System started
 then
-	postUpdate(Irrigation_StartTime, "03:00")
-
+// ensure all relays are off at startup
 //	sendCommand(Irrigation_Lawn, OFF)
 //	sendCommand(Irrigation_Vege, OFF)
 //	sendCommand(Irrigation_Back, OFF)
 //	sendCommand(Irrigation_Front, OFF)
 	sendCommand(Irrigation_Trees, OFF)
+	
+// initialise durations
+	postUpdate(Irrigation_TreesMins, "180")
 end
 
 // water trees each Saturday morning for 3 hours
 rule "Water Trees"
 when
-	Time cron "0 0 0 * * ?"
+	Time cron "0 0 7 ? * SAT"
 then
-	var DateTime startTime = parse(now.getYear() + "-" + now.getMonthOfYear() + "-" + now.getDayOfMonth() + "T" + Irrigation_StartTime.state + ":00")
-	var DateTime endTime
+	lock1.lock()
+	try {
+		// switch on irrigation
+		sendCommand(Irrigation_Trees, ON)
+
+		// get start time to nearest minute
+		var DateTime startTime = parse(now.getYear() + "-" + now.getMonthOfYear() + "-" + now.getDayOfMonth() + "T" + now.getHourOfDay() + ":00")
 	
-	// get the duration
-	var Number treesMins = Irrigation_TreesMin.state as DecimalType 
+		// determine end time
+		var int duration = (Irrigation_TreesMins.state as DecimalType).intValue()	
+		var DateTime endTime = startTime.plusMinutes(duration)
+	
+		// create time to switch off irrigation        
+		createTimer(endTime) [| sendCommand(Irrigation_Trees, OFF) ]
+	} finally {
+		// release the lock - we are ready to process the next event
+		lock1.unlock()
+	}
 end
 
 //rule "Irrigation run"

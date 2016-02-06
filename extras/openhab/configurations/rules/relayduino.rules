@@ -5,14 +5,18 @@ import org.openhab.model.script.actions.*
 import org.joda.time.*
 
 import java.util.concurrent.locks.ReentrantLock
+import java.util.ArrayList
 
 var java.util.concurrent.locks.ReentrantLock lock1 = new java.util.concurrent.locks.ReentrantLock()
 
+var java.util.ArrayList irrigationRequests = new java.util.ArrayList()
 
 // Based on code from
 // https://github.com/openhab/openhab/wiki/Samples-Rules#irrigation-controller
 // and
 // https://github.com/openhab/openhab/wiki/AlarmClock
+
+// consider using the caldav binding
 
 
 rule "Irrigation startup"
@@ -30,10 +34,44 @@ then
 	postUpdate(Irrigation_TreesMins, "180")
 end
 
-// water trees each Saturday morning for 3 hours
-rule "Water Trees"
+// the scheduler ensures that if more than one irrigation request occurs at a time
+// all will be actioned sequentially
+rule "Irrigation Requests"
 when
-	Time cron "0 0 7 ? * SAT"
+	Item IrrigationRequestTrees received command ON
+	
+then
+	// if something else in list add to list, else startIrrigation
+	if (receivedCommand.toString == "IrrigationRequestTrees" )
+		irrigationRequests.add("Trees")
+		
+	postUpdate(IrrigationRequestsNumber, irrigationRequests.size())
+end
+
+rule "Irrigation Start"
+when
+	Item IrrigationRequestsNumber changed
+then
+	// get first zone and start irrigation
+	if (irrigationRequests.size() > 0) {
+		val String zone = irrigationRequests.get(1).toString()
+		if (zone == "Trees")
+			sendCommand(IrrigationTreesStart, ON)
+	}
+end
+
+rule "Irrigation End"
+when
+	Item Irrigation_Trees received command OFF
+then
+	if (receivedCommand.toString == "Irrigation_Trees")			
+		irrigationRequests.remove("Trees")
+end
+
+// water trees each Saturday morning for 3 hours
+rule "Trees Start"
+when
+	Item IrrigationTreesStart changed to ON
 then
 	lock1.lock()
 	try {
@@ -53,6 +91,15 @@ then
 		// release the lock - we are ready to process the next event
 		lock1.unlock()
 	}
+end
+
+// water trees each Saturday morning for 3 hours
+rule "Schedule Water Trees"
+when
+	Time cron "0 0 7 ? * SAT"
+then
+	// switch on irrigation
+	sendCommand(IrrigationRequestTrees, ON)
 end
 
 //rule "Irrigation run"

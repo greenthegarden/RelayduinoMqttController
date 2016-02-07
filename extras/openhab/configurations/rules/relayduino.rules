@@ -31,10 +31,14 @@ then
 //	sendCommand(Irrigation_Back, OFF)
 //	sendCommand(Irrigation_Front, OFF)
 //	sendCommand(IrrigationTreesRelay, OFF)
-	
+
 // initialise durations
-	if (Irrigation_TreesMins == null)
+	if (Irrigation_TreesMins.state == Uninitialized) {
 		postUpdate(Irrigation_TreesMins, 180)
+	}
+	if (IrrigationRequestsNumber.state == Uninitialized ) {
+			postUpdate(IrrigationRequestsNumber, irrigationRequests.size())
+	}
 end
 
 rule "All Zones Off"
@@ -54,7 +58,7 @@ then
 	logInfo("relayduino", "Manual or automatic request to switch trees " + receivedCommand.toString())
 	sendCommand(IrrigationRequestTrees, ON)
 end
-	
+
 rule "Irrigation Manual OFF"
 when
 	Item IrrigationRequestManualTrees received command OFF
@@ -117,10 +121,10 @@ then
 	var DateTime startTime = parse(now.getYear() + "-" + now.getMonthOfYear() + "-" + now.getDayOfMonth() + "T" + now.getHourOfDay() + ":00")
 
 	// determine end time
-	var int duration = (Irrigation_TreesMins.state as DecimalType).intValue()	
+	var int duration = (Irrigation_TreesMins.state as DecimalType).intValue()
 	var DateTime endTime = startTime.plusMinutes(duration)
 
-	// create time to switch off irrigation        
+	// create time to switch off irrigation
 	//createTimer(endTime) [| sendCommand(IrrigationTreesRelay, "OFF") ]
 	createTimer(endTime) [| sendCommand(IrrigationTreesRelay, OFF) ]
 end
@@ -170,7 +174,7 @@ end
 //	if (vegeTime > 0) {
 //		endTime = startTime.plusMinutes(vegeTime)
 //		createTimer(startTime) [| sendCommand(Irrigation_Vege, ON) ]
-//		createTimer(endTime) [| sendCommand(Irrigation_Vege, OFF) ]         
+//		createTimer(endTime) [| sendCommand(Irrigation_Vege, OFF) ]
 //		startTime = endTime.plusMinutes(1)
 //	}
 //
@@ -187,7 +191,7 @@ end
 //                createTimer(endTime) [| sendCommand(Irrigation_Front, OFF) ]
 //                startTime = endTime.plusMinutes(1)
 //            }
-//        }   
+//        }
 //    end
 
 rule "Disable irrigation if any rain"
@@ -214,8 +218,8 @@ then
                         Weather_TodayIcon.state == "chancesleet" ||
                         Weather_TodayIcon.state == "chancesnow" ||
                         Weather_TodayIcon.state == "chancetstorms" ||
-                        Weather_TodayIcon.state == "flurries" ||                    
-                        Weather_TodayIcon.state == "rain" || 
+                        Weather_TodayIcon.state == "flurries" ||
+                        Weather_TodayIcon.state == "rain" ||
                         Weather_TodayIcon.state == "sleet" ||
                         Weather_TodayIcon.state == "snow" ||
                         Weather_TodayIcon.state == "tstorms"
@@ -226,7 +230,7 @@ then
                            Weather_TomorrowIcon.state == "chancesnow" ||
                            Weather_TomorrowIcon.state == "chancetstorms" ||
                            Weather_TomorrowIcon.state == "flurries" ||
-                           Weather_TomorrowIcon.state == "rain" || 
+                           Weather_TomorrowIcon.state == "rain" ||
                            Weather_TomorrowIcon.state == "sleet" ||
                            Weather_TomorrowIcon.state == "snow" ||
                            Weather_TomorrowIcon.state == "tstorms"

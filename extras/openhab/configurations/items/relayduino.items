@@ -2,6 +2,7 @@
 
 Group       Irrigation
 Group       Weather
+Group       Debug
 
 Switch      Irrigation_Master       "Irrigation Master"         <power>         (Irrigation)
 String      Irrigation_StartTime    "Start Time [%s]"           <calendar>      (Irrigation)
@@ -17,11 +18,14 @@ Number      Irrigation_TreesMins     "Trees [%d mins]"           <water>        
 //Switch      Irrigation_Vege         "Vege Patch"                <water>         (Irrigation)    { piface="irrigation:OUT:12" }
 //Switch      Irrigation_Back         "Back Garden"               <water>         (Irrigation)    { piface="irrigation:OUT:13" }
 //Switch      Irrigation_Front        "Front Garden"              <water>         (Irrigation)    { piface="irrigation:OUT:15" }
-Switch      Irrigation_Trees        "Trees"              <water>         (Irrigation)   {mqtt=">[airology:relayduino/control/relay_1:command:ON:1],>[airology:relayduino/control/relay_1:command:OFF:0],<[airology:relayduino/status/relay_1:state:MAP(1on0off.map)]"}
-Switch      IrrigationTreesOnRequest
+Switch      IrrigationTreesRelay        "Trees"              <water>         (Irrigation)   {mqtt=">[airology:relayduino/control/relay_1:command:ON:1],>[airology:relayduino/control/relay_1:command:OFF:0],<[airology:relayduino/status/relay_1:state:MAP(1on0off.map)]"}
+Switch 		IrrigationRequestTrees 
+Switch      IrrigationRequestAutoTrees "IrrigationRequestAutoTrees" 
+Switch      IrrigationRequestManualTrees "IrrigationRequestManualTrees" (Irrigation)
 Switch      IrrigationTreesStart
+Switch      AllZones
 
-Number IrrigationRequestsNumber
+Number IrrigationRequestsNumber  "IrrigationRequestsNumber [%d]" (Debug)
 
 Number   Weather_Temperature      "Temperature [%.1f °C]"       <temperature> (Weather) {weather="locationId=adelaide, type=temperature, property=current"}
 Number      Weather_Rain                "Rainfall [%.1f mm]"            <rain>          (Weather) {weather="locationId=adelaide, type=precipitation, property=total"}

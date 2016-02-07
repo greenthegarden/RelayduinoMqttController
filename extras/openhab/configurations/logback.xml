@@ -37,8 +37,8 @@
 		<appender-ref ref="STDOUT" />
 	</logger>
 
-	<logger name="org.openhab" level="INFO"/>
-<!--	<logger name="org.openhab" level="DEBUG"/> -->
+<!--		<logger name="org.openhab" level="INFO"/> -->
+    <logger name="org.openhab" level="DEBUG"/>
 <!--	<logger name="org.openhab" level="TRACE"/> -->
 
 	<!-- this class gives an irrelevant warning at startup -->
@@ -58,5 +58,7 @@
 		<appender-ref ref="FILE" />
 		<appender-ref ref="STDOUT" />
 	</root>
+	
+	<logger name="org.openhab.model.script.relayduino" level="INFO"/>
 
 </configuration>

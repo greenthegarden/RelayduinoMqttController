@@ -19,6 +19,7 @@ var java.util.ArrayList irrigationRequests = new java.util.ArrayList()
 
 // consider using the caldav binding
 
+val TreesMins_default = 1
 
 rule "Irrigation startup"
 when
@@ -34,7 +35,8 @@ then
 
 // initialise durations
 	if (Irrigation_TreesMins.state == Uninitialized) {
-		postUpdate(Irrigation_TreesMins, 180)
+		postUpdate(Irrigation_TreesMins, 1)
+//		postUpdate(Irrigation_TreesMins, TreesMins_default)
 	}
 	if (IrrigationRequestsNumber.state == Uninitialized ) {
 			postUpdate(IrrigationRequestsNumber, irrigationRequests.size())
@@ -103,8 +105,11 @@ when
 	Item IrrigationRequestTrees received command OFF
 then
 //	if (receivedCommand.toString == "IrrigationRequestTrees")
-	if (IrrigationRequestTrees.state == OFF)
+	if (IrrigationRequestTrees.state == OFF) {
 		irrigationRequests.remove("Trees")
+		sendCommand(IrrigationTreesRelay, OFF)
+		sendCommand(IrrigationTreesStart, OFF)
+	}
 	postUpdate(IrrigationRequestsNumber, irrigationRequests.size())
 end
 
@@ -126,7 +131,9 @@ then
 
 	// create time to switch off irrigation
 	//createTimer(endTime) [| sendCommand(IrrigationTreesRelay, "OFF") ]
-	createTimer(endTime) [| sendCommand(IrrigationTreesRelay, OFF) ]
+	createTimer(endTime) [|
+		sendCommand(IrrigationRequestTrees, OFF)
+	]
 end
 
 // water trees each Saturday morning for 3 hours

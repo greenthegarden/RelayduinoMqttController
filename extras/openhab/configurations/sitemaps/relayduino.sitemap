@@ -10,13 +10,13 @@ sitemap relayduino label="Relayduino Irrigation Controller"
 		Text item=Date
 	}
 	Frame {
-		Text item=Irrigation_TreesMins icon="presence-on" visibility=[Irrigation_Master==ON] {
-        	Frame label="Irrigation Trees" {
-            	Setpoint item=Irrigation_TreesMins minValue=0 maxValue=600 step=5
-            	Switch item=IrrigationTreesRelay
-				Switch item=IrrigationRequestManualTrees
-				Switch item=IrrigationTreesStart
-				Text item=IrrigationRequestsNumber            	
+		Text label="Fruit Tree Irrigation Zone" visibility=[Irrigation_Master==ON] {
+        	Frame label="Fruit Tree Irrigation Zone" {
+            	Setpoint item=FruitTreeZone_Duration minValue=0 maxValue=600 step=5
+				Switch item=FruitTreeZone_Manual
+            	Switch item=FruitTreeZone_RelayCtrl
+				Switch item=FruitTreeZone_Run
+				Text item=ZonesRequestsNumber            	
             }
         }
     }

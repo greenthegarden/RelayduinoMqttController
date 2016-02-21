@@ -4,40 +4,29 @@ Group       Irrigation
 Group       Weather
 Group       Debug
 
-Switch      Irrigation_Master       "Irrigation Master"         <power>         (Irrigation)
-String      Irrigation_StartTime    "Start Time [%s]"           <calendar>      (Irrigation)
-Number      Irrigation_ScaleFactor  "Scale Factor [%d %%]"      <water>         (Irrigation)
+Switch      Irrigation_Master       "Irrigation Master"     <power>     (Irrigation)
 
-/* Irrigation durations */
-//Number      Irrigation_LawnMins     "Lawn Sprinkler [%d mins]"  <water>         (Irrigation)
-//Number      Irrigation_VegeMins     "Vege Patch [%d mins]"      <water>         (Irrigation)
-//Number      Irrigation_BackMins     "Back Garden [%d mins]"     <water>         (Irrigation)
-//Number      Irrigation_FrontMins    "Front Garden [%d mins]"    <water>         (Irrigation)
-Number      Irrigation_TreesMins     "Trees [%d mins]"           <water>         (Irrigation)  {mqtt="<[airology:relayduino/control/duration_1:state:default]"}
+String      Irrigation_StartTime    "Start Time [%s]"       <calendar>	(Irrigation)
+Number      Irrigation_ScaleFactor  "Scale Factor [%d %%]"  <water>     (Irrigation)
 
-//Switch      Irrigation_Lawn         "Lawn Sprinkler"            <water>         (Irrigation)    { piface="irrigation:OUT:11" }
-//Switch      Irrigation_Vege         "Vege Patch"                <water>         (Irrigation)    { piface="irrigation:OUT:12" }
-//Switch      Irrigation_Back         "Back Garden"               <water>         (Irrigation)    { piface="irrigation:OUT:13" }
-//Switch      Irrigation_Front        "Front Garden"              <water>         (Irrigation)    { piface="irrigation:OUT:15" }
-
-Switch      IrrigationTreesRelay        "Trees"              <water>         (Irrigation)   {mqtt=">[airology:relayduino/control/relay_1:command:ON:1],>[airology:relayduino/control/relay_1:command:OFF:0],<[airology:relayduino/status/relay_1:state:MAP(1on0off.map)]"}
-Switch 		IrrigationRequestTrees 
-Switch      IrrigationRequestAutoTrees "IrrigationRequestAutoTrees" 
-Switch      IrrigationRequestManualTrees "IrrigationRequestManualTrees" (Irrigation)
-Switch      IrrigationTreesStart
-
+/* Elements for irrigation zones */
 Switch      AllZones
+Number		ZonesRequestsNumber  	"ZoneRequestsNumber [%d]" 			(Debug)
 
-Number IrrigationRequestsNumber  "IrrigationRequestsNumber [%d]" (Debug)
-
+/* Fruit tree zone */
+Number      FruitTreeZone_Duration	"Trees [%d mins]"		<water>     (Irrigation)	{mqtt="<[airology:relayduino/control/duration_1:state:default]"}
+Switch		FruitTreeZone_RelayCtrl										(Irrigation)	{mqtt=">[airology:relayduino/control/relay_1:command:ON:1],>[airology:relayduino/control/relay_1:command:OFF:0],<[airology:relayduino/status/relay_1:state:MAP(1on0off.map)]"}
+Switch      FruitTreeZone_Auto		"Automatic State"					(Irrigation)
+Switch      FruitTreeZone_Manual	"Manual State"						(Irrigation)
+Switch 		FruitTreeZone_Request 
+Switch      FruitTreeZone_Run
 
 /* Weather items */
-Number   Weather_Temperature      "Temperature [%.1f °C]"       <temperature> (Weather) {weather="locationId=adelaide, type=temperature, property=current"}
-Number      Weather_Rain                "Rainfall [%.1f mm]"            <rain>          (Weather) {weather="locationId=adelaide, type=precipitation, property=total"}
-String      Weather_TodayIcon           "Today [%s]"                    <w>             (Weather) {weather="locationId=adelaide, forecast=0, type=condition, property=text"} 
-String      Weather_TomorrowIcon        "Tomorrow [%s]"                 <w>   			(Weather) {weather="locationId=adelaide, forecast=1, type=condition, property=text"}
+Number   	Weather_Temperature		"Temperature [%.1f °C]"	<temperature> 	(Weather) 	{weather="locationId=adelaide, type=temperature, property=current"}
+Number      Weather_Rain            "Rainfall [%.1f mm]"    <rain>        	(Weather) 	{weather="locationId=adelaide, type=precipitation, property=total"}
+String      Weather_TodayIcon       "Today [%s]"            <w>           	(Weather)	{weather="locationId=adelaide, forecast=0, type=condition, property=text"} 
+String      Weather_TomorrowIcon    "Tomorrow [%s]"         <w>   			(Weather)	{weather="locationId=adelaide, forecast=1, type=condition, property=text"}
 
-
-/* NTP binding demo item */
-DateTime		Date			"Date [%1$tA, %1$td.%1$tm.%1$tY]"	<calendar>	{ ntp="Australia/Adelaide:en_AU" }
+/* NTP binding item */
+DateTime		Date			"Date [%1$tA, %1$td.%1$tm.%1$tY]"	<calendar>			{ntp="Australia/Adelaide:en_AU"}
 

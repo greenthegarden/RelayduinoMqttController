@@ -10,7 +10,7 @@ import java.util.ArrayList
 
 //var java.util.concurrent.locks.ReentrantLock lock1 = new java.util.concurrent.locks.ReentrantLock()
 
-var java.util.ArrayList irrigationRequests = new java.util.ArrayList()
+var java.util.ArrayList zonesRequestsList = new java.util.ArrayList()
 
 // Based on code from
 // https://github.com/openhab/openhab/wiki/Samples-Rules#irrigation-controller
@@ -19,7 +19,7 @@ var java.util.ArrayList irrigationRequests = new java.util.ArrayList()
 
 // consider using the caldav binding
 
-val TreesMins_default = 1
+val Number FruitTreeZone_Duration_Default = 1
 
 rule "Irrigation startup"
 when
@@ -34,12 +34,11 @@ then
 //	sendCommand(IrrigationTreesRelay, OFF)
 
 // initialise durations
-	if (Irrigation_TreesMins.state == Uninitialized) {
-		postUpdate(Irrigation_TreesMins, 1)
-//		postUpdate(Irrigation_TreesMins, TreesMins_default)
+	if (FruitTreeZone_Duration.state == Uninitialized) {
+		postUpdate(FruitTreeZone_Duration, FruitTreeZone_Duration_Default)
 	}
-	if (IrrigationRequestsNumber.state == Uninitialized ) {
-			postUpdate(IrrigationRequestsNumber, irrigationRequests.size())
+	if (ZonesRequestsNumber.state == Uninitialized ) {
+		postUpdate(ZonesRequestsNumber, zonesRequestsList.size())
 	}
 end
 
@@ -49,91 +48,99 @@ when
 then
 	logInfo("relayduino", "All Zones Off")
 //	sendCommand(IrrigationTreesRelay, "OFF")
-	sendCommand(IrrigationTreesRelay, OFF)
+	sendCommand(FruitTreeZone_RelayCtrl, OFF)
 end
 
 rule "Irrigation Manual or Auto Request"
 when
-	Item IrrigationRequestAutoTrees received command ON or
-	Item IrrigationRequestManualTrees received command ON
+	Item FruitTreeZone_Auto received command ON or
+	Item FruitTreeZone_Manual received command ON
 then
 	logInfo("relayduino", "Manual or automatic request to switch trees " + receivedCommand.toString())
-	sendCommand(IrrigationRequestTrees, ON)
+	sendCommand(FruitTreeZone_Request, ON)
 end
 
 rule "Irrigation Manual OFF"
 when
-	Item IrrigationRequestManualTrees received command OFF
+	Item FruitTreeZone_Manual received command OFF
 then
 	logInfo("relayduino", "Manual request to switch trees " + receivedCommand.toString())
-	sendCommand(IrrigationRequestTrees, OFF)
+	sendCommand(FruitTreeZone_Request, OFF)
 end
 
 // the scheduler ensures that if more than one irrigation request occurs at a time
 // all will be actioned sequentially
 rule "Irrigation Requests"
 when
-	Item IrrigationRequestTrees received command ON
+	Item FruitTreeZone_Request received command ON
 then
 	// if something else in list add to list, else startIrrigation
 	logInfo("relayduino", "IrrigationRequestTrees receivedCommand: " + receivedCommand.toString())
-	if (IrrigationRequestTrees.state == ON ) {
-		irrigationRequests.add("Trees")
+	if (FruitTreeZone_Request.state == ON ) {
+		zonesRequestsList.add("Trees")
 	}
-	logInfo("relayduino", "irrigationRequests.size() = " + irrigationRequests.size())
-	postUpdate(IrrigationRequestsNumber, irrigationRequests.size())
+	logInfo("relayduino", "zonesRequestsList.size() = " + zonesRequestsList.size())
+	postUpdate(ZonesRequestsNumber, zonesRequestsList.size())
 end
 
 rule "Irrigation Start"
 when
-	Item IrrigationRequestsNumber changed
+	Item ZonesRequestsNumber changed
 then
-	logInfo("relayduino", "IrrigationRequestsNumber = " + IrrigationRequestsNumber)
+	logInfo("relayduino", "IrrigationRequestsNumber = " + ZonesRequestsNumber)
 	// get first zone and start irrigation
-	if (irrigationRequests.size() > 0) {
-		val String zone = irrigationRequests.get(0).toString()
+	if (zonesRequestsList.size() > 0) {
+		val String zone = zonesRequestsList.get(0).toString()
 		if (zone == "Trees")
-			sendCommand(IrrigationTreesStart, ON)
+			sendCommand(FruitTreeZone_Run, ON)
 	} else {
 		sendCommand(AllZones, OFF)
-		sendCommand(IrrigationTreesStart, OFF)
+		sendCommand(FruitTreeZone_Run, OFF)
 	}
 end
 
 rule "Irrigation End"
 when
-	Item IrrigationRequestTrees received command OFF
+	Item FruitTreeZone_Request received command OFF
 then
 //	if (receivedCommand.toString == "IrrigationRequestTrees")
-	if (IrrigationRequestTrees.state == OFF) {
-		irrigationRequests.remove("Trees")
-		sendCommand(IrrigationTreesRelay, OFF)
-		sendCommand(IrrigationTreesStart, OFF)
+	if (FruitTreeZone_Request.state == OFF) {
+		zonesRequestsList.remove("Trees")
+		sendCommand(FruitTreeZone_Run, OFF)
 	}
-	postUpdate(IrrigationRequestsNumber, irrigationRequests.size())
+	postUpdate(ZonesRequestsNumber, zonesRequestsList.size())
 end
 
 // water trees each Saturday morning for 3 hours
 rule "Trees Start"
 when
-	Item IrrigationTreesStart changed to ON
+	Item FruitTreeZone_Run changed to ON
 then
 	// switch on irrigation
 	//sendCommand(IrrigationTreesRelay, "ON")
-	sendCommand(IrrigationTreesRelay, ON)
+	sendCommand(FruitTreeZone_RelayCtrl, ON)
 
 	// get start time to nearest minute
 	var DateTime startTime = parse(now.getYear() + "-" + now.getMonthOfYear() + "-" + now.getDayOfMonth() + "T" + now.getHourOfDay() + ":00")
 
 	// determine end time
-	var int duration = (Irrigation_TreesMins.state as DecimalType).intValue()
+	var int duration = (FruitTreeZone_Duration.state as DecimalType).intValue()
 	var DateTime endTime = startTime.plusMinutes(duration)
 
 	// create time to switch off irrigation
 	//createTimer(endTime) [| sendCommand(IrrigationTreesRelay, "OFF") ]
 	createTimer(endTime) [|
-		sendCommand(IrrigationRequestTrees, OFF)
+		sendCommand(FruitTreeZone_Request, OFF)
 	]
+end
+
+rule "Trees End"
+when
+	Item FruitTreeZone_Run changed to OFF
+then
+	// switch on irrigation
+	//sendCommand(IrrigationTreesRelay, "ON")
+	sendCommand(FruitTreeZone_RelayCtrl, OFF)
 end
 
 // water trees each Saturday morning for 3 hours
@@ -142,7 +149,7 @@ when
 	Time cron "0 0 7 ? * SAT"
 then
 	// switch on irrigation
-	sendCommand(IrrigationRequestTrees, ON)
+	sendCommand(FruitTreeZone_Request, ON)
 end
 
 

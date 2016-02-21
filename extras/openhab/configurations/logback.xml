@@ -37,8 +37,8 @@
 		<appender-ref ref="STDOUT" />
 	</logger>
 
-<!--		<logger name="org.openhab" level="INFO"/> -->
-    <logger name="org.openhab" level="DEBUG"/>
+	<logger name="org.openhab" level="INFO"/>
+<!--    <logger name="org.openhab" level="DEBUG"/> -->
 <!--	<logger name="org.openhab" level="TRACE"/> -->
 
 	<!-- this class gives an irrelevant warning at startup -->

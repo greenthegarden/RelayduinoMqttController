@@ -21,6 +21,14 @@ Switch      FruitTreeZone_Manual	"Manual State"						(Irrigation)
 Switch 		FruitTreeZone_Request 
 Switch      FruitTreeZone_Run
 
+/* Vegetable zone */
+Number      Zone2_Duration	"Vegetables [%d mins]"		<water>     (Irrigation)	{mqtt="<[airology:relayduino/control/duration_1:state:default]"}
+Switch		Zone2_RelayCtrl										(Irrigation)	{mqtt=">[airology:relayduino/control/relay_1:command:ON:1],>[airology:relayduino/control/relay_1:command:OFF:0],<[airology:relayduino/status/relay_1:state:MAP(1on0off.map)]"}
+Switch      Zone2_Auto		"Automatic State"					(Irrigation)
+Switch      Zone2_Manual	"Manual State"						(Irrigation)
+Switch 		Zone2_Request 
+Switch      Zone2_Run
+
 /* Weather items */
 Number   	Weather_Temperature		"Temperature [%.1f °C]"	<temperature> 	(Weather) 	{weather="locationId=adelaide, type=temperature, property=current"}
 Number      Weather_Rain            "Rainfall [%.1f mm]"    <rain>        	(Weather) 	{weather="locationId=adelaide, type=precipitation, property=total"}

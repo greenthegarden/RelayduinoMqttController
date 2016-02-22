@@ -20,7 +20,7 @@ var java.util.ArrayList zonesRequestsList = new java.util.ArrayList()
 // consider using the caldav binding
 
 val int FruitTreeZone_Duration_Default = 1
-val int Zone2_Duration_Default = 1
+val int Zone2_Duration_Default = 2
 
 rule "Irrigation startup"
 when
@@ -211,19 +211,19 @@ then
 	}
 end
 
-// water trees each Saturday morning for 3 hours
+// schedule every two minutes
 rule "Schedule Zone 2"
 when
-	Time cron "0 0/2 ? ? ? ?"	// every two minutes
+	Time cron "0 0/3 * * * ?"
 then
-	lock.lock()
-    try {
+//	lock.lock()
+//    try {
 		// switch on irrigation
-//		sendCommand(FruitTreeZone_Request, ON)
-		sendCommand(FruitTreeZone_Run, ON)
-	} finally {
-    	lock.unlock()
-	}
+		logInfo("relayduino", "Zone 2 scheduled ")
+		sendCommand(Zone2_Auto, ON)
+//	} finally {
+//    	lock.unlock()
+//	}
 end
 
 rule "Zone 2 Auto or Manual Request"
@@ -231,52 +231,52 @@ when
 	Item Zone2_Auto received command ON or
 	Item Zone2_Manual received command ON
 then
-	lock.lock()
-    try {
-		logInfo("relayduino", "Manual or automatic request to switch trees " + receivedCommand.toString())
+//	lock.lock()
+//    try {
+		logInfo("relayduino", "Manual or automatic request to switch vegetables " + receivedCommand.toString())
 //		sendCommand(Zone2_Request, ON)
 		sendCommand(Zone2_Run, ON)
-	} finally {
-    	lock.unlock()
-    }
+//	} finally {
+//    	lock.unlock()
+//    }
 end
 
 rule "Zone 2 Request On"
 when
 	Item Zone2_Request received command ON
 then
-	lock.lock()
-    try {
+//	lock.lock()
+//    try {
 		sendCommand(Zone2_Run, ON)
-	} finally {
-    	lock.unlock()
-	}
+//	} finally {
+//    	lock.unlock()
+//	}
 end
 
 rule "Zone 2 Request Off"
 when
 	Item FruitTreeZone_Request received command OFF
 then
-	lock.lock()
-    try {
+//	lock.lock()
+//    try {
 		sendCommand(Zone2_Run, OFF)
-	} finally {
-    	lock.unlock()
-	}
+//	} finally {
+//    	lock.unlock()
+//	}
 end
 
 rule "Zone 2 Manual OFF"
 when
 	Item Zone2_Manual received command OFF
 then
-	lock.lock()
-    try {
+//	lock.lock()
+//    try {
 		logInfo("relayduino", "Manual request to switch zone 2 " + receivedCommand.toString())
 //		sendCommand(Zone2_Request, OFF)
 		sendCommand(Zone2_Run, OFF)
-	} finally {
-    	lock.unlock()
-    }
+//	} finally {
+//    	lock.unlock()
+//    }
 end
 
 rule "Zone 2 Run"
@@ -285,20 +285,23 @@ when
 then
 	lock.lock()
     try {
-		// switch on zone
-		sendCommand(Zone2_RelayCtrl, ON)
-
 		// get start time to nearest minute
-		var DateTime startTime = parse(now.getYear() + "-" + now.getMonthOfYear() + "-" + now.getDayOfMonth() + "T" + now.getHourOfDay() + ":00")
-		var DateTime endTime
-		
+		var DateTime startTime = parse(now.getYear() + "-" + now.getMonthOfYear() + "-" + now.getDayOfMonth() + "T" + now.getHourOfDay() + ":" + now.getMinuteOfDay())
+		logInfo("relayduino", "startTime = " + startTime)
 		// determine end time depending on whether manual or automatic		
 		var int duration = (Zone2_Duration.state as DecimalType).intValue()
 		logInfo("relayduino", "duration = " + duration + " mins")
-		endTime = startTime.plusMinutes(duration)			
+		var DateTime endTime = startTime.plusMinutes(duration)			
+		logInfo("relayduino", "endTime = " + endTime)
+		
+		// switch on zone
+		createTimer(startTime) [|
+			sendCommand(Zone2_RelayCtrl, ON)
+		]
+		
 		// create timer to switch off irrigation
 		createTimer(endTime) [|
-			sendCommand(Zone2_Request, OFF)
+			sendCommand(Zone2_Run, OFF)
 		]
 	} finally {
     	lock.unlock()
@@ -309,13 +312,13 @@ rule "Zone 2 Stop"
 when
 	Item Zone2_Run changed to OFF
 then
-	lock.lock()
-    try {
+//	lock.lock()
+//    try {
 		// switch on zone
 		sendCommand(Zone2_RelayCtrl, OFF)
-	} finally {
-    	lock.unlock()
-	}
+//	} finally {
+//    	lock.unlock()
+//	}
 end
 
 //rule "Irrigation run"

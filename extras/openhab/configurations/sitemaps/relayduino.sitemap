@@ -22,13 +22,11 @@ sitemap relayduino label="Relayduino Irrigation Controller"
     }
 	Frame {
 		Text label="Vegetable Irrigation Zone" visibility=[Irrigation_Master==ON] {
-        	Frame label="Vegetable Irrigation Zone" {
-            	Setpoint item=Zone2_Duration minValue=0 maxValue=600 step=5
-				Switch item=Zone2_Manual
-            	Switch item=Zone2_RelayCtrl
-				Switch item=Zone2_Run
-				Text item=ZonesRequestsNumber            	
-            }
+           	Setpoint item=Zone2_Duration minValue=0 maxValue=600 step=1
+			Switch item=Zone2_Manual
+			Switch item=Zone2_Run
+           	Switch item=Zone2_RelayCtrl
+			Text item=ZonesRequestsNumber            	
         }
     }
 }

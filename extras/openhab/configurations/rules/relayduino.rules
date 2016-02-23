@@ -214,7 +214,7 @@ end
 // schedule every two minutes
 rule "Schedule Zone 2"
 when
-	Time cron "0 0/3 * * * ?"
+	Time cron "0 0/5 * * * ?"
 then
 //	lock.lock()
 //    try {
@@ -286,18 +286,19 @@ then
 	lock.lock()
     try {
 		// get start time to nearest minute
-		var DateTime startTime = parse(now.getYear() + "-" + now.getMonthOfYear() + "-" + now.getDayOfMonth() + "T" + now.getHourOfDay() + ":" + now.getMinuteOfDay())
-		logInfo("relayduino", "startTime = " + startTime)
+//		var DateTime startTime = parse(now.getYear() + "-" + now.getMonthOfYear() + "-" + now.getDayOfMonth() + "T" + now.getHourOfDay() + ":" + now.getMinuteOfDay())
+//		logInfo("relayduino", "startTime = " + startTime)
 		// determine end time depending on whether manual or automatic		
 		var int duration = (Zone2_Duration.state as DecimalType).intValue()
 		logInfo("relayduino", "duration = " + duration + " mins")
-		var DateTime endTime = startTime.plusMinutes(duration)			
+//		var DateTime endTime = startTime.plusMinutes(duration)			
+		var DateTime endTime = now.plusMinutes(duration)			
 		logInfo("relayduino", "endTime = " + endTime)
 		
 		// switch on zone
-		createTimer(startTime) [|
+//		createTimer(startTime) [|
 			sendCommand(Zone2_RelayCtrl, ON)
-		]
+//		]
 		
 		// create timer to switch off irrigation
 		createTimer(endTime) [|
@@ -316,6 +317,9 @@ then
 //    try {
 		// switch on zone
 		sendCommand(Zone2_RelayCtrl, OFF)
+		if (Zone2_Manual.state == ON) {
+			sendCommand(Zone2_Manual, OFF)
+		}
 //	} finally {
 //    	lock.unlock()
 //	}

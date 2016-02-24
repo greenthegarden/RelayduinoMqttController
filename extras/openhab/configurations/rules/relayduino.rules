@@ -216,14 +216,14 @@ rule "Schedule Zone 2"
 when
 	Time cron "0 0/5 * * * ?"
 then
-//	lock.lock()
-//    try {
+	lock.lock()
+    try {
 		// switch on irrigation
 		logInfo("relayduino", "Zone 2 scheduled ")
 		sendCommand(Zone2_Auto, ON)
-//	} finally {
-//    	lock.unlock()
-//	}
+	} finally {
+    	lock.unlock()
+	}
 end
 
 rule "Zone 2 Auto or Manual Request"
@@ -236,47 +236,47 @@ then
 		logInfo("relayduino", "Manual or automatic request to switch vegetables " + receivedCommand.toString())
 //		sendCommand(Zone2_Request, ON)
 		sendCommand(Zone2_Run, ON)
-//	} finally {
-//    	lock.unlock()
-//    }
+	} finally {
+    	lock.unlock()
+    }
 end
 
 rule "Zone 2 Request On"
 when
 	Item Zone2_Request received command ON
 then
-//	lock.lock()
-//    try {
+	lock.lock()
+    try {
 		sendCommand(Zone2_Run, ON)
-//	} finally {
-//    	lock.unlock()
-//	}
+	} finally {
+    	lock.unlock()
+	}
 end
 
 rule "Zone 2 Request Off"
 when
 	Item FruitTreeZone_Request received command OFF
 then
-//	lock.lock()
-//    try {
+	lock.lock()
+    try {
 		sendCommand(Zone2_Run, OFF)
-//	} finally {
-//    	lock.unlock()
-//	}
+	} finally {
+    	lock.unlock()
+	}
 end
 
 rule "Zone 2 Manual OFF"
 when
 	Item Zone2_Manual received command OFF
 then
-//	lock.lock()
-//    try {
+	lock.lock()
+    try {
 		logInfo("relayduino", "Manual request to switch zone 2 " + receivedCommand.toString())
 //		sendCommand(Zone2_Request, OFF)
 		sendCommand(Zone2_Run, OFF)
-//	} finally {
-//    	lock.unlock()
-//    }
+	} finally {
+    	lock.unlock()
+    }
 end
 
 rule "Zone 2 Run"
@@ -313,16 +313,16 @@ rule "Zone 2 Stop"
 when
 	Item Zone2_Run changed to OFF
 then
-//	lock.lock()
-//    try {
+	lock.lock()
+    try {
 		// switch on zone
 		sendCommand(Zone2_RelayCtrl, OFF)
 		if (Zone2_Manual.state == ON) {
 			sendCommand(Zone2_Manual, OFF)
 		}
-//	} finally {
-//    	lock.unlock()
-//	}
+	} finally {
+    	lock.unlock()
+	}
 end
 
 //rule "Irrigation run"

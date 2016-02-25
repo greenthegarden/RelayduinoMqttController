@@ -19,7 +19,7 @@ var java.util.ArrayList zonesRequestsList = new java.util.ArrayList()
 
 // consider using the caldav binding
 
-val int FruitTreeZone_Duration_Default = 1
+val int Zone1_Duration_Default = 1
 val int Zone2_Duration_Default = 2
 
 rule "Irrigation startup"
@@ -35,8 +35,8 @@ then
 //	sendCommand(IrrigationTreesRelay, OFF)
 
 // initialise durations
-	if (FruitTreeZone_Duration.state == Uninitialized) {
-		postUpdate(FruitTreeZone_Duration, FruitTreeZone_Duration_Default)
+	if (Zone1_Duration.state == Uninitialized) {
+		postUpdate(Zone1_Duration, Zone1_Duration_Default)
 	}
 	if (Zone2_Duration.state == Uninitialized) {
 		postUpdate(Zone2_Duration, Zone2_Duration_Default)
@@ -52,18 +52,19 @@ when
 then
 	logInfo("relayduino", "All Zones Off")
 //	sendCommand(IrrigationTreesRelay, "OFF")
-	sendCommand(FruitTreeZone_RelayCtrl, OFF)
+	sendCommand(Zone1_RelayCtrl, OFF)
+	sendCommand(Zone2_RelayCtrl, OFF)
 end
 
 rule "Irrigation Manual or Auto Request"
 when
-	Item FruitTreeZone_Auto received command ON or
-	Item FruitTreeZone_Manual received command ON
+	Item Zone1_Auto received command ON or
+	Item Zone1_Manual received command ON
 then
 	lock.lock()
     try {
 		logInfo("relayduino", "Manual or automatic request to switch trees " + receivedCommand.toString())
-		sendCommand(FruitTreeZone_Request, ON)
+		sendCommand(Zone1_Request, ON)
 	} finally {
     	lock.unlock()
     }
@@ -71,12 +72,12 @@ end
 
 rule "Irrigation Manual OFF"
 when
-	Item FruitTreeZone_Manual received command OFF
+	Item Zone1_Manual received command OFF
 then
 	lock.lock()
     try {
 		logInfo("relayduino", "Manual request to switch trees " + receivedCommand.toString())
-		sendCommand(FruitTreeZone_Request, OFF)
+		sendCommand(Zone1_Request, OFF)
 	} finally {
     	lock.unlock()
     }
@@ -86,14 +87,14 @@ end
 // all will be actioned sequentially
 rule "Irrigation Requests"
 when
-	Item FruitTreeZone_Request received command ON
+	Item Zone1_Request received command ON
 then
 	lock.lock()
     try {
 		// if something else in list add to list, else startIrrigation
-		logInfo("relayduino", "IrrigationRequestTrees receivedCommand: " + receivedCommand.toString())
-		if (FruitTreeZone_Request.state == ON ) {
-			zonesRequestsList.add("Trees")
+		logInfo("relayduino", "Zone1_Request receivedCommand: " + receivedCommand.toString())
+		if (Zone1_Request.state == ON ) {
+			zonesRequestsList.add("Zone1")
 		}
 		logInfo("relayduino", "zonesRequestsList.size() = " + zonesRequestsList.size())
 		postUpdate(ZonesRequestsNumber, zonesRequestsList.size())
@@ -104,14 +105,14 @@ end
 
 rule "Irrigation End"
 when
-	Item FruitTreeZone_Request received command OFF
+	Item Zone1_Request received command OFF
 then
 	lock.lock()
     try {
 	//	if (receivedCommand.toString == "IrrigationRequestTrees")
-		if (FruitTreeZone_Request.state == OFF) {
-			zonesRequestsList.remove("Trees")
-			sendCommand(FruitTreeZone_Run, OFF)
+		if (Zone1_Request.state == OFF) {
+			zonesRequestsList.remove("Zone1")
+			sendCommand(Zone1_Run, OFF)
 		}
 		postUpdate(ZonesRequestsNumber, zonesRequestsList.size())
 	} finally {
@@ -129,11 +130,11 @@ then
 		// get first zone and start irrigation
 		if (zonesRequestsList.size() > 0) {
 			val String zone = zonesRequestsList.get(0).toString()
-			if (zone == "Trees")
-				sendCommand(FruitTreeZone_Run, ON)
+			if (zone == "Zone1")
+				sendCommand(Zone1_Run, ON)
 		} else {
 //			sendCommand(AllZones, OFF)
-			sendCommand(FruitTreeZone_Run, OFF)
+			sendCommand(Zone1_Run, OFF)
 		}
 	} finally {
     	lock.unlock()
@@ -142,41 +143,25 @@ end
 
 rule "Trees Run"
 when
-	Item FruitTreeZone_Run changed to ON
+	Item Zone1_Run changed to ON
 then
 	lock.lock()
     try {
-		// switch on irrigation
-		//sendCommand(IrrigationTreesRelay, "ON")
-		sendCommand(FruitTreeZone_RelayCtrl, ON)
-
-		// get start time to nearest minute
-		var DateTime startTime = parse(now.getYear() + "-" + now.getMonthOfYear() + "-" + now.getDayOfMonth() + "T" + now.getHourOfDay() + ":00")
-		var DateTime endTime
-		
 		// determine end time depending on whether manual or automatic		
-		var int duration = (FruitTreeZone_Duration.state as DecimalType).intValue()
-		if (FruitTreeZone_Auto.state == ON) {
+		var int duration = (Zone1_Duration.state as DecimalType).intValue()
+		if (Zone1_Auto.state == ON) {
 			if (duration < 1) {
-				duration = FruitTreeZone_Duration_Default
+				duration = Zone1_Duration_Default
 			}
+		}
+		if (duration > 0) {
 			logInfo("relayduino", "duration = " + duration + " mins")
-			endTime = startTime.plusMinutes(duration)
-			// create time to switch off irrigation
-			//createTimer(endTime) [| sendCommand(IrrigationTreesRelay, "OFF") ]
+			var DateTime endTime = now.plusMinutes(duration)
+			logInfo("relayduino", "endTime = " + endTime)
+			// create timer to switch off irrigation
 			createTimer(endTime) [|
-				sendCommand(FruitTreeZone_Request, OFF)
-			]	
-		} else {
-			if (duration > 0) {
-				logInfo("relayduino", "duration = " + duration + " mins")
-				endTime = startTime.plusMinutes(duration)			
-				// create time to switch off irrigation
-				//createTimer(endTime) [| sendCommand(IrrigationTreesRelay, "OFF") ]
-				createTimer(endTime) [|
-					sendCommand(FruitTreeZone_Request, OFF)
-				]
-			}
+				sendCommand(Zone1_Request, OFF)
+			]
 		}
 	} finally {
     	lock.unlock()
@@ -185,36 +170,35 @@ end
 
 rule "Trees End"
 when
-	Item FruitTreeZone_Run changed to OFF
+	Item Zone1_Run changed to OFF
 then
 	lock.lock()
     try {
 		// switch on irrigation
 		//sendCommand(IrrigationTreesRelay, "ON")
-		sendCommand(FruitTreeZone_RelayCtrl, OFF)
+		sendCommand(Zone1_RelayCtrl, OFF)
 	} finally {
     	lock.unlock()
 	}
 end
 
 // water trees each Saturday morning for 3 hours
-rule "Schedule Water Trees"
+rule "Schedule Zone 1"
 when
 	Time cron "0 0 7 ? * SAT"
 then
 	lock.lock()
     try {
 		// switch on irrigation
-		sendCommand(FruitTreeZone_Request, ON)
+		sendCommand(Zone1_Request, ON)
 	} finally {
     	lock.unlock()
 	}
 end
 
-// schedule every two minutes
 rule "Schedule Zone 2"
 when
-	Time cron "0 0/5 * * * ?"
+	Time cron "0 0/5 * * * ?"	// for testing schedule every five minutes
 then
 	lock.lock()
     try {
@@ -231,8 +215,8 @@ when
 	Item Zone2_Auto received command ON or
 	Item Zone2_Manual received command ON
 then
-//	lock.lock()
-//    try {
+	lock.lock()
+    try {
 		logInfo("relayduino", "Manual or automatic request to switch vegetables " + receivedCommand.toString())
 //		sendCommand(Zone2_Request, ON)
 		sendCommand(Zone2_Run, ON)

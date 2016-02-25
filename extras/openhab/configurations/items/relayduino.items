@@ -14,12 +14,12 @@ Switch      AllZones
 Number		ZonesRequestsNumber  	"ZoneRequestsNumber [%d]" 			(Debug)
 
 /* Fruit tree zone */
-Number      FruitTreeZone_Duration	"Trees [%d mins]"		<water>     (Irrigation)	{mqtt="<[airology:relayduino/control/duration_1:state:default]"}
-Switch		FruitTreeZone_RelayCtrl										(Irrigation)	{mqtt=">[airology:relayduino/control/relay_1:command:ON:1],>[airology:relayduino/control/relay_1:command:OFF:0],<[airology:relayduino/status/relay_1:state:MAP(1on0off.map)]"}
-Switch      FruitTreeZone_Auto		"Automatic State"					(Irrigation)
-Switch      FruitTreeZone_Manual	"Manual State"						(Irrigation)
-Switch 		FruitTreeZone_Request 
-Switch      FruitTreeZone_Run
+Number      Zone1_Duration	"Duration [%d mins]"		<water>     (Irrigation)	{mqtt="<[airology:relayduino/control/duration_1:state:default]"}
+Switch		Zone1_RelayCtrl										(Irrigation)	{mqtt=">[airology:relayduino/control/relay_1:command:ON:1],>[airology:relayduino/control/relay_1:command:OFF:0],<[airology:relayduino/status/relay_1:state:MAP(1on0off.map)]"}
+Switch      Zone1_Auto		"Automatic State"					(Irrigation)
+Switch      Zone1_Manual	"Manual State"						(Irrigation)
+Switch 		Zone1_Request 
+Switch      Zone1_Run
 
 /* Vegetable zone */
 Number      Zone2_Duration	"Duration [%d mins]"		<water>     (Irrigation)	{mqtt="<[airology:relayduino/control/duration_1:state:default]"}

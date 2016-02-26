@@ -177,6 +177,12 @@ then
 		// switch on irrigation
 		//sendCommand(IrrigationTreesRelay, "ON")
 		sendCommand(Zone1_RelayCtrl, OFF)
+		if (Zone1_Auto.state==ON) {
+			sendCommand(Zone1_Auto, OFF)
+		}
+		if (Zone1_Manual.state==ON) {
+			sendCommand(Zone1_Manual, OFF)
+		}
 	} finally {
     	lock.unlock()
 	}
@@ -303,6 +309,9 @@ then
 		sendCommand(Zone2_RelayCtrl, OFF)
 		if (Zone2_Manual.state == ON) {
 			sendCommand(Zone2_Manual, OFF)
+		}
+		if (Zone2_Auto.state == ON) {
+			sendCommand(Zone2_Auto, OFF)
 		}
 	} finally {
     	lock.unlock()

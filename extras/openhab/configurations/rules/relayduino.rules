@@ -21,6 +21,8 @@ var java.util.ArrayList zonesRequestsList = new java.util.ArrayList()
 
 val int Zone1_Duration_Default = 1
 val int Zone2_Duration_Default = 2
+val int Zone3_Max_Duration_Default = 2
+val int Zone3_Volume_Default = 1000
 
 rule "Irrigation startup"
 when
@@ -40,6 +42,12 @@ then
 	}
 	if (Zone2_Duration.state == Uninitialized) {
 		postUpdate(Zone2_Duration, Zone2_Duration_Default)
+	}
+	if (Zone3_Max_Duration.state == Uninitialized) {
+		postUpdate(Zone3_Max_Duration, Zone3_Max_Duration_Default)
+	}
+	if (Zone3_Volume.state == Uninitialized) {
+		postUpdate(Zone3_Volume, Zone3_Volume_Default)
 	}
 	if (ZonesRequestsNumber.state == Uninitialized ) {
 		postUpdate(ZonesRequestsNumber, zonesRequestsList.size())
@@ -245,7 +253,7 @@ end
 
 rule "Zone 2 Request Off"
 when
-	Item FruitTreeZone_Request received command OFF
+	Item Zone2_Request received command OFF
 then
 	lock.lock()
     try {
@@ -312,6 +320,114 @@ then
 		}
 		if (Zone2_Auto.state == ON) {
 			sendCommand(Zone2_Auto, OFF)
+		}
+	} finally {
+    	lock.unlock()
+	}
+end
+
+
+rule "Schedule Zone 3"
+when
+	Time cron "0 0/5 * * * ?"	// for testing schedule every five minutes
+then
+	lock.lock()
+    try {
+		// switch on irrigation
+		logInfo("relayduino", "Zone 3 scheduled ")
+		sendCommand(Zone3_Auto, ON)
+	} finally {
+    	lock.unlock()
+	}
+end
+
+rule "Zone 3 Auto or Manual Request"
+when
+	Item Zone3_Auto received command ON or
+	Item Zone3_Manual received command ON
+then
+	lock.lock()
+    try {
+		logInfo("relayduino", "Manual or automatic request to switch vegetables " + receivedCommand.toString())
+//		sendCommand(Zone3_Request, ON)
+		sendCommand(Zone3_Run, ON)
+	} finally {
+    	lock.unlock()
+    }
+end
+
+rule "Zone 3 Request On"
+when
+	Item Zone3_Request received command ON
+then
+	lock.lock()
+    try {
+		sendCommand(Zone3_Run, ON)
+	} finally {
+    	lock.unlock()
+	}
+end
+
+rule "Zone 3 Request Off"
+when
+	Item Zone3_Request received command OFF
+then
+	lock.lock()
+    try {
+		sendCommand(Zone3_Run, OFF)
+	} finally {
+    	lock.unlock()
+	}
+end
+
+rule "Zone 3 Manual OFF"
+when
+	Item Zone3_Manual received command OFF
+then
+	lock.lock()
+    try {
+		logInfo("relayduino", "Manual request to switch zone 3 " + receivedCommand.toString())
+//		sendCommand(Zone3_Request, OFF)
+		sendCommand(Zone3_Run, OFF)
+	} finally {
+    	lock.unlock()
+    }
+end
+
+rule "Zone 3 Run"
+when
+	Item Zone3_Run changed to ON
+then
+	lock.lock()
+    try {
+		var int duration = (Zone3_Max_Duration.state as DecimalType).intValue()
+		logInfo("relayduino", "duration = " + duration + " mins")
+		var DateTime endTime = now.plusMinutes(duration)			
+		logInfo("relayduino", "endTime = " + endTime)
+		sendCommand(Zone3_RelayCtrl, ON)
+		// create timer to switch off irrigation
+		createTimer(endTime) [|
+			sendCommand(Zone3_Run, OFF)
+		]
+		// need to be able to switch off when volume exceeded
+	} finally {
+    	lock.unlock()
+	}
+end
+
+rule "Zone 3 Stop"
+when
+	Item Zone3_Run changed to OFF
+then
+	lock.lock()
+    try {
+		// switch on zone
+		sendCommand(Zone3_RelayCtrl, OFF)
+		if (Zone3_Manual.state == ON) {
+			sendCommand(Zone3_Manual, OFF)
+		}
+		if (Zone3_Auto.state == ON) {
+			sendCommand(Zone3_Auto, OFF)
 		}
 	} finally {
     	lock.unlock()

@@ -29,6 +29,15 @@ Switch      Zone2_Manual	"Manual State"						(Irrigation)
 Switch 		Zone2_Request 
 Switch      Zone2_Run
 
+/* Shrub zone */
+Number      Zone3_Max_Duration	"Duration [%d mins]"		<water>     (Irrigation)	{mqtt="<[airology:relayduino/control/duration_3:state:default]"}
+Number      Zone3_Volume	"Volume [%d litres]"		<water>     (Irrigation)	{mqtt="<[airology:relayduino/control/volume_3:state:default]"}
+Switch		Zone3_RelayCtrl										(Irrigation)	{mqtt=">[airology:relayduino/control/relay_3:command:ON:1],>[airology:relayduino/control/relay_3:command:OFF:0],<[airology:relayduino/status/relay_3:state:MAP(1on0off.map)]"}
+Switch      Zone3_Auto		"Automatic State"					(Irrigation)
+Switch      Zone3_Manual	"Manual State"						(Irrigation)
+Switch 		Zone3_Request 
+Switch      Zone3_Run
+
 /* Weather items */
 Number   	Weather_Temperature		"Temperature [%.1f °C]"	<temperature> 	(Weather) 	{weather="locationId=adelaide, type=temperature, property=current"}
 Number      Weather_Rain            "Rainfall [%.1f mm]"    <rain>        	(Weather) 	{weather="locationId=adelaide, type=precipitation, property=total"}

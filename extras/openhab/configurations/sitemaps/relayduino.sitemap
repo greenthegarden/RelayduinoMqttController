@@ -29,5 +29,16 @@ sitemap relayduino label="Relayduino Irrigation Controller"
 			Text item=ZonesRequestsNumber            	
         }
     }
+	Frame {
+		Text label="Shrub Irrigation Zone" visibility=[Irrigation_Master==ON] {
+           	Setpoint item=Zone3_Max_Duration minValue=0 maxValue=600 step=1
+           	Setpoint item=Zone3_Volume minValue=0 maxValue=3000 step=100
+           	Switch item=Zone3_Auto visibility=[Zone3_Auto==ON]
+			Switch item=Zone3_Manual visibility=[Zone3_Auto!=ON]
+			Switch item=Zone3_Run
+           	Switch item=Zone3_RelayCtrl
+			Text item=ZonesRequestsNumber            	
+        }
+    }
 }
 

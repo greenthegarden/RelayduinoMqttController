@@ -17,7 +17,7 @@ void publish_alarm_id(byte ref = 255)
   if (ref == 255)
     ref = Alarm.getTriggeredAlarmId();
   progBuffer[0] = '\0';
-  strcpy_P(progBuffer, (char*)pgm_read_word(&(STATUS_TOPICS[6])));
+  strcpy_P(progBuffer, (char*)pgm_read_word(&(STATUS_TOPICS[5])));
   char str[4];
   mqttClient.publish(progBuffer, itoa(ref, str, 10));
 }

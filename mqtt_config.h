@@ -6,7 +6,7 @@
 
 
 // MQTT parameters
-byte mqttServerAddr[]           = { 192, 168, 1, 55 };  // Pi eth0 interfaceß
+byte mqttServerAddr[]           = { 192, 168, 1, 55 };  // Pi eth0 interface
 char mqttClientId[]             = "relayduino";
 const int MQTT_PORT               = 1883;
 //#define MQTT_MAX_PACKET_SIZE        168
@@ -144,7 +144,7 @@ void publish_memory()
   progBuffer[0] = '\0';
   strcpy_P(progBuffer, (char*)pgm_read_word(&(STATUS_TOPICS[3])));
   charBuffer[0] = '\0';
-  itoa(freeMemory(), charBuffer, 10);
+  itoa(getFreeMemory(), charBuffer, 10);
   mqttClient.publish(progBuffer, charBuffer);
 }
 

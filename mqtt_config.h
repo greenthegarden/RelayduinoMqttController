@@ -6,16 +6,16 @@
 
 
 // MQTT parameters
-byte mqttServerAddr[]           = { 192, 168, 1, 55 };  // Pi eth0 interfaceß
-char mqttClientId[]             = "relayduino";
-const int MQTT_PORT               = 1883;
-//#define MQTT_MAX_PACKET_SIZE        168
-//#define MQTT_KEEPALIVE              300
+IPAddress mqttServerAddr(192, 168, 1, 55);        // Pi eth0 interface
+char mqttClientId[]                               = "relayduino";
+const int MQTT_PORT                               = 1883;
+//#define MQTT_MAX_PACKET_SIZE                      168
+//#define MQTT_KEEPALIVE                            300
 
-long lastReconnectAttempt         = 0;
+unsigned long lastReconnectAttempt                = 0UL;
 const unsigned long RECONNECTION_ATTEMPT_INTERVAL = 5000UL;
 
-const char COMMAND_SEPARATOR      = ',';
+const char COMMAND_SEPARATOR                      = ',';
 
 char message[BUFFER_SIZE];
 

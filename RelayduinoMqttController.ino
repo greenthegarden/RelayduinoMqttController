@@ -14,6 +14,9 @@ boolean mqtt_connect()
     // ... and subscribe to topics (should have list)
     mqttClient.subscribe("relayduino/request/#");
     mqttClient.subscribe("relayduino/control/#");
+  } else {
+    DEBUG_LOG(1, "failed, rc = ");
+    DEBUG_LOG(1, mqttClient.state());
   }
   return mqttClient.connected();
 }

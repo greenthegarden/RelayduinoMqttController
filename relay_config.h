@@ -9,7 +9,7 @@
 
 
 #if USE_RELAY_MASTER
-const byte RELAY_MASTER = RELAY_8;
+const byte RELAY_MASTER      = RELAY_8;
 // relay master must be the last relay
 const byte RELAY_PINS_USED[] = {RELAY_1, RELAY_2, RELAY_3, RELAY_4, RELAY_MASTER};
 
@@ -33,7 +33,7 @@ byte master_relay_on()
 }
 #else
 const byte RELAY_PINS_USED[] = {RELAY_1, RELAY_2, RELAY_3, RELAY_4};
-#endif
+#endif  /* USE_RELAY_MASTER */
 
 
 // returns 1 if relay connected to given pin is on, else returns 0
@@ -61,7 +61,8 @@ byte relay_switch_off(byte idx)
 }
 
 // used as callback functions for Alarm
-void relay1_switch_off() {
+void relay1_switch_off()
+{
   byte relayIdx=0;
   relay_switch_off(relayIdx);
 #if USE_MASTER_RELAY
@@ -69,7 +70,8 @@ void relay1_switch_off() {
 #endif
 }
 
-void relay2_switch_off() {
+void relay2_switch_off()
+{
   byte relayIdx=1;
   relay_switch_off(relayIdx);
 #if USE_MASTER_RELAY
@@ -77,7 +79,8 @@ void relay2_switch_off() {
 #endif
 }
 
-void relay3_switch_off() {
+void relay3_switch_off()
+{
   byte relayIdx=2;
   relay_switch_off(relayIdx);
 #if USE_MASTER_RELAY
@@ -85,7 +88,8 @@ void relay3_switch_off() {
 #endif
 }
 
-void relay4_switch_off() {
+void relay4_switch_off()
+{
   byte relayIdx=3;
   relay_switch_off(relayIdx);
 #if USE_MASTER_RELAY

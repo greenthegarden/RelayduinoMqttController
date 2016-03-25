@@ -1,49 +1,31 @@
 // Based on code from https://github.com/openhab/openhab/wiki/Samples-Rules#irrigation-controller
 
-Group       Irrigation
-Group       Weather
-Group       Debug
+Group     gRelayduino
+Group     gRelayduinoRelay1
+Group     gRelayduinoRelay2
+Group     gRelayduinoDebug
 
-Switch      Irrigation_Master       "Irrigation Master"     <power>     (Irrigation)
+Switch    RelayduinoMaster                "Irrigation Master"                    <power>  (gRelayduino)
 
-String      Irrigation_StartTime    "Start Time [%s]"       <calendar>	(Irrigation)
-Number      Irrigation_ScaleFactor  "Scale Factor [%d %%]"  <water>     (Irrigation)
+String    RelayduinoRelayControl          "[%s]"                                          (gRelayduino)  {mqtt=">[pi:relayduino/control/relay:command:*:default]"}
+String    RelayduinoRelayState            "[%s]"                                          (gRelayduino)  {mqtt="<[pi:relayduino/status/relay:state:default]"}
 
 /* Elements for irrigation zones */
-Switch      AllZones
-Number		ZonesRequestsNumber  	"ZoneRequestsNumber [%d]" 			(Debug)
+Number    RelayduinoRelayRunCount         "[%d]"                                          (gRelayduino)
+Number    RelayduinoRelaysRequestsNumber  "RelayduinoRelaysRequestsNumber [%d]"           (gRelayduinoDebug)
 
 /* Fruit tree zone */
-Number      Zone1_Duration	"Duration [%d mins]"		<water>     (Irrigation)	{mqtt="<[airology:relayduino/control/duration_1:state:default]"}
-Switch		Zone1_RelayCtrl										(Irrigation)	{mqtt=">[airology:relayduino/control/relay_1:command:ON:1],>[airology:relayduino/control/relay_1:command:OFF:0],<[airology:relayduino/status/relay_1:state:MAP(1on0off.map)]"}
-Switch      Zone1_Auto		"Automatic State"					(Irrigation)
-Switch      Zone1_Manual	"Manual State"						(Irrigation)
-Switch 		Zone1_Request 
-Switch      Zone1_Run
+Number    RelayduinoRelay1Duration        "Duration [%d mins]"                   <water>  (gRelayduino, gRelayduinoRelay1)
+Number    RelayduinoRelay1RunDuration     "Run Duration [%d mins]"                        (gRelayduino, gRelayduinoRelay1)
+Switch    RelayduinoRelay1Auto            "Automatic"                                     (gRelayduino, gRelayduinoRelay1)
+Switch    RelayduinoRelay1Caldav          "Caldav"                                        (gRelayduino, gRelayduinoRelay1)
+Switch    RelayduinoRelay1Manual          "Manual"                                        (gRelayduino, gRelayduinoRelay1)
+Switch    RelayduinoRelay1Running         "Relay 1 ON/OFF"                                (gRelayduino, gRelayduinoRelay1)
 
 /* Vegetable zone */
-Number      Zone2_Duration	"Duration [%d mins]"		<water>     (Irrigation)	{mqtt="<[airology:relayduino/control/duration_2:state:default]"}
-Switch		Zone2_RelayCtrl										(Irrigation)	{mqtt=">[airology:relayduino/control/relay_2:command:ON:1],>[airology:relayduino/control/relay_2:command:OFF:0],<[airology:relayduino/status/relay_2:state:MAP(1on0off.map)]"}
-Switch      Zone2_Auto		"Automatic State"					(Irrigation)
-Switch      Zone2_Manual	"Manual State"						(Irrigation)
-Switch 		Zone2_Request 
-Switch      Zone2_Run
-
-/* Shrub zone */
-Number      Zone3_Max_Duration	"Duration [%d mins]"		<water>     (Irrigation)	{mqtt="<[airology:relayduino/control/duration_3:state:default]"}
-Number      Zone3_Volume	"Volume [%d litres]"		<water>     (Irrigation)	{mqtt="<[airology:relayduino/control/volume_3:state:default]"}
-Switch		Zone3_RelayCtrl										(Irrigation)	{mqtt=">[airology:relayduino/control/relay_3:command:ON:1],>[airology:relayduino/control/relay_3:command:OFF:0],<[airology:relayduino/status/relay_3:state:MAP(1on0off.map)]"}
-Switch      Zone3_Auto		"Automatic State"					(Irrigation)
-Switch      Zone3_Manual	"Manual State"						(Irrigation)
-Switch 		Zone3_Request 
-Switch      Zone3_Run
-
-/* Weather items */
-Number   	Weather_Temperature		"Temperature [%.1f °C]"	<temperature> 	(Weather) 	{weather="locationId=adelaide, type=temperature, property=current"}
-Number      Weather_Rain            "Rainfall [%.1f mm]"    <rain>        	(Weather) 	{weather="locationId=adelaide, type=precipitation, property=total"}
-String      Weather_TodayIcon       "Today [%s]"            <w>           	(Weather)	{weather="locationId=adelaide, forecast=0, type=condition, property=text"} 
-String      Weather_TomorrowIcon    "Tomorrow [%s]"         <w>   			(Weather)	{weather="locationId=adelaide, forecast=1, type=condition, property=text"}
-
-/* NTP binding item */
-DateTime		Date			"Date [%1$tA, %1$td.%1$tm.%1$tY]"	<calendar>			{ntp="Australia/Adelaide:en_AU"}
-
+Number    RelayduinoRelay2Duration        "Duration [%d mins]"                   <water>  (gRelayduino, gRelayduinoRelay2)
+Number    RelayduinoRelay2RunDuration     "Run Duration [%d mins]"                        (gRelayduino, gRelayduinoRelay2)
+Switch    RelayduinoRelay2Auto            "Automatic"                                     (gRelayduino, gRelayduinoRelay2)
+Switch    RelayduinoRelay2Caldav          "Caldav"                                        (gRelayduino, gRelayduinoRelay2)
+Switch    RelayduinoRelay2Manual          "Manual"                                        (gRelayduino, gRelayduinoRelay2)
+Switch    RelayduinoRelay2Running         "Relay 2 ON/OFF"                                (gRelayduino, gRelayduinoRelay2)

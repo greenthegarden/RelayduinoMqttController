@@ -144,7 +144,7 @@ void publish_memory()
   progBuffer[0] = '\0';
   strcpy_P(progBuffer, (char*)pgm_read_word(&(STATUS_TOPICS[3])));
   charBuffer[0] = '\0';
-  itoa(freeMemory(), charBuffer, 10);
+  itoa(getFreeMemory(), charBuffer, 10);
   mqttClient.publish(progBuffer, charBuffer);
 }
 

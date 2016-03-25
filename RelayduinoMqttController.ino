@@ -1,3 +1,6 @@
+// “Arduino Duemilenove w/ ATmega328”
+// install the “AUTO” jumper on the PCB for ease of programming
+
 #include "config.h"
 
 boolean mqtt_connect()
@@ -137,8 +140,8 @@ void setup()
     digitalWrite(RELAY_PINS_USED[idx], LOW);
   }
 
-  DEBUG_LOG(3, "Number of relays is ");
-  DEBUG_LOG(3, ARRAY_SIZE(RELAY_PINS_USED));
+  DEBUG_LOG(1, "Number of relays is ");
+  DEBUG_LOG(1, ARRAY_SIZE(RELAY_PINS_USED));
 }
 
 /*--------------------------------------------------------------------------------------

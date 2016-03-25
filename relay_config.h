@@ -5,7 +5,7 @@
 #include <Relayduino.h>
 
 
-#define USE_RELAY_MASTER true
+#define USE_MASTER_RELAY true
 
 
 #if USE_RELAY_MASTER
@@ -17,17 +17,18 @@ const byte RELAY_PINS_USED[] = {RELAY_1, RELAY_2, RELAY_3, RELAY_4, RELAY_MASTER
 byte relay_switch_off(byte);
 byte relay_switch_on(byte);
 
-byte master_relay_off()
+
+byte master_switch_off()
 {
-  if (relay_switch_off(RELAY_PINS_USED[ARRAY_SIZE(RELAY_PINS_USED)]-1))
+  if (relay_switch_off(ARRAY_SIZE(RELAY_PINS_USED)-1))
     return 1;
   return 0;
 }
 
 // returns 1 if relay is currently on and switched off, else returns 0
-byte master_relay_on()
+byte master_switch_on()
 {
-  if (relay_switch_on(RELAY_PINS_USED[ARRAY_SIZE(RELAY_PINS_USED)]-1))
+  if (relay_switch_on(ARRAY_SIZE(RELAY_PINS_USED)-1))
     return 1;
   return 0;
 }
@@ -51,7 +52,7 @@ byte relay_switch_off(byte idx)
     DEBUG_LOG(1, "relay off");
     publish_relay_state(idx, false);
 #if USE_MASTER_RELAY
-    master_relay_off();
+    master_switch_off();
 #endif
     return 1;
   } else {
@@ -65,36 +66,24 @@ void relay1_switch_off()
 {
   byte relayIdx=0;
   relay_switch_off(relayIdx);
-#if USE_MASTER_RELAY
-  master_switch_off();
-#endif
 }
 
 void relay2_switch_off()
 {
   byte relayIdx=1;
   relay_switch_off(relayIdx);
-#if USE_MASTER_RELAY
-  master_switch_off();
-#endif
 }
 
 void relay3_switch_off()
 {
   byte relayIdx=2;
   relay_switch_off(relayIdx);
-#if USE_MASTER_RELAY
-  master_switch_off();
-#endif
 }
 
 void relay4_switch_off()
 {
   byte relayIdx=3;
   relay_switch_off(relayIdx);
-#if USE_MASTER_RELAY
-  master_switch_off();
-#endif
 }
 
 // used by callback as a void function to switch off relay which is currenlty on
@@ -118,7 +107,7 @@ byte relay_switch_on(byte idx)
     DEBUG_LOG(1, "relay on");
     publish_relay_state(idx, true);
 #if USE_MASTER_RELAY
-    master_relay_on();
+    master_switch_on();
 #endif
     return 1;
   } else {

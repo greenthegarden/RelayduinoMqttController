@@ -12,6 +12,12 @@ byte currentTimerRef              = 255;
 //byte alarm_refs_cnt               = 0;
 
 
+void alarm_cancel()
+{
+  // disable current alarm
+  Alarm.disable(Alarm.getTriggeredAlarmId());
+}
+
 void publish_alarm_id(byte ref = 255)
 {
   if (ref == 255)

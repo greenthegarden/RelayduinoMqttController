@@ -8,7 +8,7 @@
 #define USE_MASTER_RELAY true
 
 
-#if USE_RELAY_MASTER
+#if USE_MASTER_RELAY
 const byte RELAY_MASTER      = RELAY_8;
 // relay master must be the last relay
 const byte RELAY_PINS_USED[] = {RELAY_1, RELAY_2, RELAY_3, RELAY_4, RELAY_MASTER};
@@ -54,6 +54,7 @@ byte relay_switch_off(byte idx)
 #if USE_MASTER_RELAY
     master_switch_off();
 #endif
+    alarm_cancel();
     return 1;
   } else {
     DEBUG_LOG(1, "relay already off");

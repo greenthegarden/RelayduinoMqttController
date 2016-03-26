@@ -28,5 +28,12 @@ const int BAUD_RATE               = 9600;
 #include "relay_config.h"
 
 
+boolean mqttClientConnected = false;
+
+void no_network_behaviour() {
+  relays_switch_off();
+}
+
+
 #endif   /* RELAYDUINOMQTTCONTROLLER_CONFIG_H_ */
 

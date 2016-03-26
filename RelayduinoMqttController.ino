@@ -155,16 +155,22 @@ void loop()
 
   if (!mqttClient.connected()) {
     long now = millis();
+    mqttClientConnected = false;
     if (now - lastReconnectAttempt > RECONNECTION_ATTEMPT_INTERVAL) {
       lastReconnectAttempt = now;
       // Attempt to reconnect
       if (mqtt_connect()) {
         lastReconnectAttempt = 0;
+        mqttClientConnected = true;
       }
     }
   } else {
     // Client connected
     mqttClient.loop();
+  }
+
+  if (!mqttClientConnected) {
+    no_network_behaviour();
   }
 }
 

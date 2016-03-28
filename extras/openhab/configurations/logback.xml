@@ -37,9 +37,9 @@
 		<appender-ref ref="STDOUT" />
 	</logger>
 
-<!--	<logger name="org.openhab" level="INFO"/>-->
-	<logger name="org.openhab" level="DEBUG"/>
-<!--	<logger name="org.openhab" level="TRACE"/> -->
+	<logger name="org.openhab" level="INFO"/>
+<!--	<logger name="org.openhab" level="DEBUG"/>-->
+<!--	<logger name="org.openhab" level="TRACE"/>-->
 
 	<!-- this class gives an irrelevant warning at startup -->
 	<logger name="org.atmosphere.cpr.AtmosphereFramework" level="ERROR" />
@@ -60,5 +60,10 @@
 	</root>
 	
 	<logger name="org.openhab.model.script.relayduino" level="INFO"/>
+	<logger name="org.openhab.model.script.automationboard" level="DEBUG"/>
+
+
+<!--	<logger name="org.openhab.binding.weather" level="TRACE" />-->
+<!--	<logger name="org.openhab.binding.astro" level="TRACE" />-->
 
 </configuration>

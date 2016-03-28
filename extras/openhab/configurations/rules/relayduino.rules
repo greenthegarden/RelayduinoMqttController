@@ -9,6 +9,10 @@ import org.joda.time.*
 import java.util.ArrayList
 import java.util.LinkedHashSet
 
+/* TODO:
+ * Fix that requests from Caldav do not get delayed if another task is running
+ */
+
 var java.util.concurrent.locks.ReentrantLock lock = new java.util.concurrent.locks.ReentrantLock()
 
 //var java.util.ArrayList zonesRequestsList = new java.util.ArrayList()
@@ -77,6 +81,7 @@ then
     	logInfo("relayduino", "Relay 1 Openhab Activation")
 		if (RelayduinoRelay1Manual.state == ON || RelayduinoRelay1Auto.state == ON) {
 			RelayduinoRelaysRequestsSet.add("1")
+			postUpdate(RelayduinoRelay1RunDuration, RelayduinoRelay1Duration.state as DecimalType)
 			postUpdate(RelayduinoRelaysRequestsNumber, RelayduinoRelaysRequestsSet.size())
 		} else {
 			RelayduinoRelaysRequestsSet.remove("1")
@@ -104,6 +109,7 @@ then
 		} else {
 			RelayduinoRelaysRequestsSet.remove("1")
 			postUpdate(RelayduinoRelaysRequestsNumber, RelayduinoRelaysRequestsSet.size())
+			RelayduinoRelayControl.sendCommand("1,0")
 		}
 	} finally {
    		lock.unlock()
@@ -155,6 +161,7 @@ then
 		} else {
 			RelayduinoRelaysRequestsSet.remove("2")
 			postUpdate(RelayduinoRelaysRequestsNumber, RelayduinoRelaysRequestsSet.size())
+			RelayduinoRelayControl.sendCommand("2,0")
 		}
 	} finally {
    		lock.unlock()
@@ -188,7 +195,7 @@ then
 			} else {
 				logInfo("relayduino", "no requests") 
 			}
-    	}
+       	}
 	} finally {
 	   	lock.unlock()
 	}
@@ -214,6 +221,8 @@ then
 					sendCommand(RelayduinoRelay1Manual, OFF)
 				if (RelayduinoRelay1Auto.state == ON)
 					sendCommand(RelayduinoRelay1Auto, OFF)
+				if (RelayduinoRelay1Caldav.state == ON)
+					sendCommand(RelayduinoRelay1Caldav, OFF)
 				sendCommand(RelayduinoRelay1Running, OFF)
 			}
 			if (relay == "2") {
@@ -222,6 +231,8 @@ then
 					sendCommand(RelayduinoRelay2Manual, OFF)
 				if (RelayduinoRelay2Auto.state == ON)
 					sendCommand(RelayduinoRelay2Auto, OFF)
+				if (RelayduinoRelay2Caldav.state == ON)
+					sendCommand(RelayduinoRelay2Caldav, OFF)
 				sendCommand(RelayduinoRelay2Running, OFF)
 			}
 		} else {		// relay was turned on

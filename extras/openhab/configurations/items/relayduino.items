@@ -19,6 +19,8 @@ Number    RelayduinoRelay1Duration        "Duration [%d mins]"                  
 Number    RelayduinoRelay1RunDuration     "Run Duration [%d mins]"                        (gRelayduino, gRelayduinoRelay1)
 Switch    RelayduinoRelay1Auto            "Automatic"                                     (gRelayduino, gRelayduinoRelay1)
 Switch    RelayduinoRelay1Caldav          "Caldav"                                        (gRelayduino, gRelayduinoRelay1)
+Switch    RelayduinoRelay1Sensor          "Sensor"                                        (gRelayduino, gRelayduinoRelay1)
+Switch    RelayduinoRelay1Cron            "Cron"                                          (gRelayduino, gRelayduinoRelay1)
 Switch    RelayduinoRelay1Manual          "Manual"                                        (gRelayduino, gRelayduinoRelay1)
 Switch    RelayduinoRelay1Running         "Relay 1 ON/OFF"                                (gRelayduino, gRelayduinoRelay1)
 

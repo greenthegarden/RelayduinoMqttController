@@ -12,11 +12,6 @@ byte currentTimerRef              = 255;
 //byte alarm_refs_cnt               = 0;
 
 
-void alarm_cancel()
-{
-  // disable current alarm
-  Alarm.disable(Alarm.getTriggeredAlarmId());
-}
 
 void publish_alarm_id(byte ref = 255)
 {
@@ -26,6 +21,14 @@ void publish_alarm_id(byte ref = 255)
   strcpy_P(progBuffer, (char*)pgm_read_word(&(STATUS_TOPICS[5])));
   char str[4];
   mqttClient.publish(progBuffer, itoa(ref, str, 10));
+}
+
+void alarm_cancel()
+{
+  // disable current alarm
+  byte ref = Alarm.getTriggeredAlarmId();
+  Alarm.disable(ref);
+  publish_alarm_id(ref);
 }
 
 

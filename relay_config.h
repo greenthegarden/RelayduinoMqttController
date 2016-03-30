@@ -14,13 +14,13 @@ const byte RELAY_MASTER      = RELAY_8;
 const byte RELAY_PINS_USED[] = {RELAY_1, RELAY_2, RELAY_3, RELAY_4, RELAY_MASTER};
 
 // forward declarations of relay switch functions
-byte relay_switch_off(byte);
-byte relay_switch_on(byte);
+byte relay_switch_off(byte idx, boolean report=true);
+byte relay_switch_on(byte idx, boolean report=true);
 
 
 byte master_switch_off()
 {
-  if (relay_switch_off(ARRAY_SIZE(RELAY_PINS_USED)-1))
+  if (relay_switch_off(ARRAY_SIZE(RELAY_PINS_USED)-1, false))
     return 1;
   return 0;
 }
@@ -28,7 +28,7 @@ byte master_switch_off()
 // returns 1 if relay is currently on and switched off, else returns 0
 byte master_switch_on()
 {
-  if (relay_switch_on(ARRAY_SIZE(RELAY_PINS_USED)-1))
+  if (relay_switch_on(ARRAY_SIZE(RELAY_PINS_USED)-1, false))
     return 1;
   return 0;
 }
@@ -44,16 +44,19 @@ byte relay_state(byte idx)
 }
 
 // returns 1 if relay is currently on and switched off, else returns 0
-byte relay_switch_off(byte idx)
+byte relay_switch_off(byte idx, boolean report)
 {
+#if USE_MASTER_RELAY
+    if (!master_switch_off())
+      return 0;
+#endif
   // only switch relay off if it is currently on
   if (relay_state(idx)) {
     digitalWrite(RELAY_PINS_USED[idx], LOW);
     DEBUG_LOG(1, "relay off");
-    publish_relay_state(idx, false);
-#if USE_MASTER_RELAY
-    master_switch_off();
-#endif
+    if (report) {
+      publish_relay_state(idx, false);
+    }
     alarm_cancel();
     return 1;
   } else {
@@ -101,15 +104,18 @@ void relays_switch_off()
 }
 
 // returns 1 if relay is currently off and switched on, else returns 0
-byte relay_switch_on(byte idx)
+byte relay_switch_on(byte idx, boolean report)
 {
+#if USE_MASTER_RELAY
+    if (!master_switch_on())
+      return 0;
+#endif
   if (!relay_state(idx)) {
     digitalWrite(RELAY_PINS_USED[idx], HIGH);
     DEBUG_LOG(1, "relay on");
-    publish_relay_state(idx, true);
-#if USE_MASTER_RELAY
-    master_switch_on();
-#endif
+    if (report) {
+      publish_relay_state(idx, true);
+    }
     return 1;
   } else {
     DEBUG_LOG(1, "relay already on");

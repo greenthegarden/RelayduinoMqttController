@@ -7,8 +7,8 @@ Group     gRelayduinoDebug
 
 Switch    RelayduinoMaster                "Irrigation Master"                    <power>  (gRelayduino)
 
-String    RelayduinoRelayControl          "[%s]"                                          (gRelayduino)  {mqtt=">[pi:relayduino/control/relay:command:*:default]"}
-String    RelayduinoRelayState            "[%s]"                                          (gRelayduino)  {mqtt="<[pi:relayduino/status/relay:state:default]"}
+String    RelayduinoRelayControl          "[%s]"                                          (gRelayduino)//  {mqtt=">[pi:relayduino/control/relay:command:*:default]"}
+String    RelayduinoRelayState            "[%s]"                                          (gRelayduino)//  {mqtt="<[pi:relayduino/status/relay:state:default]"}
 
 /* Elements for irrigation zones */
 Number    RelayduinoRelayRunCount         "[%d]"                                          (gRelayduino)
@@ -18,7 +18,6 @@ Number    RelayduinoRelaysRequestsNumber  "RelayduinoRelaysRequestsNumber [%d]" 
 Number    RelayduinoRelay1Duration        "Duration [%d mins]"                   <water>  (gRelayduino, gRelayduinoRelay1)
 Number    RelayduinoRelay1RunDuration     "Run Duration [%d mins]"                        (gRelayduino, gRelayduinoRelay1)
 Switch    RelayduinoRelay1Auto            "Automatic"                                     (gRelayduino, gRelayduinoRelay1)
-Switch    RelayduinoRelay1Caldav          "Caldav"                                        (gRelayduino, gRelayduinoRelay1)
 Switch    RelayduinoRelay1Sensor          "Sensor"                                        (gRelayduino, gRelayduinoRelay1)
 Switch    RelayduinoRelay1Cron            "Cron"                                          (gRelayduino, gRelayduinoRelay1)
 Switch    RelayduinoRelay1Manual          "Manual"                                        (gRelayduino, gRelayduinoRelay1)
@@ -28,6 +27,5 @@ Switch    RelayduinoRelay1Running         "Relay 1 ON/OFF"                      
 Number    RelayduinoRelay2Duration        "Duration [%d mins]"                   <water>  (gRelayduino, gRelayduinoRelay2)
 Number    RelayduinoRelay2RunDuration     "Run Duration [%d mins]"                        (gRelayduino, gRelayduinoRelay2)
 Switch    RelayduinoRelay2Auto            "Automatic"                                     (gRelayduino, gRelayduinoRelay2)
-Switch    RelayduinoRelay2Caldav          "Caldav"                                        (gRelayduino, gRelayduinoRelay2)
 Switch    RelayduinoRelay2Manual          "Manual"                                        (gRelayduino, gRelayduinoRelay2)
 Switch    RelayduinoRelay2Running         "Relay 2 ON/OFF"                                (gRelayduino, gRelayduinoRelay2)

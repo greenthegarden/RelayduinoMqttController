@@ -1,0 +1,8 @@
+Strategies {
+	default = everyChange 
+}
+
+Items {
+	RelayduinoCaldavRelay1Running, RelayduinoCaldavRelay2Running : strategy = everyChange
+	Manual, LightRequest : strategy = everyChange
+}

@@ -91,30 +91,30 @@ then
    		lock.unlock()
 	}end
 
-rule "Relay 1 Caldav Activation"
-when
-	Item RelayduinoRelay1Caldav changed
-//	Item RelayduinoRelay1Caldav received command
-then
-	lock.lock()
-    try {
-    	logInfo("relayduino", "Relay 1 Caldav Activation")
-    	// if (receivedCommand == ON) {
-		if (RelayduinoRelay1Caldav.state == ON) {
-			if (RelayduinoRelaysRequestsSet.add("1")) {
-				postUpdate(RelayduinoRelay1RunDuration, 120)
-				postUpdate(RelayduinoRelaysRequestsNumber, RelayduinoRelaysRequestsSet.size())
-			}
-				
-		} else {
-			RelayduinoRelaysRequestsSet.remove("1")
-			postUpdate(RelayduinoRelaysRequestsNumber, RelayduinoRelaysRequestsSet.size())
-			RelayduinoRelayControl.sendCommand("1,0")
-		}
-	} finally {
-   		lock.unlock()
-	}
-end
+//rule "Relay 1 Caldav Activation"
+//when
+//	Item RelayduinoRelay1Caldav changed
+////	Item RelayduinoRelay1Caldav received command
+//then
+//	lock.lock()
+//    try {
+//    	logInfo("relayduino", "Relay 1 Caldav Activation")
+//    	// if (receivedCommand == ON) {
+//		if (RelayduinoRelay1Caldav.state == ON) {
+//			if (RelayduinoRelaysRequestsSet.add("1")) {
+//				postUpdate(RelayduinoRelay1RunDuration, 120)
+//				postUpdate(RelayduinoRelaysRequestsNumber, RelayduinoRelaysRequestsSet.size())
+//			}
+//				
+//		} else {
+//			RelayduinoRelaysRequestsSet.remove("1")
+//			postUpdate(RelayduinoRelaysRequestsNumber, RelayduinoRelaysRequestsSet.size())
+//			RelayduinoRelayControl.sendCommand("1,0")
+//		}
+//	} finally {
+//   		lock.unlock()
+//	}
+//end
 
 rule "Relay 2 Openhab Activation"
 when
@@ -142,31 +142,28 @@ then
 	}
 end
 
-rule "Relay 2 Caldav Activation"
-when
-	Item RelayduinoRelay2Caldav changed
-//	Item RelayduinoRelay2Auto received command or
-//	Item RelayduinoRelay2Auto received command
-then
-	lock.lock()
-    try {
-    	logInfo("relayduino", "Relay 2 Caldav Activation")
-    	// if (receivedCommand == ON) {
-		if (RelayduinoRelay2Caldav.state == ON) {
-			if (RelayduinoRelaysRequestsSet.add("2")) {
-				postUpdate(RelayduinoRelay2RunDuration, 120)
-				postUpdate(RelayduinoRelaysRequestsNumber, RelayduinoRelaysRequestsSet.size())
-			}
-				
-		} else {
-			RelayduinoRelaysRequestsSet.remove("2")
-			postUpdate(RelayduinoRelaysRequestsNumber, RelayduinoRelaysRequestsSet.size())
-			RelayduinoRelayControl.sendCommand("2,0")
-		}
-	} finally {
-   		lock.unlock()
-	}
-end
+//rule "Relay 2 Caldav Activation"
+//when
+//	Item RelayduinoRelay2Caldav changed
+//then
+//	lock.lock()
+//    try {
+//    	logInfo("relayduino", "Relay 2 Caldav Activation")
+//		if (RelayduinoRelay2Caldav.state == ON) {
+//			if (RelayduinoRelaysRequestsSet.add("2")) {
+//				postUpdate(RelayduinoRelay2RunDuration, 120)
+//				postUpdate(RelayduinoRelaysRequestsNumber, RelayduinoRelaysRequestsSet.size())
+//			}
+//				
+//		} else {
+//			RelayduinoRelaysRequestsSet.remove("2")
+//			postUpdate(RelayduinoRelaysRequestsNumber, RelayduinoRelaysRequestsSet.size())
+//			RelayduinoRelayControl.sendCommand("2,0")
+//		}
+//	} finally {
+//   		lock.unlock()
+//	}
+//end
 
 rule "Request Manager"
 when
@@ -221,8 +218,8 @@ then
 					sendCommand(RelayduinoRelay1Manual, OFF)
 				if (RelayduinoRelay1Auto.state == ON)
 					sendCommand(RelayduinoRelay1Auto, OFF)
-				if (RelayduinoRelay1Caldav.state == ON)
-					sendCommand(RelayduinoRelay1Caldav, OFF)
+//				if (RelayduinoRelay1Caldav.state == ON)
+//					sendCommand(RelayduinoRelay1Caldav, OFF)
 				sendCommand(RelayduinoRelay1Running, OFF)
 			}
 			if (relay == "2") {
@@ -231,8 +228,8 @@ then
 					sendCommand(RelayduinoRelay2Manual, OFF)
 				if (RelayduinoRelay2Auto.state == ON)
 					sendCommand(RelayduinoRelay2Auto, OFF)
-				if (RelayduinoRelay2Caldav.state == ON)
-					sendCommand(RelayduinoRelay2Caldav, OFF)
+//				if (RelayduinoRelay2Caldav.state == ON)
+//					sendCommand(RelayduinoRelay2Caldav, OFF)
 				sendCommand(RelayduinoRelay2Running, OFF)
 			}
 		} else {		// relay was turned on

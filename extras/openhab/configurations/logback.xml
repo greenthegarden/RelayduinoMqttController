@@ -59,11 +59,18 @@
 		<appender-ref ref="STDOUT" />
 	</root>
 	
-	<logger name="org.openhab.model.script.relayduino" level="INFO"/>
-	<logger name="org.openhab.model.script.automationboard" level="DEBUG"/>
-
-
+	<!-- binding logging -->
 <!--	<logger name="org.openhab.binding.weather" level="TRACE" />-->
 <!--	<logger name="org.openhab.binding.astro" level="TRACE" />-->
+	<logger name="org.openhab.binding.caldav_personal" level="TRACE"/>
+	<logger name="org.openhab.binding.caldav_command" level="TRACE"/>
+	<logger name="org.openhab.io.caldav" level="TRACE"/>
+
+	<!-- rule logging -->
+	<logger name="org.openhab.model.script.sensorlightiotmodule" level="INFO"/>
+	<logger name="org.openhab.model.script.relayduinoCaldav" level="INFO"/>
+	<logger name="org.openhab.model.script.relayduino" level="INFO"/>	
+	<logger name="org.openhab.model.script.automationboard" level="DEBUG"/>
+
 
 </configuration>

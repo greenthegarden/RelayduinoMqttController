@@ -8,9 +8,9 @@ sitemap relayduinoCaldav label="Relayduino Caldav Controller"
 		Switch item=RelayduinoCaldavRelay1Running
       	Switch item=RelayduinoCaldavRelay2Running
     }
-	Frame label="Relays" {
-		Switch item=RelayduinoCaldavRelay1
-      	Switch item=RelayduinoCaldavRelay2
-    }
+//	Frame label="Relays" {
+//		Switch item=RelayduinoCaldavRelay1
+//      	Switch item=RelayduinoCaldavRelay2
+//    }
 }
 

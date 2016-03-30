@@ -34,19 +34,7 @@ def on_subscribe(client, userdata, mid, granted_qos) :
     print("Subscribed: "+str(mid)+" "+str(granted_qos))
 
 def on_message(client, userdata, message) :
-#    print(time.clock())
-	print(message.topic+" "+str(message.payload))
-	if (message.topic == "relayduino/control/master") :
-		if (message.payload == "0") :
-			switchRelayOff()	# switch all relays off
-	if (message.topic == "relayduino/control/relay_1") :
-		if (message.payload == "1") :
-			switchRelayOn()
-		elif (message.payload == "0") :
-			switchRelayOff()
-	else :
-		print("unexpected message received!!")
-#    print("message received: topic is {0} with payload {1}".format(message.topic, message.payload))
+    print("message received:\n{0}: {1}".format(message.topic, message.payload))
 
 def on_publish(client, userdata, mid) :
     print("mid: {0}".format(str(mid)))
@@ -85,59 +73,11 @@ def tidyupAndExit() :
 	print("Bye")
 	exit(0)
 
-
-relayOn = False
-
-def switchRelay() :
-	global relayOn
-	if (relayOn) :
-		relayOn = False
-		client.publish("relayduino/status/relay_1", "0")
-		print("{0}".format("Switched relay off"))
-	else :
-		relayOn = True
-		client.publish("relayduino/status/relay_1", "1")
-		print("{0}".format("Switched relay on"))
-
-def switchRelayOn() :
-	global relayOn
-	if (relayOn) :
-		return
-	else :
-		switchRelay()
-
-def switchRelayOff() :
-	global relayOn
-	if (not relayOn) :
-		return
-	else :
-		switchRelay()
-
-command_types_valid_inputs = ['d']
-#led_control_valid_inputs   = ['0', '1']
-
-print("Enter 'd' to set duration: ")
-
 # Loop continuously
 while True :
 	try :
-		command_type = raw_input()
-		if command_type in command_types_valid_inputs :
-#			if command_type is 'd' :
-#				mqttc.publish("relayduino/request/uptime");
-#			elif command_type is 'm' :
-#				mqttc.publish("relayduino/request/memory");
-			if command_type is 'd' :
-				duration = raw_input("Enter duration in minutes: ")
-				try :
-					int(duration)
-				except ValueError :
-					print "Ensure an integer is entered"
-				else :
-					client.publish("relayduino/control/duration_1", int(duration));
-			else :
-				print("Should not be here!!")
-		else :
-			print("Invalid command type entered")
+		relay, duration = raw_input("Enter relay and duration: ").split()
+		payload = relay + "," + duration
+		client.publish("relayduino/control/relay", payload)
 	except KeyboardInterrupt :      #Triggered by pressing Ctrl+C
 		tidyupAndExit()

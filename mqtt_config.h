@@ -29,22 +29,6 @@ const char MEMORY_STATUS[]     PROGMEM = "relayduino/status/memory";
 const char TIME_STATUS[]       PROGMEM = "relayduino/status/time";
 const char ALARM_STATUS[]      PROGMEM = "relayduino/status/alarm";
 const char RELAY_STATUS[]      PROGMEM = "relayduino/status/relay";
-//const char RELAY_1_STATUS[]    PROGMEM = "relayduino/status/relay_1";
-//const char RELAY_2_STATUS[]    PROGMEM = "relayduino/status/relay_2";
-//const char RELAY_3_STATUS[]    PROGMEM = "relayduino/status/relay_3";
-//const char RELAY_4_STATUS[]    PROGMEM = "relayduino/status/relay_4";
-//const char RELAY_5_STATUS[]    PROGMEM = "relayduino/status/relay_5";
-//const char RELAY_6_STATUS[]    PROGMEM = "relayduino/status/relay_6";
-//const char RELAY_7_STATUS[]    PROGMEM = "relayduino/status/relay_7";
-//const char RELAY_8_STATUS[]    PROGMEM = "relayduino/status/relay_8";
-//const char DURATION_1_STATUS[] PROGMEM = "relayduino/status/duration_1";
-//const char DURATION_2_STATUS[] PROGMEM = "relayduino/status/duration_2";
-//const char DURATION_3_STATUS[] PROGMEM = "relayduino/status/duration_3";
-//const char DURATION_4_STATUS[] PROGMEM = "relayduino/status/duration_4";
-//const char DURATION_5_STATUS[] PROGMEM = "relayduino/status/duration_5";
-//const char DURATION_6_STATUS[] PROGMEM = "relayduino/status/duration_6";
-//const char DURATION_7_STATUS[] PROGMEM = "relayduino/status/duration_7";
-//const char DURATION_8_STATUS[] PROGMEM = "relayduino/status/duration_8";
 
 PGM_P const STATUS_TOPICS[]    PROGMEM = { CONNECTED_STATUS,    // idx = 0
                                            IP_ADDR_STATUS,      // idx = 1
@@ -79,7 +63,6 @@ PGM_P const INPUT_TOPICS[]     PROGMEM = { ANALOG_IN_1_INPUT,     // idx = 0
 
 const char TIME_REQUEST[]      PROGMEM = "relayduino/request/time";
 const char STATE_REQUEST[]     PROGMEM = "relayduino/request/relay_state";
-const char DURATION_REQUEST[]  PROGMEM = "relayduino/request/durations";
 
 PGM_P const REQUEST_TOPICS[]   PROGMEM = {STATE_REQUEST,          // idx = 0
                                          };
@@ -89,25 +72,8 @@ PGM_P const REQUEST_TOPICS[]   PROGMEM = {STATE_REQUEST,          // idx = 0
 
 const char RELAY_CONTROL[]     PROGMEM = "relayduino/control/relay";
 
-//const char RELAY_1_CONTROL[]   PROGMEM = "relayduino/control/relay_1";
-//const char RELAY_2_CONTROL[]   PROGMEM = "relayduino/control/relay_2";
-//const char RELAY_3_CONTROL[]   PROGMEM = "relayduino/control/relay_3";
-//const char RELAY_4_CONTROL[]   PROGMEM = "relayduino/control/relay_4";
-//const char RELAY_5_CONTROL[]   PROGMEM = "relayduino/control/relay_5";
-//const char RELAY_6_CONTROL[]   PROGMEM = "relayduino/control/relay_6";
-//const char RELAY_7_CONTROL[]   PROGMEM = "relayduino/control/relay_7";
-//const char RELAY_8_CONTROL[]   PROGMEM = "relayduino/control/relay_8";
-//
-//const char DURATION_1_CTRL[]   PROGMEM = "relayduino/control/duration_1";
-//const char DURATION_2_CTRL[]   PROGMEM = "relayduino/control/duration_2";
-//const char DURATION_3_CTRL[]   PROGMEM = "relayduino/control/duration_3";
-//const char DURATION_4_CTRL[]   PROGMEM = "relayduino/control/duration_4";
-//const char DURATION_5_CTRL[]   PROGMEM = "relayduino/control/duration_5";
-//const char DURATION_6_CTRL[]   PROGMEM = "relayduino/control/duration_6";
-//const char DURATION_7_CTRL[]   PROGMEM = "relayduino/control/duration_7";
-//const char DURATION_8_CTRL[]   PROGMEM = "relayduino/control/duration_8";
 
-PGM_P const CONTROL_TOPICS[]   PROGMEM = { RELAY_CONTROL,             // idx = 0
+PGM_P const CONTROL_TOPICS[]   PROGMEM = { RELAY_CONTROL,         // idx = 0
                                           };
 
 
@@ -116,22 +82,19 @@ void callback(char* topic, uint8_t* payload, unsigned int length);
 
 PubSubClient   mqttClient(mqttServerAddr, MQTT_PORT, callback, ethernetClient);
 
-void publish_connected()
-{
+void publish_connected() {
   progBuffer[0] = '\0';
   strcpy_P(progBuffer, (char*)pgm_read_word(&(STATUS_TOPICS[0])));
   mqttClient.publish(progBuffer, "");
 }
 
-void publish_ip_address()
-{
+void publish_ip_address() {
   progBuffer[0] = '\0';
   strcpy_P(progBuffer, (char*)pgm_read_word(&(STATUS_TOPICS[1])));
   mqttClient.publish(progBuffer, "192.168.1.90");
 }
 
-void publish_uptime()
-{
+void publish_uptime() {
   progBuffer[0] = '\0';
   strcpy_P(progBuffer, (char*)pgm_read_word(&(STATUS_TOPICS[2])));
   charBuffer[0] = '\0';
@@ -139,8 +102,7 @@ void publish_uptime()
   mqttClient.publish(progBuffer, charBuffer);
 }
 
-void publish_memory()
-{
+void publish_memory() {
   progBuffer[0] = '\0';
   strcpy_P(progBuffer, (char*)pgm_read_word(&(STATUS_TOPICS[3])));
   charBuffer[0] = '\0';
@@ -166,6 +128,11 @@ void publish_relay_state(byte relayIdx, boolean relayState) {
   DEBUG_LOG(1, "progBuffer: ");
   DEBUG_LOG(1, progBuffer);
   mqttClient.publish(progBuffer, charBuffer);
+}
+
+void publish_status() {
+  publish_uptime();
+  publish_memory();
 }
 
 

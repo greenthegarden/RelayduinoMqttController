@@ -39,25 +39,16 @@ PGM_P const STATUS_TOPICS[]    PROGMEM = { CONNECTED_STATUS,    // idx = 0
                                            RELAY_STATUS,        // idx = 6
                                           };
 
+
 // Relayduino Input topics
 
-const char ANALOG_IN_1_INPUT[]       PROGMEM = "relayduino/input/analog_in_1";
-const char ANALOG_IN_2_INPUT[]       PROGMEM = "relayduino/input/analog_in_2";
-const char ANALOG_IN_3_INPUT[]       PROGMEM = "relayduino/input/analog_in_3";
+const char ANALOG_INPUT[]       PROGMEM = "relayduino/input/analog_in";
+const char OPTO_INPUT[]         PROGMEM = "relayduino/input/opto_input";
 
-const char OPTO_INPUT_1_INPUT[]      PROGMEM = "relayduino/input/opto_input_1";
-const char OPTO_INPUT_2_INPUT[]      PROGMEM = "relayduino/input/opto_input_2";
-const char OPTO_INPUT_3_INPUT[]      PROGMEM = "relayduino/input/opto_input_3";
-const char OPTO_INPUT_4_INPUT[]      PROGMEM = "relayduino/input/opto_input_4";
-
-PGM_P const INPUT_TOPICS[]     PROGMEM = { ANALOG_IN_1_INPUT,     // idx = 0
-                                           ANALOG_IN_2_INPUT,     // idx = 1
-                                           ANALOG_IN_3_INPUT,     // idx = 2
-                                           OPTO_INPUT_1_INPUT,    // idx = 3
-                                           OPTO_INPUT_2_INPUT,    // idx = 4
-                                           OPTO_INPUT_3_INPUT,    // idx = 5
-                                           OPTO_INPUT_4_INPUT,    // idx = 6
+PGM_P const INPUT_TOPICS[]      PROGMEM = { ANALOG_INPUT,   // idx = 0
+                                            OPTO_INPUT,     // idx = 1
                                           };
+
 
 // Request topics
 

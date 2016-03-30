@@ -97,18 +97,18 @@ void callback(char* topic, uint8_t* payload, unsigned int payloadLength)
         DEBUG_LOG(1, "separator: ");
         DEBUG_LOG(1, separator);
         if (separator != 0) {
-            byte relayIdx = atoi(message)-1;
-            DEBUG_LOG(1, "relayIdx: ");
-            DEBUG_LOG(1, relayIdx);
-            ++separator;
-            unsigned long duration = atoi(separator);
-            DEBUG_LOG(1, "duration: ");
-            DEBUG_LOG(1, duration);
-            if (duration>0) {
-              relay_switch_on_with_timer(relayIdx, duration);
-            } else {
-              relay_switch_off(relayIdx);
-            }
+          byte relayIdx = atoi(message) - 1;
+          DEBUG_LOG(1, "relayIdx: ");
+          DEBUG_LOG(1, relayIdx);
+          ++separator;
+          unsigned long duration = atoi(separator);
+          DEBUG_LOG(1, "duration: ");
+          DEBUG_LOG(1, duration);
+          if (duration > 0) {
+            relay_switch_on_with_timer(relayIdx, duration);
+          } else {
+            relay_switch_off(relayIdx);
+          }
         }
       } else {  // unknown control topic has arrived - ignore!!
         DEBUG_LOG(1, "Unknown control topic arrived");
@@ -139,9 +139,20 @@ void setup()
     pinMode(RELAY_PINS_USED[idx], OUTPUT);
     digitalWrite(RELAY_PINS_USED[idx], LOW);
   }
+  // configure input pins as inputs
+  for (byte idx = 0; idx < ARRAY_SIZE(ANALOG_INPUTS); idx++) {
+    pinMode(ANALOG_INPUTS[idx], INPUT);
+  }
+  for (byte idx = 0; idx < ARRAY_SIZE(OPTICAL_INPUTS); idx++) {
+    pinMode(OPTICAL_INPUTS[idx], INPUT);
+  }
 
   DEBUG_LOG(1, "Number of relays is ");
   DEBUG_LOG(1, ARRAY_SIZE(RELAY_PINS_USED));
+  DEBUG_LOG(1, "Number of analog inputs is ");
+  DEBUG_LOG(1, ARRAY_SIZE(ANALOG_INPUTS));
+  DEBUG_LOG(1, "Number of optical (digital) inputs is ");
+  DEBUG_LOG(1, ARRAY_SIZE(OPTICAL_INPUTS));
 }
 
 /*--------------------------------------------------------------------------------------
@@ -153,8 +164,9 @@ void loop()
   // require an Alarm.delay in order to allow alarms to work
   Alarm.delay(0);
 
+  unsigned long now = millis();
+
   if (!mqttClient.connected()) {
-    long now = millis();
     mqttClientConnected = false;
     if (now - lastReconnectAttempt > RECONNECTION_ATTEMPT_INTERVAL) {
       lastReconnectAttempt = now;
@@ -169,8 +181,16 @@ void loop()
     mqttClient.loop();
   }
 
+  if (now - inputsPreviousMillis >= INPUT_READ_INTERVAL) {
+    if (mqttClientConnected) {
+      inputsPreviousMillis = now;
+      read_inputs();
+    }
+  }
+  
   if (!mqttClientConnected) {
     no_network_behaviour();
   }
+
 }
 

@@ -7,11 +7,6 @@
 
 byte currentTimerRef              = 255;
 
-//const byte MAX_ALARMS             = 10;
-//byte alarm_refs[MAX_ALARMS];
-//byte alarm_refs_cnt               = 0;
-
-
 
 void publish_alarm_id(byte ref = 255)
 {

@@ -46,7 +46,7 @@ void publish_reading(byte inputType, byte idx, byte reading) {
   progBuffer[0] = '\0';
   strcpy_P(progBuffer, (char*)pgm_read_word(&(INPUT_TOPICS[inputType])));
   charBuffer[0] = '\0';
-  itoa(reading, charBuffer, 10);
+  sprintf(charBuffer, "%i%c%i", idx, ',', reading);
   mqttClient.publish(progBuffer, charBuffer);
 }
 

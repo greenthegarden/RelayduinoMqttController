@@ -5,7 +5,8 @@
 #include <TimeAlarms.h>
 
 
-byte currentTimerRef              = 255;
+//byte currentTimerRef              = 255;
+byte currentTimerRef              = dtINVALID_ALARM_ID;
 
 
 void publish_alarm_id(byte ref = 255)

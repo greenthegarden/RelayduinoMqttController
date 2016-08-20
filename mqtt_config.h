@@ -6,7 +6,7 @@
 
 
 // MQTT parameters
-IPAddress mqttServerAddr(192, 168, 1, 55);        // Pi eth0 interface
+IPAddress mqttServerAddr(192, 168, 1, 50);        // openhab
 char mqttClientId[]                               = "relayduino";
 const int MQTT_PORT                               = 1883;
 //#define MQTT_MAX_PACKET_SIZE                      168

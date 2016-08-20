@@ -130,9 +130,25 @@ void setup()
   Serial.begin(BAUD_RATE);
 #endif
 
+  DEBUG_LOG(1, "RELAYDUINO");
+
   // Configure Ethernet
+#if USE_DHCP
+  if (Ethernet.begin(mac) == 0) {
+    DEBUG_LOG(1, "Failed to configure Ethernet using DHCP");
+    // no point in carrying on, so do nothing forevermore:
+    for(;;)
+      ;
+  }
+#else
   Ethernet.begin(mac, ip);
+//  Ethernet.begin(mac, myIp, myDns, myGateway, mySubnet);
+#endif
+ 
   delay(1500);
+  
+  DEBUG_LOG(1, "IP:");
+  DEBUG_LOG(1, Ethernet.localIP());
 
   // configure relay pins as outputs and set to LOW
   for (byte idx = 0; idx < ARRAY_SIZE(RELAY_PINS_USED); idx++) {

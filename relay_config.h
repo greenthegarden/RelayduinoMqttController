@@ -80,6 +80,26 @@ void relay4_switch_off() {
   relay_switch_off(relayIdx);
 }
 
+void relay5_switch_off() {
+  byte relayIdx=4;
+  relay_switch_off(relayIdx);
+}
+
+void relay6_switch_off() {
+  byte relayIdx=5;
+  relay_switch_off(relayIdx);
+}
+
+void relay7_switch_off() {
+  byte relayIdx=6;
+  relay_switch_off(relayIdx);
+}
+
+void relay8_switch_off() {
+  byte relayIdx=7;
+  relay_switch_off(relayIdx);
+}
+
 // used by callback as a void function to switch off relay which is currenlty on
 void relays_switch_off() {
   byte relayCount = ARRAY_SIZE(RELAY_PINS_USED);

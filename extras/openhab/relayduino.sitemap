@@ -1,0 +1,49 @@
+sitemap relayduino label="Relayduino Controller"
+{
+	Frame {
+		Switch item=RelayduinoDiscovered
+	}
+	Frame label="Schedule" visibility=[RelayduinoDiscovered==ON] {
+		Text item=gRelayduinoCommandEventNT1
+		Text item=gRelayduinoCommandEventNT2
+	}
+	Frame label="Relays" visibility=[RelayduinoDiscovered==ON] {
+		Switch item=RelayduinoRelay1State
+		Text item=RelayduinoRelay1LastOn
+		Text item=RelayduinoRelay1LastOff
+      	Switch item=RelayduinoRelay2State
+		Text item=RelayduinoRelay2LastOn
+		Text item=RelayduinoRelay2LastOff
+		Switch item=RelayduinoRelay3State
+		Text item=RelayduinoRelay3LastOn
+		Text item=RelayduinoRelay3LastOff
+      	Switch item=RelayduinoRelay4State
+		Text item=RelayduinoRelay4LastOn
+		Text item=RelayduinoRelay4LastOff
+		Switch item=RelayduinoRelay5State
+		Text item=RelayduinoRelay5LastOn
+		Text item=RelayduinoRelay5LastOff
+      	Switch item=RelayduinoRelay6State
+		Text item=RelayduinoRelay6LastOn
+		Text item=RelayduinoRelay6LastOff
+		Switch item=RelayduinoRelay7State
+		Text item=RelayduinoRelay7LastOn
+		Text item=RelayduinoRelay7LastOff
+      	Switch item=RelayduinoRelay8State
+		Text item=RelayduinoRelay8LastOn
+		Text item=RelayduinoRelay8LastOff
+    }
+    Frame label="Inputs" visibility=[RelayduinoDiscovered==ON] {
+    	Text item=RelayduinoAnalogInput1
+    	Text item=RelayduinoAnalogInput2
+    	Text item=RelayduinoAnalogInput3
+    	Text item=RelayduinoAnalogInput4
+    	Switch item=RelayduinoDigitalInput1
+    	Switch item=RelayduinoDigitalInput2
+    	Switch item=RelayduinoDigitalInput3    	
+    }
+//	Frame label="Relays" {
+//		Switch item=RelayduinoCaldavRelay1
+//      	Switch item=RelayduinoCaldavRelay2
+//    }
+}

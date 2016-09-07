@@ -1,0 +1,253 @@
+import org.openhab.core.library.types.*
+//import org.openhab.core.library.items.*
+import org.openhab.core.persistence.*
+import org.openhab.model.script.actions.*
+
+import org.joda.time.*
+
+/* TODO:
+ * Fix that requests from Caldav do not get delayed if another task is running
+ */
+
+//var java.util.concurrent.locks.ReentrantLock lock = new java.util.concurrent.locks.ReentrantLock()
+
+
+rule "Relayduino Relay State"
+when
+	Item RelayduinoRelayState changed
+then
+//	lock.lock()
+//    try {
+    	logInfo("relayduino", "RelayduinoRelayState state changed. RelayduinoRelayState.state: [{}].", RelayduinoRelayState.state)
+
+		val String[] messageParts = RelayduinoRelayState.state.toString.split(",");
+		val String relay = messageParts.get(0);
+		val String state = messageParts.get(1);
+
+		if (state == "0") {		// relay turned off
+			logInfo("relayduino", "relay turned off")
+			if (relay == "1") {
+				logInfo("relayduino", "relay 1 off")
+				sendCommand(RelayduinoRelay1State, OFF)
+			}
+			if (relay == "2") {
+				logInfo("relayduino", "relay 2 off")
+				sendCommand(RelayduinoRelay2State, OFF)
+			}
+			if (relay == "3") {
+				logInfo("relayduino", "relay 3 off")
+				sendCommand(RelayduinoRelay3State, OFF)
+			}
+			if (relay == "4") {
+				logInfo("relayduino", "relay 4 off")
+				sendCommand(RelayduinoRelay4State, OFF)
+			}
+			if (relay == "5") {
+				logInfo("relayduino", "relay 5 off")
+				sendCommand(RelayduinoRelay5State, OFF)
+			}
+			if (relay == "6") {
+				logInfo("relayduino", "relay 6 off")
+				sendCommand(RelayduinoRelay6State, OFF)
+			}
+			if (relay == "7") {
+				logInfo("relayduino", "relay 7 off")
+				sendCommand(RelayduinoRelay7State, OFF)
+			}
+			if (relay == "8") {
+				logInfo("relayduino", "relay 8 off")
+				sendCommand(RelayduinoRelay8State, OFF)
+			}
+		} else {		// relay was turned on
+			logInfo("relayduino", "relay turned on")
+			if (relay == "1") {
+				logInfo("relayduino", "relay 1 on")
+				sendCommand(RelayduinoRelay1State, ON)
+			}
+			if (relay == "2") {
+				logInfo("relayduino", "relay 2 on")
+				sendCommand(RelayduinoRelay2State, ON)
+			}
+			if (relay == "3") {
+				logInfo("relayduino", "relay 3 on")
+				sendCommand(RelayduinoRelay3State, ON)
+			}
+			if (relay == "4") {
+				logInfo("relayduino", "relay 4 on")
+				sendCommand(RelayduinoRelay4State, ON)
+			}
+			if (relay == "5") {
+				logInfo("relayduino", "relay 5 on")
+				sendCommand(RelayduinoRelay5State, ON)
+			}
+			if (relay == "6") {
+				logInfo("relayduino", "relay 6 on")
+				sendCommand(RelayduinoRelay6State, ON)
+			}
+			if (relay == "7") {
+				logInfo("relayduino", "relay 7 on")
+				sendCommand(RelayduinoRelay7State, ON)
+			}
+			if (relay == "8") {
+				logInfo("relayduino", "relay 8 on")
+				sendCommand(RelayduinoRelay8State, ON)
+			}
+		}
+//	} finally {
+//	   	lock.unlock()
+//	}
+end
+
+rule "Records last relay 1 on and off times"
+when
+  Item RelayduinoRelay1State received command
+then
+	if (receivedCommand == ON) {
+  		postUpdate(RelayduinoRelay1LastOn, new DateTimeType())
+  	} else {
+  		postUpdate(RelayduinoRelay1LastOff, new DateTimeType())
+  	}
+end
+
+rule "Records last relay 2 on and off times"
+when
+  Item RelayduinoRelay2State received command
+then
+	if (receivedCommand == ON) {
+  		postUpdate(RelayduinoRelay2LastOn, new DateTimeType())
+  	} else {
+  		postUpdate(RelayduinoRelay2LastOff, new DateTimeType())
+  	}
+end
+
+rule "Records last relay 3 on and off times"
+when
+  Item RelayduinoRelay3State received command
+then
+	if (receivedCommand == ON) {
+  		postUpdate(RelayduinoRelay3LastOn, new DateTimeType())
+  	} else {
+  		postUpdate(RelayduinoRelay3LastOff, new DateTimeType())
+  	}
+end
+
+rule "Records last relay 4 on and off times"
+when
+  Item RelayduinoRelay4State received command
+then
+	if (receivedCommand == ON) {
+  		postUpdate(RelayduinoRelay4LastOn, new DateTimeType())
+  	} else {
+  		postUpdate(RelayduinoRelay4LastOff, new DateTimeType())
+  	}
+end
+
+rule "Records last relay 5 on and off times"
+when
+  Item RelayduinoRelay5State received command
+then
+	if (receivedCommand == ON) {
+  		postUpdate(RelayduinoRelay5LastOn, new DateTimeType())
+  	} else {
+  		postUpdate(RelayduinoRelay5LastOff, new DateTimeType())
+  	}
+end
+
+rule "Records last relay 6 on and off times"
+when
+  Item RelayduinoRelay6State received command
+then
+	if (receivedCommand == ON) {
+  		postUpdate(RelayduinoRelay6LastOn, new DateTimeType())
+  	} else {
+  		postUpdate(RelayduinoRelay6LastOff, new DateTimeType())
+  	}
+end
+
+rule "Records last relay 7 on and off times"
+when
+  Item RelayduinoRelay7State received command
+then
+	if (receivedCommand == ON) {
+  		postUpdate(RelayduinoRelay7LastOn, new DateTimeType())
+  	} else {
+  		postUpdate(RelayduinoRelay7LastOff, new DateTimeType())
+  	}
+end
+
+rule "Records last relay 8 on and off times"
+when
+  Item RelayduinoRelay8State received command
+then
+	if (receivedCommand == ON) {
+  		postUpdate(RelayduinoRelay8LastOn, new DateTimeType())
+  	} else {
+  		postUpdate(RelayduinoRelay8LastOff, new DateTimeType())
+  	}
+end
+
+rule "Relayduino Analog Input"
+when
+	Item RelayduinoAnalogInput changed
+then
+//	lock.lock()
+//    try {
+    	logInfo("relayduino", "RelayduinoAnalogInput state changed. RelayduinoAnalogInput.state: [{}].", RelayduinoAnalogInput.state)
+
+		val String[] messageParts = RelayduinoAnalogInput.state.toString.split(",");
+		val String input = messageParts.get(0);
+		val String value = messageParts.get(1);
+
+		if (input == "0") {
+			postUpdate(RelayduinoAnalogInput1, value)
+		} else if (input == "1") {
+			postUpdate(RelayduinoAnalogInput2, value)
+		} else if (input == "2") {
+			postUpdate(RelayduinoAnalogInput3, value)
+		} else if (input == "3") {
+			postUpdate(RelayduinoAnalogInput4, value)
+		} else {
+			logInfo("relayduino", "Unknown input value")
+		}
+//	} finally {
+//	   	lock.unlock()
+//	}
+end
+
+rule "Relayduino Digital Input"
+when
+	Item RelayduinoDigitalInput changed
+then
+//	lock.lock()
+//    try {
+    	logInfo("relayduino", "RelayduinoDigitalInput state changed. RelayduinoDigitalInput.state: [{}].", RelayduinoAnalogInput.state)
+
+		val String[] messageParts = RelayduinoDigitalInput.state.toString.split(",");
+		val String input = messageParts.get(0);
+		val String value = messageParts.get(1);
+
+		if (input == "0") {
+			if (value == "0") {
+				sendCommand(RelayduinoDigitalInput1, OFF)
+			} else {
+				sendCommand(RelayduinoDigitalInput1, ON)
+			}
+		} else if (input == "1") {
+			if (value == "0") {
+				sendCommand(RelayduinoDigitalInput2, OFF)
+			} else {
+				sendCommand(RelayduinoDigitalInput2, ON)
+			}
+		} else if (input == "2") {
+			if (value == "0") {
+				sendCommand(RelayduinoDigitalInput3, OFF)
+			} else {
+				sendCommand(RelayduinoDigitalInput3, ON)
+			}
+		} else {
+			logInfo("relayduino", "Unknown input value")
+		}
+//	} finally {
+//	   	lock.unlock()
+//	}
+end

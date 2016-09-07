@@ -1,0 +1,574 @@
+import org.openhab.core.library.types.*
+//import org.openhab.core.library.items.*
+import org.openhab.core.persistence.*
+import org.openhab.model.script.actions.*
+
+import org.joda.time.*
+
+//import java.util.concurrent.locks.ReentrantLock
+import java.util.ArrayList
+import java.util.LinkedHashSet
+
+/* TODO:
+ * Fix that requests from Caldav do not get delayed if another task is running
+ */
+
+var java.util.concurrent.locks.ReentrantLock lock = new java.util.concurrent.locks.ReentrantLock()
+
+//var java.util.ArrayList zonesRequestsList = new java.util.ArrayList()
+
+var java.util.LinkedHashSet RelayduinoRelaysRequestsSet = new java.util.LinkedHashSet()
+
+// Based on code from
+// https://github.com/openhab/openhab/wiki/Samples-Rules#irrigation-controller
+// and
+// https://github.com/openhab/openhab/wiki/AlarmClock
+
+// consider using the caldav binding
+
+val int RelayduinoRelay1DurationDefault = 1
+val int RelayduinoRelay2DurationDefault = 2
+
+rule "Irrigation startup"
+when
+	System started
+then
+	postUpdate(RelayduinoMaster, ON)
+// ensure all relays are off at startup
+//	sendCommand(Irrigation_Lawn, OFF)
+//	sendCommand(Irrigation_Vege, OFF)
+//	sendCommand(Irrigation_Back, OFF)
+//	sendCommand(Irrigation_Front, OFF)
+//	sendCommand(IrrigationTreesRelay, OFF)
+
+// initialise durations
+	if (RelayduinoRelay1Duration.state == Uninitialized) {
+		postUpdate(RelayduinoRelay1Duration, RelayduinoRelay1DurationDefault)
+	}
+	if (RelayduinoRelay2Duration.state == Uninitialized) {
+		postUpdate(RelayduinoRelay2Duration, RelayduinoRelay2DurationDefault)
+	}
+	if (RelayduinoRelaysRequestsNumber.state == Uninitialized ) {
+//		postUpdate(ZonesRequestsNumber, zonesRequestsList.size())
+//		postUpdate(RelayduinoRelaysRequestsNumber, RelayduinoRelaysRequestsSet.size())
+		postUpdate(RelayduinoRelaysRequestsNumber, RelayduinoRelaysRequestsSet.size())
+	}
+	if (RelayduinoRelayRunCount.state == Uninitialized) {
+		postUpdate(RelayduinoRelayRunCount, 0)
+	}
+end
+
+rule "Relay 1 Openhab Activation"
+when
+	Item RelayduinoRelay1Manual changed or
+	Item RelayduinoRelay1Auto changed
+then
+//	var Number duration = RelayduinoRelay1DurationDefault
+//	if (RelayduinoRelay1Duration.state != Uninitialized)
+//		duration = RelayduinoRelay1Duration.state as DecimalType	
+//	logInfo("relayduino", "duration is [{}].", duration)
+//	var String message
+//	if (RelayduinoRelay1Manual.state == ON || RelayduinoRelay1Auto.state == ON) {
+////		message = "1" + "," + Relay1_Duration.state.toString
+//		message = "1" + "," + duration 
+//	} else {
+//		message = "1,0"
+//	}
+//	logInfo("automationboard", "message is [{}].", message)	
+//	RelayduinoRelayControl.sendCommand(message)
+	lock.lock()
+    try {
+    	logInfo("relayduino", "Relay 1 Openhab Activation")
+		if (RelayduinoRelay1Manual.state == ON || RelayduinoRelay1Auto.state == ON) {
+			RelayduinoRelaysRequestsSet.add("1")
+			postUpdate(RelayduinoRelay1RunDuration, RelayduinoRelay1Duration.state as DecimalType)
+			postUpdate(RelayduinoRelaysRequestsNumber, RelayduinoRelaysRequestsSet.size())
+		} else {
+			RelayduinoRelaysRequestsSet.remove("1")
+			postUpdate(RelayduinoRelaysRequestsNumber, RelayduinoRelaysRequestsSet.size())
+		}
+	} finally {
+   		lock.unlock()
+	}end
+
+//rule "Relay 1 Caldav Activation"
+//when
+//	Item RelayduinoRelay1Caldav changed
+////	Item RelayduinoRelay1Caldav received command
+//then
+//	lock.lock()
+//    try {
+//    	logInfo("relayduino", "Relay 1 Caldav Activation")
+//    	// if (receivedCommand == ON) {
+//		if (RelayduinoRelay1Caldav.state == ON) {
+//			if (RelayduinoRelaysRequestsSet.add("1")) {
+//				postUpdate(RelayduinoRelay1RunDuration, 120)
+//				postUpdate(RelayduinoRelaysRequestsNumber, RelayduinoRelaysRequestsSet.size())
+//			}
+//				
+//		} else {
+//			RelayduinoRelaysRequestsSet.remove("1")
+//			postUpdate(RelayduinoRelaysRequestsNumber, RelayduinoRelaysRequestsSet.size())
+//			RelayduinoRelayControl.sendCommand("1,0")
+//		}
+//	} finally {
+//   		lock.unlock()
+//	}
+//end
+
+rule "Relay 2 Openhab Activation"
+when
+	Item RelayduinoRelay2Manual changed or
+	Item RelayduinoRelay2Auto changed
+//	Item RelayduinoRelay2Auto received command or
+//	Item RelayduinoRelay2Auto received command
+then
+	lock.lock()
+    try {
+    	logInfo("relayduino", "Relay 2 Openhab Activation")
+    	// if (receivedCommand == ON) {
+		if (RelayduinoRelay2Manual.state == ON || RelayduinoRelay2Auto.state == ON) {
+			if (RelayduinoRelaysRequestsSet.add("2")) {
+				postUpdate(RelayduinoRelay2RunDuration, RelayduinoRelay2Duration.state as DecimalType)
+				postUpdate(RelayduinoRelaysRequestsNumber, RelayduinoRelaysRequestsSet.size())
+			}
+				
+		} else {
+			RelayduinoRelaysRequestsSet.remove("2")
+			postUpdate(RelayduinoRelaysRequestsNumber, RelayduinoRelaysRequestsSet.size())
+		}
+	} finally {
+   		lock.unlock()
+	}
+end
+
+//rule "Relay 2 Caldav Activation"
+//when
+//	Item RelayduinoRelay2Caldav changed
+//then
+//	lock.lock()
+//    try {
+//    	logInfo("relayduino", "Relay 2 Caldav Activation")
+//		if (RelayduinoRelay2Caldav.state == ON) {
+//			if (RelayduinoRelaysRequestsSet.add("2")) {
+//				postUpdate(RelayduinoRelay2RunDuration, 120)
+//				postUpdate(RelayduinoRelaysRequestsNumber, RelayduinoRelaysRequestsSet.size())
+//			}
+//				
+//		} else {
+//			RelayduinoRelaysRequestsSet.remove("2")
+//			postUpdate(RelayduinoRelaysRequestsNumber, RelayduinoRelaysRequestsSet.size())
+//			RelayduinoRelayControl.sendCommand("2,0")
+//		}
+//	} finally {
+//   		lock.unlock()
+//	}
+//end
+
+rule "Request Manager"
+when
+	Item RelayduinoRelayRunCount changed or
+	Item RelayduinoRelaysRequestsNumber changed
+then
+	lock.lock()
+    try {
+    	logInfo("relayduino", "Request Manager")
+	   	val Number runCount = RelayduinoRelayRunCount.state as DecimalType
+ 		if (runCount == 0) {	// no relays on
+			var Number requestsSize = RelayduinoRelaysRequestsNumber.state as DecimalType
+			if (requestsSize > 0) {
+				logInfo("relayduino", "create message ... ")
+				val String zone = RelayduinoRelaysRequestsSet.iterator().next().toString()
+				logInfo("relayduino", "zone = " + zone)
+				var String message
+				if (zone == "1")
+///					message = "1" + "," + RelayduinoRelay1Duration.state as DecimalType
+					message = "1" + "," + RelayduinoRelay1RunDuration.state as DecimalType
+				else if (zone == "2")
+//					message = "2" + "," + RelayduinoRelay2Duration.state as DecimalType
+					message = "2" + "," + RelayduinoRelay2RunDuration.state as DecimalType
+				logInfo("relayduino", "message is [{}].", message)	
+				RelayduinoRelayControl.sendCommand(message)
+			} else {
+				logInfo("relayduino", "no requests") 
+			}
+       	}
+	} finally {
+	   	lock.unlock()
+	}
+end
+
+rule "Relayduino Relay State"
+when
+	Item RelayduinoRelayState changed
+then
+	lock.lock()
+    try {
+    	logInfo("relayduino", "RelayduinoRelayState state changed. RelayduinoRelayState.state: [{}].", RelayduinoRelayState.state)
+
+		val String[] messageParts = RelayduinoRelayState.state.toString.split(",");
+		val String relay = messageParts.get(0);
+		val String state = messageParts.get(1);
+		
+		if (state == "0") {		// relay was turned off
+			logInfo("relayduino", "relay turned off")
+			if (relay == "1") {
+				logInfo("relayduino", "relay 1 off")
+				if (RelayduinoRelay1Manual.state == ON)
+					sendCommand(RelayduinoRelay1Manual, OFF)
+				if (RelayduinoRelay1Auto.state == ON)
+					sendCommand(RelayduinoRelay1Auto, OFF)
+//				if (RelayduinoRelay1Caldav.state == ON)
+//					sendCommand(RelayduinoRelay1Caldav, OFF)
+				sendCommand(RelayduinoRelay1Running, OFF)
+			}
+			if (relay == "2") {
+				logInfo("relayduino", "relay 2 off")
+				if (RelayduinoRelay2Manual.state == ON)
+					sendCommand(RelayduinoRelay2Manual, OFF)
+				if (RelayduinoRelay2Auto.state == ON)
+					sendCommand(RelayduinoRelay2Auto, OFF)
+//				if (RelayduinoRelay2Caldav.state == ON)
+//					sendCommand(RelayduinoRelay2Caldav, OFF)
+				sendCommand(RelayduinoRelay2Running, OFF)
+			}
+		} else {		// relay was turned on
+			logInfo("relayduino", "relay turned on")
+			if (relay == "1") {
+				logInfo("relayduino", "relay 1 on")
+				sendCommand(RelayduinoRelay1Running, ON)
+			}
+			if (relay == "2") {
+				logInfo("relayduino", "relay 2 on")
+				sendCommand(RelayduinoRelay2Running, ON)
+			}
+		}
+	} finally {
+	   	lock.unlock()
+	}
+end
+
+
+
+
+//rule "All Zones Off"
+//when
+//	Item AllZones received command OFF
+//then
+//	logInfo("relayduino", "All Zones Off")
+////	sendCommand(IrrigationTreesRelay, "OFF")
+//	sendCommand(Zone1RelayCtrl, OFF)
+//	sendCommand(Zone2RelayCtrl, OFF)
+//end
+
+//rule "Irrigation Manual or Auto Request"
+//when
+//	Item Zone1Auto received command ON or
+//	Item Zone1Manual received command ON
+//then
+//	lock.lock()
+//    try {
+//		logInfo("relayduino", "Manual or automatic request to switch trees " + receivedCommand.toString())
+//		sendCommand(Zone1Request, ON)
+//	} finally {
+//    	lock.unlock()
+//    }
+//end
+//
+//rule "Irrigation Manual OFF"
+//when
+//	Item Zone1Manual received command OFF
+//then
+//	lock.lock()
+//    try {
+//		logInfo("relayduino", "Manual request to switch trees " + receivedCommand.toString())
+//		sendCommand(Zone1Request, OFF)
+//	} finally {
+//    	lock.unlock()
+//    }
+//end
+//
+//// the scheduler ensures that if more than one irrigation request occurs at a time
+//// all will be actioned sequentially
+//rule "Irrigation Requests"
+//when
+//	Item Zone1Request received command ON
+//then
+//	lock.lock()
+//    try {
+//		// if something else in list add to list, else startIrrigation
+//		logInfo("relayduino", "Zone1_Request receivedCommand: " + receivedCommand.toString())
+//		if (Zone1Request.state == ON ) {
+////			zonesRequestsList.add("Zone1")
+//			zonesRequestsSet.add("Zone1")
+//		}
+////		logInfo("relayduino", "zonesRequestsList.size() = " + zonesRequestsList.size())
+//		logInfo("relayduino", "zonesRequestsSet.size() = " + zonesRequestsSet.size())
+////		postUpdate(ZonesRequestsNumber, zonesRequestsList.size())
+//		postUpdate(ZonesRequestsNumber, zonesRequestsSet.size())
+//	} finally {
+//    	lock.unlock()
+//    }
+//end
+//
+//rule "Irrigation End"
+//when
+//	Item Zone1Request received command OFF
+//then
+//	lock.lock()
+//    try {
+//	//	if (receivedCommand.toString == "IrrigationRequestTrees")
+//		if (Zone1Request.state == OFF) {
+////			zonesRequestsList.remove("Zone1")
+//			if (zonesRequestsSet.remove("Zone1") == true)
+//				sendCommand(Zone1Run, OFF)
+//		}
+//		postUpdate(ZonesRequestsNumber, zonesRequestsList.size())
+//	} finally {
+//    	lock.unlock()
+//	}
+//end
+//
+//rule "Trees Run"
+//when
+//	Item Zone1Run changed to ON
+//then
+//	lock.lock()
+//    try {
+//		// determine end time depending on whether manual or automatic		
+//		var int duration = (Zone1Duration.state as DecimalType).intValue()
+//		if (Zone1Auto.state == ON) {
+//			if (duration < 1) {
+//				duration = Zone1DurationDefault
+//			}
+//		}
+//		if (duration > 0) {
+//			logInfo("relayduino", "duration = " + duration + " mins")
+//			var DateTime endTime = now.plusMinutes(duration)
+//			logInfo("relayduino", "endTime = " + endTime)
+//			// create timer to switch off irrigation
+//			createTimer(endTime) [|
+//				sendCommand(Zone1Request, OFF)
+//			]
+//		}
+//	} finally {
+//    	lock.unlock()
+//	}
+//end
+//
+//rule "Trees End"
+//when
+//	Item Zone1Run changed to OFF
+//then
+//	lock.lock()
+//    try {
+//		// switch on irrigation
+//		//sendCommand(IrrigationTreesRelay, "ON")
+//		sendCommand(Zone1RelayCtrl, OFF)
+//		if (Zone1Auto.state==ON) {
+//			sendCommand(Zone1Auto, OFF)
+//		}
+//		if (Zone1Manual.state==ON) {
+//			sendCommand(Zone1Manual, OFF)
+//		}
+//	} finally {
+//    	lock.unlock()
+//	}
+//end
+//
+//// water trees each Saturday morning for 3 hours
+//rule "Schedule Zone 1"
+//when
+//	Time cron "0 0 7 ? * SAT"
+//then
+//	lock.lock()
+//    try {
+//		// switch on irrigation
+//		sendCommand(Zone1Request, ON)
+//	} finally {
+//    	lock.unlock()
+//	}
+//end
+//
+//rule "Schedule Zone 2"
+//when
+//	Time cron "0 0/5 * * * ?"	// for testing schedule every five minutes
+//then
+//	lock.lock()
+//    try {
+//		// switch on irrigation
+//		logInfo("relayduino", "Zone 2 scheduled ")
+//		sendCommand(Zone2Auto, ON)
+//	} finally {
+//    	lock.unlock()
+//	}
+//end
+//
+//rule "Zone 2 Auto or Manual Request"
+//when
+//	Item Zone2Auto received command ON or
+//	Item Zone2Manual received command ON
+//then
+//	lock.lock()
+//    try {
+//		logInfo("relayduino", "Manual or automatic request to switch vegetables " + receivedCommand.toString())
+////		sendCommand(Zone2_Request, ON)
+//		sendCommand(Zone2Run, ON)
+//	} finally {
+//    	lock.unlock()
+//    }
+//end
+//
+//rule "Zone 2 Request On"
+//when
+//	Item Zone2Request received command ON
+//then
+//	lock.lock()
+//    try {
+//		sendCommand(Zone2Run, ON)
+//	} finally {
+//    	lock.unlock()
+//	}
+//end
+//
+//rule "Zone 2 Request Off"
+//when
+//	Item Zone2Request received command OFF
+//then
+//	lock.lock()
+//    try {
+//		sendCommand(Zone2Run, OFF)
+//	} finally {
+//    	lock.unlock()
+//	}
+//end
+//
+//rule "Zone 2 Manual OFF"
+//when
+//	Item Zone2Manual received command OFF
+//then
+//	lock.lock()
+//    try {
+//		logInfo("relayduino", "Manual request to switch zone 2 " + receivedCommand.toString())
+////		sendCommand(Zone2_Request, OFF)
+//		sendCommand(Zone2Run, OFF)
+//	} finally {
+//    	lock.unlock()
+//    }
+//end
+//
+//rule "Zone 2 Run"
+//when
+//	Item Zone2Run changed to ON
+//then
+//	lock.lock()
+//    try {
+//		// get start time to nearest minute
+////		var DateTime startTime = parse(now.getYear() + "-" + now.getMonthOfYear() + "-" + now.getDayOfMonth() + "T" + now.getHourOfDay() + ":" + now.getMinuteOfDay())
+////		logInfo("relayduino", "startTime = " + startTime)
+//		// determine end time depending on whether manual or automatic		
+//		var int duration = (Zone2Duration.state as DecimalType).intValue()
+//		logInfo("relayduino", "duration = " + duration + " mins")
+////		var DateTime endTime = startTime.plusMinutes(duration)			
+//		var DateTime endTime = now.plusMinutes(duration)			
+//		logInfo("relayduino", "endTime = " + endTime)
+//		
+//		// switch on zone
+////		createTimer(startTime) [|
+//			sendCommand(Zone2RelayCtrl, ON)
+////		]
+//		
+//		// create timer to switch off irrigation
+//		createTimer(endTime) [|
+//			sendCommand(Zone2Run, OFF)
+//		]
+//	} finally {
+//    	lock.unlock()
+//	}
+//end
+//
+//rule "Zone 2 Stop"
+//when
+//	Item Zone2Run changed to OFF
+//then
+//	lock.lock()
+//    try {
+//		// switch on zone
+//		sendCommand(Zone2RelayCtrl, OFF)
+//		if (Zone2Manual.state == ON) {
+//			sendCommand(Zone2Manual, OFF)
+//		}
+//		if (Zone2Auto.state == ON) {
+//			sendCommand(Zone2Auto, OFF)
+//		}
+//	} finally {
+//    	lock.unlock()
+//	}
+//end
+
+
+//rule "Disable irrigation if any rain"
+//when
+//	Item Weather_Rain changed or
+//	Item Weather_TodayIcon changed or
+//	Item Weather_TomorrowIcon changed
+//then
+//	// the rainfall threshold where we shutdown off irrigation
+//	var rainThreshold = 1
+//
+//	// check for any rain in the last 24 hours
+//	var rainInLast24Hours = Weather_Rain.maximumSince(now.minusHours(24), "rrd4j")
+//
+//	// default to the current rain value in case there is nothing in our history
+//	var rain = Weather_Rain.state
+//
+//	if (rainInLast24Hours != null)
+//		rain = rainInLast24Hours.state
+//
+//	// check if any rain is forecast
+//	var rainToday = Weather_TodayIcon.state == "chanceflurries" ||
+//                        Weather_TodayIcon.state == "chancerain" ||
+//                        Weather_TodayIcon.state == "chancesleet" ||
+//                        Weather_TodayIcon.state == "chancesnow" ||
+//                        Weather_TodayIcon.state == "chancetstorms" ||
+//                        Weather_TodayIcon.state == "flurries" ||
+//                        Weather_TodayIcon.state == "rain" ||
+//                        Weather_TodayIcon.state == "sleet" ||
+//                        Weather_TodayIcon.state == "snow" ||
+//                        Weather_TodayIcon.state == "tstorms"
+//
+//	var rainTomorrow = Weather_TomorrowIcon.state == "chanceflurries" ||
+//                           Weather_TomorrowIcon.state == "chancerain" ||
+//                           Weather_TomorrowIcon.state == "chancesleet" ||
+//                           Weather_TomorrowIcon.state == "chancesnow" ||
+//                           Weather_TomorrowIcon.state == "chancetstorms" ||
+//                           Weather_TomorrowIcon.state == "flurries" ||
+//                           Weather_TomorrowIcon.state == "rain" ||
+//                           Weather_TomorrowIcon.state == "sleet" ||
+//                           Weather_TomorrowIcon.state == "snow" ||
+//                           Weather_TomorrowIcon.state == "tstorms"
+//
+//	// shutoff irrigation if there has been rain or rain is forecast
+//	var logMessage = ""
+//	if (rain > rainThreshold) {
+//		logMessage = "Rain in the last 24 hours (" + rain + " mm) is above our threshold (" + rainThreshold + " mm) - irrigation disabled!"
+//	} else if (rainToday) {
+//		logMessage = "Rain is forecast for today - irrigation disabled!"
+//	} else if (rainTomorrow) {
+//		logMessage = "Rain is forecast for tomorrow - irrigation disabled!"
+//	}
+//
+//	if (logMessage != "") {
+//		if (IrrigationMaster.state == ON) {
+//			logInfo("Irrigation", logMessage)
+//			//send("ben.jones12@gmail.com", logMessage)
+//			postUpdate(IrrigationMaster, OFF)
+//		}
+//	} else {
+//		if (IrrigationMaster.state == OFF) {
+//			logInfo("Irrigation", "No rain in the last 24 hours or any rain forecast - irrigation enabled!")
+//			//send("ben.jones12@gmail.com", "No rain in the last 24 hours or any rain forecast - irrigation enabled!")
+//			postUpdate(IrrigationMaster, ON)
+//		}
+//	}
+//end

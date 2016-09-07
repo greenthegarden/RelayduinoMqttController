@@ -1,0 +1,31 @@
+// Based on code from https://github.com/openhab/openhab/wiki/Samples-Rules#irrigation-controller
+
+Group     gRelayduino
+Group     gRelayduinoRelay1
+Group     gRelayduinoRelay2
+Group     gRelayduinoDebug
+
+Switch    RelayduinoMaster                "Irrigation Master"                    <power>  (gRelayduino)
+
+String    RelayduinoRelayControl          "[%s]"                                          (gRelayduino)//  {mqtt=">[pi:relayduino/control/relay:command:*:default]"}
+String    RelayduinoRelayState            "[%s]"                                          (gRelayduino)//  {mqtt="<[pi:relayduino/status/relay:state:default]"}
+
+/* Elements for irrigation zones */
+Number    RelayduinoRelayRunCount         "[%d]"                                          (gRelayduino)
+Number    RelayduinoRelaysRequestsNumber  "RelayduinoRelaysRequestsNumber [%d]"           (gRelayduinoDebug)
+
+/* Fruit tree zone */
+Number    RelayduinoRelay1Duration        "Duration [%d mins]"                   <water>  (gRelayduino, gRelayduinoRelay1)
+Number    RelayduinoRelay1RunDuration     "Run Duration [%d mins]"                        (gRelayduino, gRelayduinoRelay1)
+Switch    RelayduinoRelay1Auto            "Automatic"                                     (gRelayduino, gRelayduinoRelay1)
+Switch    RelayduinoRelay1Sensor          "Sensor"                                        (gRelayduino, gRelayduinoRelay1)
+Switch    RelayduinoRelay1Cron            "Cron"                                          (gRelayduino, gRelayduinoRelay1)
+Switch    RelayduinoRelay1Manual          "Manual"                                        (gRelayduino, gRelayduinoRelay1)
+Switch    RelayduinoRelay1Running         "Relay 1 ON/OFF"                                (gRelayduino, gRelayduinoRelay1)
+
+/* Vegetable zone */
+Number    RelayduinoRelay2Duration        "Duration [%d mins]"                   <water>  (gRelayduino, gRelayduinoRelay2)
+Number    RelayduinoRelay2RunDuration     "Run Duration [%d mins]"                        (gRelayduino, gRelayduinoRelay2)
+Switch    RelayduinoRelay2Auto            "Automatic"                                     (gRelayduino, gRelayduinoRelay2)
+Switch    RelayduinoRelay2Manual          "Manual"                                        (gRelayduino, gRelayduinoRelay2)
+Switch    RelayduinoRelay2Running         "Relay 2 ON/OFF"                                (gRelayduino, gRelayduinoRelay2)

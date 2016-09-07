@@ -1,0 +1,16 @@
+sitemap relayduinoCaldav label="Relayduino Caldav Controller"
+{
+	Frame label="Schedule" {
+		Text item=gRelayduinoCommandEventNT1
+		Text item=gRelayduinoCommandEventNT2
+	}
+	Frame label="Relays" {
+		Switch item=RelayduinoCaldavRelay1Running
+      	Switch item=RelayduinoCaldavRelay2Running
+    }
+//	Frame label="Relays" {
+//		Switch item=RelayduinoCaldavRelay1
+//      	Switch item=RelayduinoCaldavRelay2
+//    }
+}
+

@@ -1,0 +1,114 @@
+import org.openhab.core.library.types.*
+//import org.openhab.core.library.items.*
+import org.openhab.core.persistence.*
+import org.openhab.model.script.actions.*
+
+import org.joda.time.*
+
+/* TODO:
+ * Fix that requests from Caldav do not get delayed if another task is running
+ */
+
+//var java.util.concurrent.locks.ReentrantLock lock = new java.util.concurrent.locks.ReentrantLock()
+
+
+//rule "Relay 1 Caldav Activation"
+//when
+////	Item RelayduinoCaldavRelay1 changed
+//	Item RelayduinoCaldavRelay1 received command
+//then
+//	lock.lock()
+//    try {
+//    	logInfo("relayduinoCaldav", "Relay 1 Caldav Activation")
+//    	if (receivedCommand == ON) {
+////		if (RelayduinoCaldavRelay1.state == ON) {
+//			RelayduinoCaldavRelayControl.sendCommand("1,120")
+//		} else {
+//			RelayduinoCaldavRelayControl.sendCommand("1,0")
+//		}
+//	} finally {
+//   		lock.unlock()
+//	}
+//end
+//
+//rule "Relay 2 Caldav Activation"
+//when
+//	Item RelayduinoCaldavRelay2 changed
+//then
+//	lock.lock()
+//    try {
+//    	logInfo("relayduinoCaldav", "Relay 2 Caldav Activation")
+//		if (RelayduinoCaldavRelay2.state == ON) {
+//			RelayduinoCaldavRelayControl.sendCommand("2,120")
+//		} else {
+//			RelayduinoCaldavRelayControl.sendCommand("2,0")
+//		}
+//	} finally {
+//   		lock.unlock()
+//	}
+//end
+
+rule "Relayduino Caldav Relay State"
+when
+	Item RelayduinoCaldavRelayState changed
+then
+//	lock.lock()
+//    try {
+    	logInfo("relayduinoCaldav", "RelayduinoCaldavRelayState state changed. RelayduinoCaldavRelayState.state: [{}].", RelayduinoCaldavRelayState.state)
+
+		val String[] messageParts = RelayduinoCaldavRelayState.state.toString.split(",");
+		val String relay = messageParts.get(0);
+		val String state = messageParts.get(1);
+		
+		if (state == "0") {		// relay was turned off
+			logInfo("relayduinoCaldav", "relay turned off")
+			if (relay == "1") {
+				logInfo("relayduinoCaldav", "relay 1 off")
+				sendCommand(RelayduinoCaldavRelay1Running, OFF)
+			}
+			if (relay == "2") {
+				logInfo("relayduinoCaldav", "relay 2 off")
+				sendCommand(RelayduinoCaldavRelay2Running, OFF)
+			}
+		} else {		// relay was turned on
+			logInfo("relayduinoCaldav", "relay turned on")
+			if (relay == "1") {
+				logInfo("relayduinoCaldav", "relay 1 on")
+				sendCommand(RelayduinoCaldavRelay1Running, ON)
+			}
+			if (relay == "2") {
+				logInfo("relayduinoCaldav", "relay 2 on")
+				sendCommand(RelayduinoCaldavRelay2Running, ON)
+			}
+		}
+//	} finally {
+//	   	lock.unlock()
+//	}
+end
+
+//rule "Rain de-activation"
+//when
+//	Item WdgAdelaideForecastTodayOutlook changed or
+//	Item WdgAdelaideForecastTomorrowOutlook changed
+//then
+//	var rainProbability = WdgAdelaidePrecipProbability
+//	var rainTotal       = WdgAdelaidePrecipTotal
+//	var rainToday =     WdgAdelaideForecastTodayOutlook.state    == "rain" ||
+//                        WdgAdelaideForecastTodayOutlook.state    == "showers" ||
+//                        WdgAdelaideForecastTodayOutlook.state    == "tstorms"
+//	var rainTomorrow =  WdgAdelaideForecastTomorrowOutlook.state == "rain" ||
+//                        WdgAdelaideForecastTomorrowOutlook.state == "showers" ||
+//                        WdgAdelaideForecastTomorrowOutlook.state == "tstorms"
+//    var logMessage = ""
+//	if (rainToday) {
+//    	logMessage = "Rain is forecast for today - irrigation disabled!"
+//    } else if (rainTomorrow) {
+//    	logMessage = "Rain is forecast for tomorrow - irrigation disabled!"
+//    }
+//    if (logMessage != "") {
+//		sendCommand(RainPossible, ON)
+//	} else {
+//		sendCommand(RainPossible, OFF)
+//	}
+//end
+

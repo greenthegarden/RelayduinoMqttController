@@ -1,0 +1,35 @@
+sitemap relayduino label="Relayduino Controller"
+{
+//	Frame {
+//		Group item=gIrrigation label="Irrigation" icon="water"
+//	}
+//	Frame label="Weather" {
+//		Group item=Weather label="Weather"
+//	}
+//	Frame label="Date" {
+//		Text item=Date
+//	}
+	Frame label="Master" {
+		Switch item=RelayduinoMaster
+	}
+	Frame label="Status" {
+		Text item=RelayduinoRelaysRequestsNumber
+			Switch item=RelayduinoRelay1Running
+			Switch item=RelayduinoRelay2Running
+	}
+	Frame label="Relay 1" {
+//		Text label="Relay 1" visibility=[RelayduinoMaster==ON] {
+           	Setpoint item=RelayduinoRelay1Duration minValue=0 maxValue=20 step=2
+			Switch item=RelayduinoRelay1Auto visibility=[RelayduinoRelay1Auto==ON]
+//			Switch item=RelayduinoRelay1Caldav visibility=[RelayduinoRelay1Caldav==ON]
+			Switch item=RelayduinoRelay1Manual visibility=[RelayduinoRelay1Auto!=ON]
+    }
+	Frame label="Relay 2" {
+//		Text label="Relay 2" visibility=[RelayduinoMaster==ON] {
+           	Setpoint item=RelayduinoRelay2Duration minValue=0 maxValue=20 step=1
+           	Switch item=RelayduinoRelay2Auto visibility=[RelayduinoRelay2Auto==ON]
+//           	Switch item=RelayduinoRelay2Caldav visibility=[RelayduinoRelay2Caldav==ON]
+			Switch item=RelayduinoRelay2Manual visibility=[RelayduinoRelay2Auto!=ON]
+    }
+}
+

@@ -188,6 +188,7 @@ void publish_relay_state(byte relayIdx, boolean relayState) {
 }
 
 void publish_status() {
+  publish_ip_address();
   publish_uptime();
   publish_memory();
 }

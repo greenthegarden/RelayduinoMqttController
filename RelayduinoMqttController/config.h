@@ -28,6 +28,8 @@ const int BAUD_RATE               = 9600;
 #include "alarm_config.h"
 #include "relay_config.h"
 
+const unsigned long STATUS_UPDATE_INTERVAL = 10000UL;
+unsigned long statusPreviousMillis = 0UL;
 
 void no_network_behaviour() {
   relays_switch_off();
@@ -40,7 +42,6 @@ const byte OPTICAL_INPUTS[] = { OPTO_INPUT_1, OPTO_INPUT_2, OPTO_INPUT_3, OPTO_I
 const byte ANALOG_INPUTS[]= { ANALOG_IN_1, ANALOG_IN_2, ANALOG_IN_3 };
 unsigned long inputsPreviousMillis = 0UL;
 const unsigned long INPUT_READ_INTERVAL = 5UL * 60UL * 1000UL;
-
 
 void publish_reading(byte inputType, byte idx, byte reading) {
   topicBuffer[0] = '\0';

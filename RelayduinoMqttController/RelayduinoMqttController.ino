@@ -12,10 +12,7 @@ boolean mqtt_connect()
     DEBUG_LOG(1, "  connected");
     // Once connected, publish an announcement ...
     publish_connected();
-    publish_ip_address();
-#if USE_FREEMEM
-    publish_memory();
-#endif
+    publish_status();
     // ... and subscribe to topics (should have list)
     mqttClient.subscribe("relayduino/request/#");
     mqttClient.subscribe("relayduino/control/#");
@@ -181,6 +178,13 @@ void loop()
   } else {
     // Client connected
     mqttClient.loop();
+  }
+
+  if (now - statusPreviousMillis >= STATUS_UPDATE_INTERVAL) {
+    if (mqttClientConnected) {
+      statusPreviousMillis = now;
+      publish_status();
+    }
   }
 
 #if USE_INPUTS

@@ -131,6 +131,9 @@ void setup()
 
   DEBUG_LOG(1, "RELAYDUINO");
 
+  // configure ethernet
+  ethernet_init();
+
   // configure relay pins as outputs and set to LOW
   for (byte idx = 0; idx < ARRAY_SIZE(RELAY_PINS_USED); idx++) {
     pinMode(RELAY_PINS_USED[idx], OUTPUT);

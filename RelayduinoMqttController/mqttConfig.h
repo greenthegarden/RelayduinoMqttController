@@ -4,7 +4,6 @@
 
 #include <PubSubClient.h>
 
-
 // MQTT parameters
 IPAddress mqttServerAddr(192, 168, 1, 50);        // openhab
 const char mqttClientId[]                         = "relayduino";
@@ -77,12 +76,12 @@ typedef enum {
   MQTT_STATUS_IDX          = 0,
   VERSION_STATUS_IDX       = 1,
   INTERVAL_STATUS_IDX      = 2,
-  IP_ADDR_STATUS_IDX       = 1,
-  UPTIME_STATUS_IDX        = 2,
-  MEMORY_STATUS_IDX        = 3,
-  TIME_STATUS_IDX          = 4,
-  ALARM_STATUS_IDX         = 5,
-  RELAY_STATUS_IDX         = 6,
+  IP_ADDR_STATUS_IDX       = 3,
+  UPTIME_STATUS_IDX        = 4,
+  MEMORY_STATUS_IDX        = 5,
+  TIME_STATUS_IDX          = 6,
+  ALARM_STATUS_IDX         = 7,
+  RELAY_STATUS_IDX         = 8,
 } status_topics;
 
 

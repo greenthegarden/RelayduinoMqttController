@@ -7,19 +7,20 @@
 
 // MQTT parameters
 IPAddress mqttServerAddr(192, 168, 1, 50);        // openhab
-char mqttClientId[]                               = "relayduino";
+const char mqttClientId[]                         = "relayduino";
 const int MQTT_PORT                               = 1883;
-
-boolean mqttClientConnected                       = false;
 
 unsigned long lastReconnectAttempt                = 0UL;
 const unsigned long RECONNECTION_ATTEMPT_INTERVAL = 5000UL;
+
+boolean mqttClientConnected                       = false;
+
+const char COMMAND_SEPARATOR                      = ',';
 
 // callback function definition
 void callback(char* topic, uint8_t* payload, unsigned int length);
 
 PubSubClient   mqttClient(mqttServerAddr, MQTT_PORT, callback, ethernetClient);
-
 
 // MQTT topic definitions
 
@@ -51,6 +52,8 @@ typedef enum {
 
 // Status topics
 const char MQTT_STATUS[]       PROGMEM = "relayduino/status/mqtt";
+const char VERSION_STATUS[]    PROGMEM = "relayduino/status/version";
+const char INTERVAL_STATUS[]   PROGMEM = "relayduino/status/interval";
 const char IP_ADDR_STATUS[]    PROGMEM = "relayduino/status/ip_addr";
 const char UPTIME_STATUS[]     PROGMEM = "relayduino/status/uptime";
 const char MEMORY_STATUS[]     PROGMEM = "relayduino/status/memory";
@@ -59,17 +62,21 @@ const char ALARM_STATUS[]      PROGMEM = "relayduino/status/alarm";
 const char RELAY_STATUS[]      PROGMEM = "relayduino/status/relay";
 
 PGM_P const STATUS_TOPICS[]    PROGMEM = { MQTT_STATUS,         // idx = 0
-                                           IP_ADDR_STATUS,      // idx = 1
-                                           UPTIME_STATUS,       // idx = 2
-                                           MEMORY_STATUS,       // idx = 3
-                                           TIME_STATUS,         // idx = 4
-                                           ALARM_STATUS,        // idx = 5
-                                           RELAY_STATUS,        // idx = 6
+                                           VERSION_STATUS,      // idx = 1
+                                           INTERVAL_STATUS,     // idx = 2
+                                           IP_ADDR_STATUS,      // idx = 3
+                                           UPTIME_STATUS,       // idx = 4
+                                           MEMORY_STATUS,       // idx = 5
+                                           TIME_STATUS,         // idx = 6
+                                           ALARM_STATUS,        // idx = 7
+                                           RELAY_STATUS,        // idx = 8
                                           };
 
 // STATUS_TOPICS indices, must match table above
 typedef enum {
   MQTT_STATUS_IDX          = 0,
+  VERSION_STATUS_IDX       = 1,
+  INTERVAL_STATUS_IDX      = 2,
   IP_ADDR_STATUS_IDX       = 1,
   UPTIME_STATUS_IDX        = 2,
   MEMORY_STATUS_IDX        = 3,
@@ -122,17 +129,27 @@ typedef enum {
   RELAY_CONTROL_IDX          = 0,
 } control_topics;
 
-
-const char COMMAND_SEPARATOR                      = ',';
-
-//char message[BUFFER_SIZE];
-
 void publish_connected() {
   topicBuffer[0] = '\0';
   strcpy_P(topicBuffer, (char*)pgm_read_word(&(STATUS_TOPICS[MQTT_STATUS_IDX])));
   payloadBuffer[0] = '\0';
   strcpy_P(payloadBuffer, (char*)pgm_read_word(&(MQTT_PAYLOADS[MQTT_PAYLOAD_CONNECTED_IDX])));
   mqttClient.publish(topicBuffer, payloadBuffer);
+}
+
+void publish_version() {
+  topicBuffer[0] = '\0';
+  strcpy_P(topicBuffer, (char*)pgm_read_word(&(STATUS_TOPICS[VERSION_STATUS_IDX])));
+  payloadBuffer[0] = '\0';
+  sprintf(payloadBuffer, "%i.%i", VERSION_MAJOR, VERSION_MINOR);
+  mqttClient.publish(topicBuffer, payloadBuffer);
+}
+
+void publish_status_interval() {
+  topicBuffer[0] = '\0';
+  strcpy_P(topicBuffer, (char*)pgm_read_word(&(STATUS_TOPICS[INTERVAL_STATUS_IDX])));
+  payloadBuffer[0] = '\0';
+  mqttClient.publish(topicBuffer, ltoa(STATUS_UPDATE_INTERVAL, payloadBuffer, 10));
 }
 
 void publish_ip_address() {
@@ -187,12 +204,16 @@ void publish_relay_state(byte relayIdx, boolean relayState) {
   mqttClient.publish(topicBuffer, payloadBuffer);
 }
 
-void publish_status() {
+void publish_configuration() {
+  publish_version();
+  publish_status_interval();
   publish_ip_address();
+}
+
+void publish_status() {
   publish_uptime();
   publish_memory();
 }
-
 
 
 #endif   /* RELAYDUINOMQTTCONTROLLER_MQTT_CONFIG_H_ */

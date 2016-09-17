@@ -5,13 +5,12 @@
 #include <TimeAlarms.h>
 
 
-//byte currentTimerRef              = 255;
 byte currentTimerRef              = dtINVALID_ALARM_ID;
 
 
-void publish_alarm_id(byte ref = 255)
+void publish_alarm_id(byte ref = dtINVALID_ALARM_ID)
 {
-  if (ref == 255) {
+  if (ref == dtINVALID_ALARM_ID) {
     ref = Alarm.getTriggeredAlarmId();
   }
   topicBuffer[0] = '\0';

@@ -4,9 +4,13 @@
 
 #include <PubSubClient.h>
 
+
 // MQTT parameters
-IPAddress mqttServerAddr(192, 168, 1, 50);        // openhab
-const char mqttClientId[]                         = "relayduino";
+//IPAddress mqttServerAddr(192, 168, 1, 50);        // openhab
+IPAddress mqttServerAddr(192, 168, 2, 90);        // emonPi
+const char MQTT_CLIENT_ID[]                       = "relayduino";
+const char MQTT_USERNAME[]                        = "emonpi";
+const char MQTT_PASSWORD[]                        = "emonpimqtt2016";
 const int MQTT_PORT                               = 1883;
 
 unsigned long lastReconnectAttempt                = 0UL;

@@ -1,6 +1,6 @@
 # RelayduinoMqttController
 
-An [Arduino](http://arduino.cc) project to control an Ocean Controls [KTA-223 Relayduino](https://oceancontrols.com.au/KTA-223.html) via [MQTT](http://mqtt.org).
+An [Arduino](http://arduino.cc) project to control an [Ocean Controls KTA-223 Relayduino](https://oceancontrols.com.au/KTA-223.html) via [MQTT](http://mqtt.org).
 
 
 ## Requirements
@@ -17,9 +17,7 @@ When the jumper labeled AUTO is installed the board will reset each time a seria
 
 ## Configuration
 
-The code makes use of the [NetEEPROM library](https://github.com/gregington/NetEEPROM) to configure the MAC address of the Ethernet hardware. See the examples that accompany the library for how to set a MAC address. Utilising the library means the MAC address does not need to be defined in the code, allowing an IP address to be assigned automatically without code changes to multiple boards (assuming a DHCP server is available on network).
-
-The MQTT broker address is required to be defined within the source code. Set the address on line 8 of file [mqttConfig.h](RelayshieldMqttController/mqttConfig.h).
+The MQTT broker address is required to be defined within the source code. Set the address on line 8 of file [mqttConfig.h](RelayduinoMqttController/mqttConfig.h).
 
 ## Compiling code
 
@@ -85,7 +83,14 @@ and payload, in the format `x,y`, where
 - `x` is the relay number (1 to 8)
 - `y` is either `0` or `1` to signifity whether the relay is off or on, respectively.
 
-Other status messages are generated for reliability. See the file [mqttConfig.h](RelayshieldMqttController/mqttConfig.h) for details.
+Data from the analog and digital KTA-223 inputs are available using the following MQTT topics
+
+```
+relayduino/input/analog
+relayduino/input/opto
+```
+
+Other status messages are generated for reliability. See the file [mqttConfig.h](RelayduinoMqttController/mqttConfig.h) for details.
 
 ## Contact
 

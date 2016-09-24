@@ -1,45 +1,77 @@
 Group     gRelayduino
 
-Switch    RelayduinoDiscovered           "On Network"                                     (gRelayduino)  {nh="192.168.2.90"} 
+String    RelayduinoConnectedMessage     "[%s]"                                           (gRelayduino)  {mqtt="<[emonpi:relayduino/status/mqtt:state:default]"}
+DateTime  RelayduinoConnected            "Last Connected [%1$tT, %1$td.%1$tm.%1$tY]"
+
+// configuration items
+String    RelayduinoCodeVersion          "Code Version [%s]"                              (gRelayduino)  {mqtt="<[emonpi:relayduino/status/version:state:default]"}
+Number    RelayduinoStatusInterval       "Status Interval (mSecs) [%d]"                   (gRelayduino)  {mqtt="<[emonpi:relayduino/status/interval:state:default]"}
+String    RelayduinoIpAddress            "IP [%s]"                                        (gRelayduino)  {mqtt="<[emonpi:relayduino/status/ip_addr:state:default]"}
+
+// status items
+Number    RelayduinoUptime               "Uptime (mSecs) [%d]"                            (gRelayduino)  {mqtt="<[emonpi:relayduino/status/uptime:state:default]"}
+Number    RelayduinoMemory               "Memory (bytes) [%d]"                            (gRelayduino)  {mqtt="<[emonpi:relayduino/status/memory:state:default]"}
+DateTime  RelayduinoLastStatusUpdate     "Last Status Update [%1$tT, %1$td.%1$tm.%1$tY]"
+Switch    RelayduinoState                "Connected"                                      (gRelayduino)
 
 // input values from Relayduino
-String    RelayduinoRelayState           "[%s]"                                           (gRelayduino)  {mqtt="<[openhab:relayduino/status/relay:state:default]"}
-String    RelayduinoAnalogInput          "[%s]"                                           (gRelayduino)  {mqtt="<[openhab:relayduino/input/analog_in:state:default]"}
-String    RelayduinoDigitalInput         "[%s]"                                           (gRelayduino)  {mqtt="<[openhab:relayduino/input/opto_input:state:default]"}
+String    RelayduinoRelayState           "[%s]"                                           (gRelayduino)  {mqtt="<[emonpi:relayduino/status/relay:state:default]"}
+String    RelayduinoAnalogInput          "[%s]"                                           (gRelayduino)  {mqtt="<[emonpi:relayduino/input/analog:state:default]"}
+String    RelayduinoDigitalInput         "[%s]"                                           (gRelayduino)  {mqtt="<[emonpi:relayduino/input/opto:state:default]"}
 
 // relay control messages to Relayduino
-String    RelayduinoRelayControl         "[%s]"                                           (gRelayduino)  {mqtt=">[openhab:relayduino/control/relay:command:*:default]"}
+String    RelayduinoRelayControl         "[%s]"                                           (gRelayduino)  {mqtt=">[emonpi:relayduino/control/relay:command:*:default]"}
+
+Number    RelayduinoRequests             "Requests [%d]"
 
 // relay states
-Switch    RelayduinoRelay1State          "Relay 1 Running"                                (gRelayduino)
+Group     gRelayduinoRelay
+
+Switch    RelayduinoRelay1Request        "Request"
+Number    RelayduinoRelay1Duration       "Duration (minutes) [%d]"
+Switch    RelayduinoRelay1State          "State"                                          (gRelayduino, gRelayduinoRelay)
 DateTime  RelayduinoRelay1LastOn         "Last on [%1$tT, %1$td.%1$tm.%1$tY]"
 DateTime  RelayduinoRelay1LastOff        "Last off [%1$tT, %1$td.%1$tm.%1$tY]"
 
-Switch    RelayduinoRelay2State          "Relay 2 Running"                                (gRelayduino)
+Switch    RelayduinoRelay2Request        "Request"
+Number    RelayduinoRelay2Duration       "Duration (minutes) [%d]"
+Switch    RelayduinoRelay2State          "State"                                          (gRelayduino, gRelayduinoRelay)
 DateTime  RelayduinoRelay2LastOn         "Last on [%1$tT, %1$td.%1$tm.%1$tY]"
 DateTime  RelayduinoRelay2LastOff        "Last off [%1$tT, %1$td.%1$tm.%1$tY]"
 
-Switch    RelayduinoRelay3State          "Relay 3 Running"                                (gRelayduino)
+Switch    RelayduinoRelay3Request        "Request"
+Number    RelayduinoRelay3Duration       "Duration (minutes) [%d]"
+Switch    RelayduinoRelay3State          "State"                                          (gRelayduino, gRelayduinoRelay)
 DateTime  RelayduinoRelay3LastOn         "Last on [%1$tT, %1$td.%1$tm.%1$tY]"
 DateTime  RelayduinoRelay3LastOff        "Last off [%1$tT, %1$td.%1$tm.%1$tY]"
 
-Switch    RelayduinoRelay4State          "Relay 4 Running"                                (gRelayduino)
+Switch    RelayduinoRelay4Request        "Request"
+Number    RelayduinoRelay4Duration       "Duration (minutes) [%d]"
+Switch    RelayduinoRelay4State          "State"                                          (gRelayduino, gRelayduinoRelay)
 DateTime  RelayduinoRelay4LastOn         "Last on [%1$tT, %1$td.%1$tm.%1$tY]"
 DateTime  RelayduinoRelay4LastOff        "Last off [%1$tT, %1$td.%1$tm.%1$tY]"
 
-Switch    RelayduinoRelay5State          "Relay 5 Running"                                (gRelayduino)
+Switch    RelayduinoRelay5Request        "Request"
+Number    RelayduinoRelay5Duration       "Duration (minutes) [%d]"
+Switch    RelayduinoRelay5State          "State"                                          (gRelayduino, gRelayduinoRelay)
 DateTime  RelayduinoRelay5LastOn         "Last on [%1$tT, %1$td.%1$tm.%1$tY]"
 DateTime  RelayduinoRelay5LastOff        "Last off [%1$tT, %1$td.%1$tm.%1$tY]"
 
-Switch    RelayduinoRelay6State          "Relay 6 Running"                                (gRelayduino)
+Switch    RelayduinoRelay6Request        "Request"
+Number    RelayduinoRelay6Duration       "Duration (minutes) [%d]"
+Switch    RelayduinoRelay6State          "State"                                          (gRelayduino, gRelayduinoRelay)
 DateTime  RelayduinoRelay6LastOn         "Last on [%1$tT, %1$td.%1$tm.%1$tY]"
 DateTime  RelayduinoRelay6LastOff        "Last off [%1$tT, %1$td.%1$tm.%1$tY]"
 
-Switch    RelayduinoRelay7State          "Relay 7 Running"                                (gRelayduino)
+Switch    RelayduinoRelay7Request        "Request"
+Number    RelayduinoRelay7Duration       "Duration (minutes) [%d]"
+Switch    RelayduinoRelay7State          "State"                                          (gRelayduino, gRelayduinoRelay)
 DateTime  RelayduinoRelay7LastOn         "Last on [%1$tT, %1$td.%1$tm.%1$tY]"
 DateTime  RelayduinoRelay7LastOff        "Last off [%1$tT, %1$td.%1$tm.%1$tY]"
 
-Switch    RelayduinoRelay8State          "Relay 8 Running"                                (gRelayduino)
+Switch    RelayduinoRelay8Request        "Request"
+Number    RelayduinoRelay8Duration       "Duration (minutes) [%d]"
+Switch    RelayduinoRelay8State          "State"                                          (gRelayduino, gRelayduinoRelay)
 DateTime  RelayduinoRelay8LastOn         "Last on [%1$tT, %1$td.%1$tm.%1$tY]"
 DateTime  RelayduinoRelay8LastOff        "Last off [%1$tT, %1$td.%1$tm.%1$tY]"
 
@@ -51,16 +83,4 @@ Number    RelayduinoAnalogInput4         "Analog Input 4 [%.1f]"
 Switch    RelayduinoDigitalInput1        "Digital Input 1"
 Switch    RelayduinoDigitalInput2        "Digital Input 2"
 Switch    RelayduinoDigitalInput3        "Digital Input 3"
-
-Group gRelayduinoEvents
-String    gRelayduinoCommandEventName1   "Event [%s]"                         <calendar>  (gRelayduinoEvents)  {caldavPersonal="calendar:openhab type:EVENT eventNr:1 value:NAME"}
-//String   gRelayduinoCommandEventDesc1  "Description [%s]"                   <calendar>  (gRelayduinoEvents)  {caldavPersonal="calendar:openhab type:EVENT eventNr:1 value:DESCRIPTION"}
-//String   gRelayduinoCommandEventPlace1 "Place [%s]"                         <calendar>  (gRelayduinoEvents)  {caldavPersonal="calendar:openhab type:EVENT eventNr:1 value:PLACE"}
-DateTime  gRelayduinoCommandEventStart1  "Start [%1$tT, %1$td.%1$tm.%1$tY]"   <calendar>  (gRelayduinoEvents)  {caldavPersonal="calendar:openhab type:EVENT eventNr:1 value:START"}
-//DateTime gRelayduinoCommandEventEnd1   "End [%1$tT, %1$td.%1$tm.%1$tY]"     <calendar>  (gRelayduinoEvents)  {caldavPersonal="calendar:openhab type:EVENT eventNr:1 value:END"}
-//String   gRelayduinoCommandEventTime1  "Time [%s]"                          <calendar>  (gRelayduinoEvents)  {caldavPersonal="calendar:openhab type:EVENT eventNr:1 value:TIME"}
-String    gRelayduinoCommandEventNT1     "Event [%s]"                 <calendar>  (gRelayduinoEvents)  {caldavPersonal="calendar:openhab type:EVENT eventNr:1 value:NAMEANDTIME"}
-String    gRelayduinoCommandEventName2   "Event [%s]"                         <calendar>  (gRelayduinoEvents)  {caldavPersonal="calendar:openhab type:EVENT eventNr:2 value:NAME"}
-DateTime  gRelayduinoCommandEventTime2   "Begin [%1$tT, %1$td.%1$tm.%1$tY]"   <calendar>  (gRelayduinoEvents)  {caldavPersonal="calendar:openhab type:EVENT eventNr:2 value:START"}
-String    gRelayduinoCommandEventNT2     "Event [%s]"                 <calendar>  (gRelayduinoEvents)  {caldavPersonal="calendar:openhab type:EVENT eventNr:2 value:NAMEANDTIME"}
 

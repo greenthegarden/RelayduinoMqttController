@@ -1,11 +1,11 @@
 # RelayduinoMqttController
 
-An [Arduino](http://arduino.cc) project to control a [KTA-223 Relayduino](https://oceancontrols.com.au/KTA-223.html) via [MQTT](http://mqtt.org).
+An [Arduino](http://arduino.cc) project to control an Ocean Controls [KTA-223 Relayduino](https://oceancontrols.com.au/KTA-223.html) via [MQTT](http://mqtt.org).
 
 
 ## Requirements
 
-A KTA-223 Relayduino with an ethernet shield installed.
+An Ocean Controls KTA-223 Relayduino with an ethernet shield installed.
 
 In addition, an MQTT broker is required to running and accessible from the Arduino.
 
@@ -14,10 +14,6 @@ Example code is included in [extras](extras), for [openHAB](http://openhab.org) 
 ### Notes on the Relayduino
 
 When the jumper labeled AUTO is installed the board will reset each time a serial connection is made to the USB serial port. This should only be installed when reprogramming via the Arduino Environment, or the device will reset each time a serial connection is made to the unit.
-
-
-https://github.com/sudar/MemoryFree
-
 
 ## Configuration
 
@@ -51,11 +47,10 @@ from the “Tools->Board” menu, and install the “AUTO” jumper on the PCB.
 
 In addition the following additional libraries are required
 
-- [NetEEPROM](https://github.com/gregington/NetEEPROM)
 - [PubSubClient](https://github.com/knolleary/pubsubclient)
 - [MemoryFree](https://github.com/sudar/MemoryFree)
-- [Time]()
-- [TimeAlarms]()
+- [Time](http://www.pjrc.com/teensy/td_libs_Time.html)
+- [TimeAlarms](http://www.pjrc.com/teensy/td_libs_TimeAlarms.html)
 - [Relayduino](https://github.com/greenthegarden/Relayduino)
 
 # Using program

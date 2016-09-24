@@ -57,6 +57,17 @@ client.on_disconnect = on_disconnect
 # Uncomment to enable debug messages
 #client.on_log       = on_log
 
+try :
+	mqtt_username = config['mqtt_configuration']['MQTT_BROKER_USERNAME']
+	try :
+		mqtt_password = config['mqtt_configuration']['MQTT_BROKER_PASSWORD']
+		client.username_pw_set(mqtt_username, mqtt_password);
+	except NameError:
+		print("{0}",format("No mqtt password set"))
+		client.username_pw_set(mqtt_username);
+except NameError:
+	print("{0}",format("No mqtt username set"))
+
 client.connect(
                config['mqtt_configuration']['MQTT_BROKER_IP'],
                int(config['mqtt_configuration']['MQTT_BROKER_PORT']),
@@ -73,11 +84,27 @@ def tidyupAndExit() :
 	print("Bye")
 	exit(0)
 
+def enterInput() :
+	relay, duration = raw_input("Enter relay and duration (minutes) in form <relay duration>: ").split()
+	try :
+		int(relay)
+	except ValueError :
+		print("Please enter an integer for relay")
+		return
+	try :
+		int(duration)
+	except ValueError :
+		print("Please enter an integer for duration")
+		return
+	if ( int(relay) in [1,2,3,4,5,6,7,8] ) :
+		payload = relay + "," + duration
+		client.publish("relayduino/control/relay", payload)
+	else :
+		print("Ensure relay number is correct!!")
+
 # Loop continuously
 while True :
 	try :
-		relay, duration = raw_input("Enter relay and duration: ").split()
-		payload = relay + "," + duration
-		client.publish("relayduino/control/relay", payload)
+		enterInput()
 	except KeyboardInterrupt :      #Triggered by pressing Ctrl+C
 		tidyupAndExit()

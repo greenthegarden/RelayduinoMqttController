@@ -9,13 +9,18 @@
 from configobj import ConfigObj
 config = ConfigObj('RelayduinoMqttController.cfg')
 
-print("{0}".format("Relayduino MQTT Controller Simulator"))
+print("{0}".format("Relayduino MQTT Controller"))
 
 
 #---------------------------------------------------------------------------------------
 # Modules and methods to support MQTT
 #
 #---------------------------------------------------------------------------------------
+
+# requires paho-mqtt package to support MQTT
+# see https://pypi.python.org/pypi/paho-mqtt/1.1
+# for more information about package
+# see http://www.hivemq.com/blog/mqtt-client-library-paho-python
 
 import paho.mqtt.client as mqtt
 
@@ -84,7 +89,7 @@ def tidyupAndExit() :
 	print("Bye")
 	exit(0)
 
-def enterInput() :
+def processInput() :
 	relay, duration = raw_input("Enter relay and duration (minutes) in form <relay duration>: ").split()
 	try :
 		int(relay)
@@ -101,10 +106,11 @@ def enterInput() :
 		client.publish("relayduino/control/relay", payload)
 	else :
 		print("Ensure relay number is correct!!")
+		break
 
 # Loop continuously
 while True :
 	try :
-		enterInput()
+		processInput()
 	except KeyboardInterrupt :      #Triggered by pressing Ctrl+C
 		tidyupAndExit()

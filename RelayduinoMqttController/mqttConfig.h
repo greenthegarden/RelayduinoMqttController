@@ -27,11 +27,11 @@ PubSubClient mqttClient(mqttServerAddr, MQTT_PORT, callback, ethernetClient);
 
 // MQTT payloads
 const char MQTT_PAYLOAD_CONNECTED[] PROGMEM = "CONNECTED";
+const char MQTT_PAYLOAD_OK[] PROGMEM = "OK";
 const char MQTT_PAYLOAD_ERROR[] PROGMEM = "ERROR";
 const char MQTT_PAYLOAD_START[] PROGMEM = "START";
 const char MQTT_PAYLOAD_END[] PROGMEM = "END";
 const char MQTT_PAYLOAD_SLEEP[] PROGMEM = "SLEEP";
-const char MQTT_PAYLOAD_OK[] PROGMEM = "OK";
 
 PGM_P const MQTT_PAYLOADS[] PROGMEM = {
     MQTT_PAYLOAD_CONNECTED, // idx = 0

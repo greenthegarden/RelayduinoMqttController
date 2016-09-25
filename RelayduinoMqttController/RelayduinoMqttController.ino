@@ -3,8 +3,7 @@
 
 #include "config.h"
 
-boolean mqtt_connect()
-{
+boolean mqtt_connect() {
   DEBUG_LOG(1, "Attempting MQTT connection ...");
   if (mqttClient.connect(MQTT_CLIENT_ID, MQTT_USERNAME, MQTT_PASSWORD)) {
     DEBUG_LOG(1, "  connected");
@@ -22,10 +21,10 @@ boolean mqtt_connect()
   return mqttClient.connected();
 }
 
-void callback(char* topic, uint8_t* payload, unsigned int payloadLength)
-{
+void callback(char *topic, uint8_t *payload, unsigned int payloadLength) {
   // handle message arrived
-  /* topic = part of the variable header:has topic name of the topic where the publish received
+  /* topic = part of the variable header:has topic name of the topic where the
+     publish received
        NOTE: variable header does not contain the 2 bytes with the
             publish msg ID
       payload = pointer to the first item of the buffer array that
@@ -38,9 +37,11 @@ void callback(char* topic, uint8_t* payload, unsigned int payloadLength)
   DEBUG_LOG(1, payloadLength);
 
   // Copy the payload to the new buffer
-  char* message = (char*)malloc((sizeof(char) * payloadLength) + 1); // get the size of the bytes and store in memory
-  memcpy(message, payload, payloadLength * sizeof(char));        // copy the memory
-  message[payloadLength * sizeof(char)] = '\0';                  // add terminating character
+  char *message =
+      (char *)malloc((sizeof(char) * payloadLength) +
+                     1); // get the size of the bytes and store in memory
+  memcpy(message, payload, payloadLength * sizeof(char)); // copy the memory
+  message[payloadLength * sizeof(char)] = '\0'; // add terminating character
 
   DEBUG_LOG(1, "Message with topic");
   DEBUG_LOG(1, topic);
@@ -63,9 +64,9 @@ void callback(char* topic, uint8_t* payload, unsigned int payloadLength)
     }
   }
   if (requestTopicFound) {
-    if (topicIdx == STATE_REQUEST_IDX) {  // topic is STATE_REQUEST
+    if (topicIdx == STATE_REQUEST_IDX) { // topic is STATE_REQUEST
       DEBUG_LOG(1, "STATE_REQUEST topic arrived");
-    } else {  // unknown request topic has arrived - ignore!!
+    } else { // unknown request topic has arrived - ignore!!
       DEBUG_LOG(1, "Unknown request topic arrived");
     }
   } else {
@@ -85,13 +86,14 @@ void callback(char* topic, uint8_t* payload, unsigned int payloadLength)
     if (controlTopicFound) {
       DEBUG_LOG(1, "Control topic index");
       DEBUG_LOG(1, topicIdx);
-      //switch to case statements
-      if (topicIdx == RELAY_CONTROL_IDX) {  // topic is RELAY_CONTROL
+      // switch to case statements
+      if (topicIdx == RELAY_CONTROL_IDX) { // topic is RELAY_CONTROL
         DEBUG_LOG(1, "RELAY_CONTROL topic arrived");
         // message is expected to be in format "relay,duration"
         // get relay and duration from message
-        // see http://arduino.stackexchange.com/questions/1013/how-do-i-split-an-incoming-string
-        char* separator = strchr(message, COMMAND_SEPARATOR);
+        // see
+        // http://arduino.stackexchange.com/questions/1013/how-do-i-split-an-incoming-string
+        char *separator = strchr(message, COMMAND_SEPARATOR);
         DEBUG_LOG(1, "separator: ");
         DEBUG_LOG(1, separator);
         if (separator != 0) {
@@ -108,7 +110,7 @@ void callback(char* topic, uint8_t* payload, unsigned int payloadLength)
             relay_switch_off(relayIdx);
           }
         }
-      } else {  // unknown control topic has arrived - ignore!!
+      } else { // unknown control topic has arrived - ignore!!
         DEBUG_LOG(1, "Unknown control topic arrived");
       }
     }
@@ -122,8 +124,7 @@ void callback(char* topic, uint8_t* payload, unsigned int payloadLength)
   setup()
   Called by the Arduino framework once, before the main loop begins
   --------------------------------------------------------------------------------------*/
-void setup()
-{
+void setup() {
 #if DEBUG_LEVEL > 0
   Serial.begin(BAUD_RATE);
 #endif
@@ -160,8 +161,7 @@ void setup()
   loop()
   Arduino main loop
   --------------------------------------------------------------------------------------*/
-void loop()
-{
+void loop() {
   // require an Alarm.delay in order to allow alarms to work
   Alarm.delay(0);
 

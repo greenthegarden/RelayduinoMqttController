@@ -10,13 +10,11 @@
 
 #if ETHERNET_SHIELD_VERSION == 1
 #include <Ethernet.h>
+byte mac[] = { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED };
 #elif ETHERNET_SHIELD_VERSION == 2
 #include <Ethernet2.h>
+byte mac[] = { 0x90, 0xA2, 0xDA, 0x0F, 0xFC, 0xA9 };
 #endif
-
-// Update these with values suitable for your network.
-byte mac[] = {0x90, 0xA2, 0xDA,
-              0x0F, 0xFC, 0xA9}; // value for Arduino Ethernet Shield 2
 
 EthernetClient ethernetClient;
 
@@ -26,9 +24,9 @@ void ethernet_init() {
   // Configure Ethernet
   if (Ethernet.begin(mac) == 0) {
     DEBUG_LOG(1, "Failed to configure Ethernet using DHCP");
-    // no point in carrying on, so do nothing forevermore:
-    for (;;)
-      ;
+    // try to configure using IP address instead of DHCP:
+    IPAddress ip(192, 168, 1, 29);
+    Ethernet.begin(mac, ip);
   }
   delay(NETWORK_STARTUP_DELAY);
 

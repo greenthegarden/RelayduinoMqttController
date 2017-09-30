@@ -1,84 +1,57 @@
-sitemap relayduino label="Relayduino Controller"
+sitemap relayduino label="Irrigation Controller"
 {
-	Frame label="Configuration" {
-		Text item=RelayduinoConnected
-		Text item=RelayduinoCodeVersion
-		Text item=RelayduinoStatusInterval
-		Text item=RelayduinoIpAddress
-	}
-	Frame label="State" {
-		Text item=RelayduinoUptime
-		Text item=RelayduinoMemory
-		Text item=RelayduinoLastStatusUpdate
-		Switch item=RelayduinoState
-	}
-//	Frame {
-//		Switch item=RelayduinoDiscovered
-//	}
-//	Frame label="Schedule" visibility=[RelayduinoDiscovered==ON] {
-//		Text item=gRelayduinoCommandEventNT1
-//		Text item=gRelayduinoCommandEventNT2
-//	}
-	Frame label="Relay 1" visibility=[RelayduinoState==ON] {
-		Switch item=RelayduinoRelay1Request
-		Setpoint item=RelayduinoRelay1Duration label="Duration (minutes) [%d]" minValue=5 maxValue=60 step=5
-		Switch item=RelayduinoRelay1State
-		Text item=RelayduinoRelay1LastOn
-		Text item=RelayduinoRelay1LastOff
-	}
-	Frame label="Relay 2" visibility=[RelayduinoState==ON] {
-      		Switch item=RelayduinoRelay2State
-		Setpoint item=RelayduinoRelay2Duration label="Duration (minutes) [%d]" minValue=5 maxValue=60 step=5
-		Text item=RelayduinoRelay2LastOn
-		Text item=RelayduinoRelay2LastOff
-	}
-	Frame label="Relay 3" visibility=[RelayduinoState==ON] {
-		Switch item=RelayduinoRelay3State
-		Setpoint item=RelayduinoRelay3Duration label="Duration (minutes) [%d]" minValue=5 maxValue=60 step=5
-		Text item=RelayduinoRelay3LastOn
-		Text item=RelayduinoRelay3LastOff
-	}
-	Frame label="Relay 4" visibility=[RelayduinoState==ON] {
-      		Switch item=RelayduinoRelay4State
-		Setpoint item=RelayduinoRelay4Duration label="Duration (minutes) [%d]" minValue=5 maxValue=60 step=5
-		Text item=RelayduinoRelay4LastOn
-		Text item=RelayduinoRelay4LastOff
-	}
-	Frame label="Relay 5" visibility=[RelayduinoState==ON] {
-		Switch item=RelayduinoRelay5State
-		Setpoint item=RelayduinoRelay5Duration label="Duration (minutes) [%d]" minValue=5 maxValue=60 step=5
-		Text item=RelayduinoRelay5LastOn
-		Text item=RelayduinoRelay5LastOff
-	}
-	Frame label="Relay 6" visibility=[RelayduinoState==ON] {
-      		Switch item=RelayduinoRelay6State
-		Setpoint item=RelayduinoRelay6Duration label="Duration (minutes) [%d]" minValue=5 maxValue=60 step=5
-		Text item=RelayduinoRelay6LastOn
-		Text item=RelayduinoRelay6LastOff	
-	}
-	Frame label="Relay 7" visibility=[RelayduinoState==ON] {
-		Switch item=RelayduinoRelay7State
-		Setpoint item=RelayduinoRelay7Duration label="Duration (minutes) [%d]" minValue=5 maxValue=60 step=5
-		Text item=RelayduinoRelay7LastOn
-		Text item=RelayduinoRelay7LastOff
-	}
-	Frame label="Relay 8" visibility=[RelayduinoState==ON] {
-      		Switch item=RelayduinoRelay8State
-		Setpoint item=RelayduinoRelay8Duration label="Duration (minutes) [%d]" minValue=5 maxValue=60 step=5
-		Text item=RelayduinoRelay8LastOn
-		Text item=RelayduinoRelay8LastOff
-    }
-    Frame label="Inputs" visibility=[RelayduinoState==ON] {
-    	Text item=RelayduinoAnalogInput1
-    	Text item=RelayduinoAnalogInput2
-    	Text item=RelayduinoAnalogInput3
-    	Text item=RelayduinoAnalogInput4
-    	Switch item=RelayduinoDigitalInput1
-    	Switch item=RelayduinoDigitalInput2
-    	Switch item=RelayduinoDigitalInput3    	
-    }
-//	Frame label="Relays" {
-//		Switch item=RelayduinoCaldavRelay1
-//      	Switch item=RelayduinoCaldavRelay2
-//    }
+	Frame label="Relays" visibility=[RelayduinoState==ON] {
+		Group item=gRelayduinoRelaysState label="Relays"
+//		Group item=gRelayduinoRelaysMode label="Relay mode"
+		Text item=RelayduinoRelayRunning label="Relay currently running"
+		Group item=gRelayduinoRelay1 label="Relay 1" icon="switch" {
+			Selection item=RelayduinoRelay1Mode label="Mode" icon="switch" mappings=[1="auto", 2="manual"]
+			Setpoint item=RelayduinoRelay1ManualDuration label="Duration" icon="clock" minValue=0 maxValue=300 step=1 visibility=[RelayduinoRelay1Mode==2]
+			Switch item=RelayduinoRelay1Request label="Request" visibility=[RelayduinoRelay1Mode==2]
+			Switch item=RelayduinoRelay1State label="Running"
+			Text item=RelayduinoRelay1LastOn label="Last on" icon="clock"
+			Text item=RelayduinoRelay1LastOff label="Last off" icon="clock"
+		}
+		Group item=gRelayduinoRelay2 label="Relay 2" icon="switch" {
+			Selection item=RelayduinoRelay2Mode label="Mode" icon="switch" mappings=[1="auto", 2="manual"]
+			Setpoint item=RelayduinoRelay2ManualDuration label="Duration" icon="clock" minValue=0 maxValue=300 step=1 visibility=[RelayduinoRelay2Mode==2]
+			Switch item=RelayduinoRelay2Request label="Request" visibility=[RelayduinoRelay2Mode==2]
+			Switch item=RelayduinoRelay2State label="Running"
+			Text item=RelayduinoRelay2LastOn label="Last on" icon="clock"
+			Text item=RelayduinoRelay2LastOff label="Last off" icon="clock"
+		}
+//		Group item=gRelayduinoRelay3 label="Relay 3" icon="switch" {
+//			Selection item=RelayduinoRelay3Mode label="Mode" icon="switch" mappings=[1="auto", 2="manual"]
+//			Setpoint item=RelayduinoRelay3ManualDuration label="Duration" icon="clock" minValue=0 maxValue=300 step=5 visibility=[RelayduinoRelay1Mode==2]
+//			Switch item=RelayduinoRelay3Run label="Run" visibility=[RelayduinoRelay3Mode==2]
+//			Switch item=RelayduinoRelay3State label="Running"
+//			Text item=RelayduinoRelay3LastOn label="Last on" icon="clock"
+//			Text item=RelayduinoRelay3LastOff label="Last off" icon="clock"
+//		}
+    }	// end Frame label="Relays"
+	Frame label="Status and Configuration" {
+		Text label="Status and Configuration" icon="settings" {
+//		Group item=gRelayshieldStatus label="Status" icon="switch" {
+			Frame label="Status" {
+				Switch item=RelayduinoState label="Connected"
+				Text item=RelayduinoUptime label="Uptime" icon="clock"
+				Text item=RelayduinoMemory label="Memory" icon="settings"
+				Text item=RelayduinoLastStatusUpdate label="Last Status Update" icon="calendar"
+//				Text item=RelayduinoRelayState
+//				Text item=RelayduinoRelayControl
+				Text item=RelayRequestsSize label="Requests Length" icon="settings"
+			}
+//		}	// end Group item=gRelayshieldStatus
+//		Group item=gRelayshieldConfig label="Configuration" icon="settings" {
+			Frame label="Configuration" {
+				Text item=RelayduinoLastConnected label="Last Connected" icon="calendar"
+				Text item=RelayduinoStatusInterval label="Status Interval" icon="clock"
+				Text item=RelayduinoIpAddress label="IP Address" icon="network"
+				Switch item=RelayduinoUseMasterRelay label="Use Master Relay" icon="settings"
+//				Text item=RelayduinoMasterRelay label="Master Relay" icon="settings" visibility=[RelayduinoUseMasterRelay==ON]
+				Setpoint item=RelayduinoMasterRelay label="Master Relay" icon="settings" minValue=1 maxValue=8 step=1 visibility=[RelayduinoUseMasterRelay==ON]
+			}
+		}	// end Group item=gRelayshieldConfig
+		}	// end Text label="Status and Configuration"
+//	}	// end Frame label="Status and Configuration"
 }

@@ -63,6 +63,10 @@ val org.eclipse.xtext.xbase.lib.Functions$Function1 removeRelayRequest = [
 			RelayduinoRelay1Request.sendCommand(OFF)
 		} else if (relayIdx == 2) {
 			RelayduinoRelay2Request.sendCommand(OFF)
+		} else if (relayIdx == 3) {
+			RelayduinoRelay3Request.sendCommand(OFF)
+		} else if (relayIdx == 4) {
+			RelayduinoRelay4Request.sendCommand(OFF)
 		}
 	]
 

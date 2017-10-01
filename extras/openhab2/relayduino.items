@@ -60,9 +60,17 @@ DateTime  RelayduinoRelay3LastOn         "[%1$tT, %1$td.%1$tm.%1$tY]"     (gRela
 DateTime  RelayduinoRelay3LastOff        "[%1$tT, %1$td.%1$tm.%1$tY]"     (gRelayduino, gRelayduinoRelay3)
 
 Group     gRelayduinoRelay4
-Number 	  RelayduinoRelay4Mode			                                      (gRelayduino, gRelayduinoRelay3, gRelayduinoRelaysMode)
-Number    RelayduinoRelay4ManualDuration "[%d minutes]"                   (gRelayduino, gRelayduinoRelay3)
-Switch    RelayduinoRelay4Run                                             (gRelayduino, gRelayduinoRelay3, gRelayduinoRelaysRun)
-Switch    RelayduinoRelay4State                                           (gRelayduino, gRelayduinoRelay3, gRelayduinoRelaysState)
-DateTime  RelayduinoRelay4LastOn         "[%1$tT, %1$td.%1$tm.%1$tY]"     (gRelayduino, gRelayduinoRelay3)
-DateTime  RelayduinoRelay4LastOff        "[%1$tT, %1$td.%1$tm.%1$tY]"     (gRelayduino, gRelayduinoRelay3)
+Number 	  RelayduinoRelay4Mode			                                      (gRelayduino, gRelayduinoRelay4, gRelayduinoRelaysMode)
+Number    RelayduinoRelay4ManualDuration "[%d minutes]"                   (gRelayduino, gRelayduinoRelay4)
+Switch    RelayduinoRelay4Run                                             (gRelayduino, gRelayduinoRelay4, gRelayduinoRelaysRun)
+Switch    RelayduinoRelay4State                                           (gRelayduino, gRelayduinoRelay4, gRelayduinoRelaysState)
+DateTime  RelayduinoRelay4LastOn         "[%1$tT, %1$td.%1$tm.%1$tY]"     (gRelayduino, gRelayduinoRelay4)
+DateTime  RelayduinoRelay4LastOff        "[%1$tT, %1$td.%1$tm.%1$tY]"     (gRelayduino, gRelayduinoRelay4)
+
+Group     gRelayduinoRelay8
+Number 	  RelayduinoRelay8Mode			                                      (gRelayduino, gRelayduinoRelay8, gRelayduinoRelaysMode)
+Number    RelayduinoRelay8ManualDuration "[%d minutes]"                   (gRelayduino, gRelayduinoRelay8)
+Switch    RelayduinoRelay8Run                                             (gRelayduino, gRelayduinoRelay8, gRelayduinoRelaysRun)
+Switch    RelayduinoRelay8State                                           (gRelayduino, gRelayduinoRelay8, gRelayduinoRelaysState)
+DateTime  RelayduinoRelay8LastOn         "[%1$tT, %1$td.%1$tm.%1$tY]"     (gRelayduino, gRelayduinoRelay8)
+DateTime  RelayduinoRelay8LastOff        "[%1$tT, %1$td.%1$tm.%1$tY]"     (gRelayduino, gRelayduinoRelay8)

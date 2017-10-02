@@ -12,7 +12,7 @@ Number    RelayduinoMasterRelay          "[%d]" (gRelayduino)
 // status items
 Group     gRelayduinoStatus
 Number    RelayduinoUptimeRaw            "[%d]"                           (gRelayduino, gRelayduinoStatus)  {mqtt="<[emonpi:relayduino/status/uptime:state:default]"}
-String    RelayduinoUptime               "[%s]"                           (gRelayduino, gRelayduinoStatus)  {mqtt="<[emonpi:relayduino/status/uptime:state:JS(uptimeFromSeconds.js)]"}
+String    RelayduinoUptime               "[%s]"                           (gRelayduino, gRelayduinoStatus)  {mqtt="<[emonpi:relayduino/status/uptime:state:JS(uptimeFromMilliSeconds.js)]"}
 Number    RelayduinoMemory               "[%d bytes]"                     (gRelayduino, gRelayduinoStatus)  {mqtt="<[emonpi:relayduino/status/memory:state:default]"}
 DateTime  RelayduinoLastStatusUpdate     "[%1$tT, %1$td.%1$tm.%1$tY]"     (gRelayduino, gRelayduinoStatus)
 Switch    RelayduinoState                                                 (gRelayduino, gRelayduinoStatus)

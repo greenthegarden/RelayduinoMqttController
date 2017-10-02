@@ -1,4 +1,4 @@
-sitemap relayduino label="Irrigation Controller"
+sitemap relayduino label="Irrigation"
 {
 	Frame label="Relays" visibility=[RelayduinoState==ON] {
 
@@ -40,6 +40,15 @@ sitemap relayduino label="Irrigation Controller"
 			Switch item=RelayduinoRelay4State label="Running"
 			Text item=RelayduinoRelay4LastOn label="Last on" icon="clock"
 			Text item=RelayduinoRelay4LastOff label="Last off" icon="clock"
+		}
+
+		Group item=gRelayduinoRelay8 label="Master" icon="switch" visibility=[RelayduinoUseMasterRelay==OFF] {
+			Selection item=RelayduinoRelay8Mode label="Mode" icon="switch" mappings=[1="auto", 2="manual"]
+			Setpoint item=RelayduinoRelay8ManualDuration label="Duration" icon="clock" minValue=0 maxValue=300 step=1 visibility=[RelayduinoRelay8Mode==2]
+			Switch item=RelayduinoRelay8Request label="Request" visibility=[RelayduinoRelay8Mode==2]
+			Switch item=RelayduinoRelay8State label="Running"
+			Text item=RelayduinoRelay8LastOn label="Last on" icon="clock"
+			Text item=RelayduinoRelay8LastOff label="Last off" icon="clock"
 		}
 
   }	// end Frame label="Relays"

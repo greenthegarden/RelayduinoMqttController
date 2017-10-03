@@ -202,23 +202,28 @@ when
 	Item RelayduinoRelay1Request changed
 then
 	val Integer relay = 1
+	val Integer defaultDuration = 20
 	var String message = ""
 	if (RelayduinoRelay1Request.state == ON) {
-		if (RelayduinoRelay1ManualDuration != NULL) {
-			val Integer duration = (RelayduinoRelay1ManualDuration.state as DecimalType).intValue
-			if (duration > 0) {		// relay request to turn on
-				RelayRequests.put(relay, duration)
-				message = "RelayRequests.put with relay " + relay + " and duration " + duration + " at " + new DateTime().toString
-				logInfo(relayduinologgingname, message)
+		var Integer duration = defaultDuration
+		if (RelayduinoRelay1Mode == 2) {
+			// manual mode
+			if (RelayduinoRelay1ManualDuration != NULL) {
+				duration = (RelayduinoRelay1ManualDuration.state as DecimalType).intValue
 			}
 		}
-	} else {		// relay was turned on
+		if (duration > 0) {
+			// relay request to turn on
+			RelayRequests.put(relay, duration)
+			message = "RelayRequests.put with relay " + relay + " and duration " + duration + " at " + new DateTime().toString
+			logInfo(relayduinologgingname, message)
+		}
+	} else {
+		// relay was turned on
 		RelayRequests.remove(relay)
 		message = "RelayRequests.remove with relay " + relay + " at " + new DateTime().toString
 		logInfo(relayduinologgingname, message)
 		if (lastRelayRunning == relay) {
-//			val cmdStr = relay.toString + "," + "0"
-//			RelayduinoRelayControl.sendCommand(cmdStr)
 			relayOffCommand.apply(relay)
 		}
 	}
@@ -230,23 +235,28 @@ when
 	Item RelayduinoRelay2Request changed
 then
 	val Integer relay = 2
+	val Integer defaultDuration = 60
 	var String message = ""
 	if (RelayduinoRelay2Request.state == ON) {
-		if (RelayduinoRelay2ManualDuration != NULL) {
-			val Integer duration = (RelayduinoRelay2ManualDuration.state as DecimalType).intValue
-			if (duration > 0) {		// relay request to turn on
-				RelayRequests.put(relay, duration)
-				message = "RelayRequests.put with relay " + relay + " and duration " + duration + " at " + new DateTime().toString
-				logInfo(relayduinologgingname, message)
+		var Integer duration = defaultDuration
+		if (RelayduinoRelay2Mode == 2) {
+			// manual mode
+			if (RelayduinoRelay2ManualDuration != NULL) {
+				duration = (RelayduinoRelay2ManualDuration.state as DecimalType).intValue
 			}
 		}
-	} else {		// relay was turned on
+		if (duration > 0) {
+			// relay request to turn on
+			RelayRequests.put(relay, duration)
+			message = "RelayRequests.put with relay " + relay + " and duration " + duration + " at " + new DateTime().toString
+			logInfo(relayduinologgingname, message)
+		}
+	} else {
+		// relay was turned on
 		RelayRequests.remove(relay)
 		message = "RelayRequests.remove with relay " + relay + " at " + new DateTime().toString
 		logInfo(relayduinologgingname, message)
 		if (lastRelayRunning == relay) {
-//			val cmdStr = relay.toString + "," + "0"
-//			RelayduinoRelayControl.sendCommand(cmdStr)
 			relayOffCommand.apply(relay)
 		}
 	}
@@ -258,23 +268,28 @@ when
 	Item RelayduinoRelay3Request changed
 then
 	val Integer relay = 3
+	val Integer defaultDuration = 180
 	var String message = ""
 	if (RelayduinoRelay3Request.state == ON) {
-		if (RelayduinoRelay3ManualDuration != NULL) {
-			val Integer duration = (RelayduinoRelay3ManualDuration.state as DecimalType).intValue
-			if (duration > 0) {		// relay request to turn on
-				RelayRequests.put(relay, duration)
-				message = "RelayRequests.put with relay " + relay + " and duration " + duration + " at " + new DateTime().toString
-				logInfo(relayduinologgingname, message)
+		var Integer duration = defaultDuration
+		if (RelayduinoRelay3Mode == 2) {
+			// manual mode
+			if (RelayduinoRelay3ManualDuration != NULL) {
+				duration = (RelayduinoRelay3ManualDuration.state as DecimalType).intValue
 			}
 		}
-	} else {		// relay was turned on
+		if (duration > 0) {
+			// relay request to turn on
+			RelayRequests.put(relay, duration)
+			message = "RelayRequests.put with relay " + relay + " and duration " + duration + " at " + new DateTime().toString
+			logInfo(relayduinologgingname, message)
+		}
+	} else {
+		// relay was turned on
 		RelayRequests.remove(relay)
 		message = "RelayRequests.remove with relay " + relay + " at " + new DateTime().toString
 		logInfo(relayduinologgingname, message)
 		if (lastRelayRunning == relay) {
-//			val cmdStr = relay.toString + "," + "0"
-//			RelayduinoRelayControl.sendCommand(cmdStr)
 			relayOffCommand.apply(relay)
 		}
 	}
@@ -286,23 +301,28 @@ when
 	Item RelayduinoRelay4Request changed
 then
 	val Integer relay = 4
+	val Integer defaultDuration = 60
 	var String message = ""
 	if (RelayduinoRelay4Request.state == ON) {
-		if (RelayduinoRelay4ManualDuration != NULL) {
-			val Integer duration = (RelayduinoRelay4ManualDuration.state as DecimalType).intValue
-			if (duration > 0) {		// relay request to turn on
-				RelayRequests.put(relay, duration)
-				message = "RelayRequests.put with relay " + relay + " and duration " + duration + " at " + new DateTime().toString
-				logInfo(relayduinologgingname, message)
+		var Integer duration = defaultDuration
+		if (RelayduinoRelay4Mode == 2) {
+			// manual mode
+			if (RelayduinoRelay4ManualDuration != NULL) {
+				duration = (RelayduinoRelay4ManualDuration.state as DecimalType).intValue
 			}
 		}
-	} else {		// relay was turned on
+		if (duration > 0) {
+			// relay request to turn on
+			RelayRequests.put(relay, duration)
+			message = "RelayRequests.put with relay " + relay + " and duration " + duration + " at " + new DateTime().toString
+			logInfo(relayduinologgingname, message)
+		}
+	} else {
+		// relay was turned on
 		RelayRequests.remove(relay)
 		message = "RelayRequests.remove with relay " + relay + " at " + new DateTime().toString
 		logInfo(relayduinologgingname, message)
 		if (lastRelayRunning == relay) {
-//			val cmdStr = relay.toString + "," + "0"
-//			RelayduinoRelayControl.sendCommand(cmdStr)
 			relayOffCommand.apply(relay)
 		}
 	}

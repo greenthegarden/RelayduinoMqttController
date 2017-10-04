@@ -147,8 +147,6 @@ then
 			val Iterator<Entry<Integer, Integer>> it = RelayRequests.entrySet().iterator();
 			if (it.hasNext()) {
 				val Map.Entry<Integer, Integer> entry = it.next();
-//				val cmdStr = entry.getKey().toString + "," + entry.getValue().toString
-//				RelayduinoRelayControl.sendCommand(cmdStr)
 				relayOnCommand.apply(entry.getKey(), entry.getValue())
 				RelayRequests.remove(entry.getKey())
 				RelayRequestsSize.postUpdate(RelayRequests.size())
@@ -202,10 +200,9 @@ when
 	Item RelayduinoRelay1Request changed
 then
 	val Integer relay = 1
-	val Integer defaultDuration = 20
 	var String message = ""
 	if (RelayduinoRelay1Request.state == ON) {
-		var Integer duration = defaultDuration
+		var Integer duration = RelayduinoRelay1DefaultDuration
 		if (RelayduinoRelay1Mode == 2) {
 			// manual mode
 			if (RelayduinoRelay1ManualDuration != NULL) {
@@ -235,10 +232,9 @@ when
 	Item RelayduinoRelay2Request changed
 then
 	val Integer relay = 2
-	val Integer defaultDuration = 60
 	var String message = ""
 	if (RelayduinoRelay2Request.state == ON) {
-		var Integer duration = defaultDuration
+		var Integer duration = RelayduinoRelay2DefaultDuration
 		if (RelayduinoRelay2Mode == 2) {
 			// manual mode
 			if (RelayduinoRelay2ManualDuration != NULL) {
@@ -271,7 +267,7 @@ then
 	val Integer defaultDuration = 180
 	var String message = ""
 	if (RelayduinoRelay3Request.state == ON) {
-		var Integer duration = defaultDuration
+		var Integer duration = RelayduinoRelay3DefaultDuration
 		if (RelayduinoRelay3Mode == 2) {
 			// manual mode
 			if (RelayduinoRelay3ManualDuration != NULL) {
@@ -304,7 +300,7 @@ then
 	val Integer defaultDuration = 60
 	var String message = ""
 	if (RelayduinoRelay4Request.state == ON) {
-		var Integer duration = defaultDuration
+		var Integer duration = RelayduinoRelay4DefaultDuration
 		if (RelayduinoRelay4Mode == 2) {
 			// manual mode
 			if (RelayduinoRelay4ManualDuration != NULL) {

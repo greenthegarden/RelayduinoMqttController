@@ -54,27 +54,30 @@ sitemap relayduino label="Irrigation"
   }	// end Frame label="Relays"
 	Frame label="Status and Configuration" {
 		Text label="Status and Configuration" icon="settings" {
-//		Group item=gRelayshieldStatus label="Status" icon="switch" {
 			Frame label="Status" {
 				Switch item=RelayduinoState label="Connected"
 				Text item=RelayduinoUptime label="Uptime" icon="clock"
 				Text item=RelayduinoMemory label="Memory" icon="settings"
 				Text item=RelayduinoLastStatusUpdate label="Last Status Update" icon="calendar"
-//				Text item=RelayduinoRelayState
-//				Text item=RelayduinoRelayControl
 				Text item=RelayRequestsSize label="Requests Length" icon="settings"
 			}
-//		}	// end Group item=gRelayshieldStatus
-//		Group item=gRelayshieldConfig label="Configuration" icon="settings" {
 			Frame label="Configuration" {
 				Text item=RelayduinoLastConnected label="Last Connected" icon="calendar"
 				Text item=RelayduinoStatusInterval label="Status Interval" icon="clock"
 				Text item=RelayduinoIpAddress label="IP Address" icon="network"
-				Switch item=RelayduinoUseMasterRelay label="Use Master Relay" icon="settings"
-//				Text item=RelayduinoMasterRelay label="Master Relay" icon="settings" visibility=[RelayduinoUseMasterRelay==ON]
-				Setpoint item=RelayduinoMasterRelay label="Master Relay" icon="settings" minValue=1 maxValue=8 step=1 visibility=[RelayduinoUseMasterRelay==ON]
 			}
-		}	// end Group item=gRelayshieldConfig
+			Frame label="Settings" {
+				Switch item=RelayduinoUseMasterRelay label="Use Master Relay" icon="settings"
+				Setpoint item=RelayduinoMasterRelay label="Master Relay" icon="settings" minValue=1 maxValue=8 step=1 visibility=[RelayduinoUseMasterRelay==ON]
+				Setpoint item=RelayduinoRelay1DefaultDuration label="Relay 1 Default Duration" icon="clock" minValue=0 maxValue=300 step=5
+				Setpoint item=RelayduinoRelay2DefaultDuration label="Relay 2 Default Duration" icon="clock" minValue=0 maxValue=300 step=5
+				Setpoint item=RelayduinoRelay3DefaultDuration label="Relay 3 Default Duration" icon="clock" minValue=0 maxValue=300 step=5
+				Setpoint item=RelayduinoRelay4DefaultDuration label="Relay 4 Default Duration" icon="clock" minValue=0 maxValue=300 step=5
+				Setpoint item=RelayduinoRelay5DefaultDuration label="Relay 5 Default Duration" icon="clock" minValue=0 maxValue=300 step=5
+				Setpoint item=RelayduinoRelay6DefaultDuration label="Relay 6 Default Duration" icon="clock" minValue=0 maxValue=300 step=5
+				Setpoint item=RelayduinoRelay7DefaultDuration label="Relay 7 Default Duration" icon="clock" minValue=0 maxValue=300 step=5
+				Setpoint item=RelayduinoRelay8DefaultDuration label="Relay 8 Default Duration" icon="clock" minValue=0 maxValue=300 step=5
+			}
 		}	// end Text label="Status and Configuration"
-//	}	// end Frame label="Status and Configuration"
+	}	// end Frame label="Status and Configuration"
 }

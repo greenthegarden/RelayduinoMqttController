@@ -20,14 +20,17 @@ Number    RelayRequestsSize               "[%d]"
 Group     gRelayduinoSettings
 Switch    RelayduinoUseMasterRelay                                        (gRelayduino, gRelayduinoSettings)
 Number    RelayduinoMasterRelay           "[%d]"                          (gRelayduino, gRelayduinoSettings)
-Number    RelayduinoRelay1DefaultDuration "[%d minutes]"                  (gRelayduino, gRelayduinoSettings, gRelayduinoRelay1)
-Number    RelayduinoRelay2DefaultDuration "[%d minutes]"                  (gRelayduino, gRelayduinoSettings, gRelayduinoRelay2)
-Number    RelayduinoRelay3DefaultDuration "[%d minutes]"                  (gRelayduino, gRelayduinoSettings, gRelayduinoRelay3)
-Number    RelayduinoRelay4DefaultDuration "[%d minutes]"                  (gRelayduino, gRelayduinoSettings, gRelayduinoRelay4)
-Number    RelayduinoRelay5DefaultDuration "[%d minutes]"                  (gRelayduino, gRelayduinoSettings, gRelayduinoRelay5)
-Number    RelayduinoRelay6DefaultDuration "[%d minutes]"                  (gRelayduino, gRelayduinoSettings, gRelayduinoRelay6)
-Number    RelayduinoRelay7DefaultDuration "[%d minutes]"                  (gRelayduino, gRelayduinoSettings, gRelayduinoRelay7)
-Number    RelayduinoRelay8DefaultDuration "[%d minutes]"                  (gRelayduino, gRelayduinoSettings, gRelayduinoRelay8)
+
+// default durations
+Group     gRelayduinoDefaultDurations
+Number    RelayduinoRelay1DefaultDuration "[%d minutes]"                  (gRelayduino, gRelayduinoDefaultDurations, gRelayduinoRelay1)
+Number    RelayduinoRelay2DefaultDuration "[%d minutes]"                  (gRelayduino, gRelayduinoDefaultDurations, gRelayduinoRelay2)
+Number    RelayduinoRelay3DefaultDuration "[%d minutes]"                  (gRelayduino, gRelayduinoDefaultDurations, gRelayduinoRelay3)
+Number    RelayduinoRelay4DefaultDuration "[%d minutes]"                  (gRelayduino, gRelayduinoDefaultDurations, gRelayduinoRelay4)
+Number    RelayduinoRelay5DefaultDuration "[%d minutes]"                  (gRelayduino, gRelayduinoDefaultDurations, gRelayduinoRelay5)
+Number    RelayduinoRelay6DefaultDuration "[%d minutes]"                  (gRelayduino, gRelayduinoDefaultDurations, gRelayduinoRelay6)
+Number    RelayduinoRelay7DefaultDuration "[%d minutes]"                  (gRelayduino, gRelayduinoDefaultDurations, gRelayduinoRelay7)
+Number    RelayduinoRelay8DefaultDuration "[%d minutes]"                  (gRelayduino, gRelayduinoDefaultDurations, gRelayduinoRelay8)
 
 // input values from Powerhub
 String    RelayduinoRelayState            "[%s]"                          (gRelayduino)                     {mqtt="<[emonpi:relayduino/status/relay:state:default]"}

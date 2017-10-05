@@ -1,11 +1,9 @@
 sitemap relayduino label="Irrigation"
 {
 	Frame label="Relays" visibility=[RelayduinoState==ON] {
-
-		Group item=gRelayduinoRelaysState label="Relays"
+//		Group item=gRelayduinoRelaysState label="Relays"
 //		Group item=gRelayduinoRelaysMode label="Relay mode"
 		Text item=RelayduinoRelayRunning label="Relay currently running"
-
 		Group item=gRelayduinoRelay1 label="Front grass" icon="switch" {
 			Selection item=RelayduinoRelay1Mode label="Mode" icon="switch" mappings=[1="auto", 2="manual"]
 			Setpoint item=RelayduinoRelay1ManualDuration label="Duration" icon="clock" minValue=0 maxValue=60 step=1 visibility=[RelayduinoRelay1Mode==2]
@@ -14,7 +12,6 @@ sitemap relayduino label="Irrigation"
 			Text item=RelayduinoRelay1LastOn label="Last on" icon="clock"
 			Text item=RelayduinoRelay1LastOff label="Last off" icon="clock"
 		}
-
 		Group item=gRelayduinoRelay2 label="Shrubs" icon="switch" {
 			Selection item=RelayduinoRelay2Mode label="Mode" icon="switch" mappings=[1="auto", 2="manual"]
 			Setpoint item=RelayduinoRelay2ManualDuration label="Duration" icon="clock" minValue=0 maxValue=60 step=5 visibility=[RelayduinoRelay2Mode==2]
@@ -23,7 +20,6 @@ sitemap relayduino label="Irrigation"
 			Text item=RelayduinoRelay2LastOn label="Last on" icon="clock"
 			Text item=RelayduinoRelay2LastOff label="Last off" icon="clock"
 		}
-
 		Group item=gRelayduinoRelay3 label="Trees" icon="switch" {
 			Selection item=RelayduinoRelay3Mode label="Mode" icon="switch" mappings=[1="auto", 2="manual"]
 			Setpoint item=RelayduinoRelay3ManualDuration label="Duration" icon="clock" minValue=0 maxValue=300 step=10 visibility=[RelayduinoRelay3Mode==2]
@@ -32,7 +28,6 @@ sitemap relayduino label="Irrigation"
 			Text item=RelayduinoRelay3LastOn label="Last on" icon="clock"
 			Text item=RelayduinoRelay3LastOff label="Last off" icon="clock"
 		}
-
 		Group item=gRelayduinoRelay4 label="Vegetables" icon="switch" {
 			Selection item=RelayduinoRelay4Mode label="Mode" icon="switch" mappings=[1="auto", 2="manual"]
 			Setpoint item=RelayduinoRelay4ManualDuration label="Duration" icon="clock" minValue=0 maxValue=60 step=1 visibility=[RelayduinoRelay4Mode==2]
@@ -41,7 +36,6 @@ sitemap relayduino label="Irrigation"
 			Text item=RelayduinoRelay4LastOn label="Last on" icon="clock"
 			Text item=RelayduinoRelay4LastOff label="Last off" icon="clock"
 		}
-
 		Group item=gRelayduinoRelay8 label="Master" icon="switch" visibility=[RelayduinoUseMasterRelay==OFF] {
 			Selection item=RelayduinoRelay8Mode label="Mode" icon="switch" mappings=[1="auto", 2="manual"]
 			Setpoint item=RelayduinoRelay8ManualDuration label="Duration" icon="clock" minValue=0 maxValue=300 step=1 visibility=[RelayduinoRelay8Mode==2]
@@ -50,7 +44,6 @@ sitemap relayduino label="Irrigation"
 			Text item=RelayduinoRelay8LastOn label="Last on" icon="clock"
 			Text item=RelayduinoRelay8LastOff label="Last off" icon="clock"
 		}
-
   }	// end Frame label="Relays"
 	Frame label="Status and Configuration" {
 		Text label="Status and Configuration" icon="settings" {
@@ -69,14 +62,16 @@ sitemap relayduino label="Irrigation"
 			Frame label="Settings" {
 				Switch item=RelayduinoUseMasterRelay label="Use Master Relay" icon="settings"
 				Setpoint item=RelayduinoMasterRelay label="Master Relay" icon="settings" minValue=1 maxValue=8 step=1 visibility=[RelayduinoUseMasterRelay==ON]
-				Setpoint item=RelayduinoRelay1DefaultDuration label="Relay 1 Default Duration" icon="clock" minValue=0 maxValue=300 step=5
-				Setpoint item=RelayduinoRelay2DefaultDuration label="Relay 2 Default Duration" icon="clock" minValue=0 maxValue=300 step=5
-				Setpoint item=RelayduinoRelay3DefaultDuration label="Relay 3 Default Duration" icon="clock" minValue=0 maxValue=300 step=5
-				Setpoint item=RelayduinoRelay4DefaultDuration label="Relay 4 Default Duration" icon="clock" minValue=0 maxValue=300 step=5
-				Setpoint item=RelayduinoRelay5DefaultDuration label="Relay 5 Default Duration" icon="clock" minValue=0 maxValue=300 step=5
-				Setpoint item=RelayduinoRelay6DefaultDuration label="Relay 6 Default Duration" icon="clock" minValue=0 maxValue=300 step=5
-				Setpoint item=RelayduinoRelay7DefaultDuration label="Relay 7 Default Duration" icon="clock" minValue=0 maxValue=300 step=5
-				Setpoint item=RelayduinoRelay8DefaultDuration label="Relay 8 Default Duration" icon="clock" minValue=0 maxValue=300 step=5
+			}
+			Frame label="Default Durations" {
+				Setpoint item=RelayduinoRelay1DefaultDuration label="Relay 1" icon="clock" minValue=0 maxValue=300 step=5
+				Setpoint item=RelayduinoRelay2DefaultDuration label="Relay 2" icon="clock" minValue=0 maxValue=300 step=5
+				Setpoint item=RelayduinoRelay3DefaultDuration label="Relay 3" icon="clock" minValue=0 maxValue=300 step=5
+				Setpoint item=RelayduinoRelay4DefaultDuration label="Relay 4" icon="clock" minValue=0 maxValue=300 step=5
+				Setpoint item=RelayduinoRelay5DefaultDuration label="Relay 5" icon="clock" minValue=0 maxValue=300 step=5
+				Setpoint item=RelayduinoRelay6DefaultDuration label="Relay 6" icon="clock" minValue=0 maxValue=300 step=5
+				Setpoint item=RelayduinoRelay7DefaultDuration label="Relay 7" icon="clock" minValue=0 maxValue=300 step=5
+				Setpoint item=RelayduinoRelay8DefaultDuration label="Relay 8" icon="clock" minValue=0 maxValue=300 step=5
 			}
 		}	// end Text label="Status and Configuration"
 	}	// end Frame label="Status and Configuration"

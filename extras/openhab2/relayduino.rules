@@ -175,8 +175,8 @@ then
 	val Integer relay = 1
 	var String message = ""
 	if (RelayduinoRelay1Request.state == ON) {
-		var Integer duration = (RelayduinoRelay1DefaultDuration.state as DecimalType).intValue
-		if (RelayduinoRelay1Mode == 2) {
+		var Integer duration = (RelayduinoRelay2DefaultDuration.state as DecimalType).intValue
+		if (RelayduinoRelay1Mode.state == 2) {
 			// manual mode
 			if (RelayduinoRelay1ManualDuration != NULL) {
 				duration = (RelayduinoRelay1ManualDuration.state as DecimalType).intValue
@@ -208,7 +208,7 @@ then
 	var String message = ""
 	if (RelayduinoRelay2Request.state == ON) {
 		var Integer duration = (RelayduinoRelay2DefaultDuration.state as DecimalType).intValue
-		if (RelayduinoRelay2Mode == 2) {
+		if (RelayduinoRelay2Mode.state == 2) {
 			// manual mode
 			if (RelayduinoRelay2ManualDuration != NULL) {
 				duration = (RelayduinoRelay2ManualDuration.state as DecimalType).intValue
@@ -240,7 +240,7 @@ then
 	var String message = ""
 	if (RelayduinoRelay3Request.state == ON) {
 		var Integer duration = (RelayduinoRelay3DefaultDuration.state as DecimalType).intValue
-		if (RelayduinoRelay3Mode == 2) {
+		if (RelayduinoRelay3Mode.state == 2) {
 			// manual mode
 			if (RelayduinoRelay3ManualDuration != NULL) {
 				duration = (RelayduinoRelay3ManualDuration.state as DecimalType).intValue
@@ -272,7 +272,7 @@ then
 	var String message = ""
 	if (RelayduinoRelay4Request.state == ON) {
 		var Integer duration = (RelayduinoRelay4DefaultDuration.state as DecimalType).intValue
-		if (RelayduinoRelay4Mode == 2) {
+		if (RelayduinoRelay4Mode.state == 2) {
 			// manual mode
 			if (RelayduinoRelay4ManualDuration != NULL) {
 				duration = (RelayduinoRelay4ManualDuration.state as DecimalType).intValue

@@ -176,6 +176,10 @@ then
 	var String message = ""
 	if (RelayduinoRelay1Request.state == ON) {
 		var Integer duration = (RelayduinoRelay2DefaultDuration.state as DecimalType).intValue
+		if (RelayduinoRelay1Mode.state == 0) {
+			// mode off
+			return;
+		}
 		if (RelayduinoRelay1Mode.state == 2) {
 			// manual mode
 			if (RelayduinoRelay1ManualDuration != NULL) {
@@ -196,6 +200,10 @@ then
 		if (lastRelayRunning == relay) {
 			relayOffCommand.apply(relay)
 		}
+		if (RelayduinoRelay1Mode.state == 2) {
+			// manual mode
+			RelayduinoRelay1Mode.postUpdate(1)	// set to auto
+		}
 	}
 	RelayRequestsSize.postUpdate(RelayRequests.size())
 end
@@ -208,6 +216,10 @@ then
 	var String message = ""
 	if (RelayduinoRelay2Request.state == ON) {
 		var Integer duration = (RelayduinoRelay2DefaultDuration.state as DecimalType).intValue
+		if (RelayduinoRelay2Mode.state == 0) {
+			// mode off
+			return;
+		}
 		if (RelayduinoRelay2Mode.state == 2) {
 			// manual mode
 			if (RelayduinoRelay2ManualDuration != NULL) {
@@ -228,6 +240,10 @@ then
 		if (lastRelayRunning == relay) {
 			relayOffCommand.apply(relay)
 		}
+		if (RelayduinoRelay2Mode.state == 2) {
+			// manual mode
+			RelayduinoRelay2Mode.postUpdate(1)	// set to auto
+		}
 	}
 	RelayRequestsSize.postUpdate(RelayRequests.size())
 end
@@ -240,6 +256,10 @@ then
 	var String message = ""
 	if (RelayduinoRelay3Request.state == ON) {
 		var Integer duration = (RelayduinoRelay3DefaultDuration.state as DecimalType).intValue
+		if (RelayduinoRelay3Mode.state == 0) {
+			// mode off
+			return;
+		}
 		if (RelayduinoRelay3Mode.state == 2) {
 			// manual mode
 			if (RelayduinoRelay3ManualDuration != NULL) {
@@ -260,6 +280,10 @@ then
 		if (lastRelayRunning == relay) {
 			relayOffCommand.apply(relay)
 		}
+		if (RelayduinoRelay3Mode.state == 2) {
+			// manual mode
+			RelayduinoRelay3Mode.postUpdate(1)	// set to auto
+		}
 	}
 	RelayRequestsSize.postUpdate(RelayRequests.size())
 end
@@ -272,6 +296,10 @@ then
 	var String message = ""
 	if (RelayduinoRelay4Request.state == ON) {
 		var Integer duration = (RelayduinoRelay4DefaultDuration.state as DecimalType).intValue
+		if (RelayduinoRelay4Mode.state == 0) {
+			// mode off
+			return;
+		}
 		if (RelayduinoRelay4Mode.state == 2) {
 			// manual mode
 			if (RelayduinoRelay4ManualDuration != NULL) {
@@ -292,6 +320,10 @@ then
 		if (lastRelayRunning == relay) {
 			relayOffCommand.apply(relay)
 		}
+		if (RelayduinoRelay4Mode.state == 2) {
+			// manual mode
+			RelayduinoRelay4Mode.postUpdate(1)	// set to auto
+		}
 	}
 	RelayRequestsSize.postUpdate(RelayRequests.size())
 end
@@ -303,7 +335,6 @@ then
 	var String message = ""
 	message = "RelayduinoRelayState state changed to " + RelayduinoRelayState.state.toString + " at " + new DateTime().toString
 	logInfo(relayduinologgingname, message)
-
 	val String[] messageParts = RelayduinoRelayState.state.toString.split(",");
 	val Integer relay = Integer::parseInt(messageParts.get(0))
 	val Integer state = Integer::parseInt(messageParts.get(1))

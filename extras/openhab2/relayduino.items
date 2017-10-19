@@ -32,7 +32,7 @@ Number    RelayduinoRelay6DefaultDuration "[%d minutes]"                  (gRela
 Number    RelayduinoRelay7DefaultDuration "[%d minutes]"                  (gRelayduino, gRelayduinoDefaultDurations, gRelayduinoRelay7)
 Number    RelayduinoRelay8DefaultDuration "[%d minutes]"                  (gRelayduino, gRelayduinoDefaultDurations, gRelayduinoRelay8)
 
-// input values from Powerhub
+// input values from Relayduino
 String    RelayduinoRelayState            "[%s]"                          (gRelayduino)                     {mqtt="<[emonpi:relayduino/status/relay:state:default]"}
 String    RelayduinoRelayRequest          "[%s]"                          (gRelayduino)                     {mqtt="<[emonpi:relayduino/status/request:state:default]"}
 

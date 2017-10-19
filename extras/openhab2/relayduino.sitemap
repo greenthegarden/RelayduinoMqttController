@@ -1,7 +1,6 @@
 sitemap relayduino label="Irrigation"
 {
 	Frame label="Relays" visibility=[RelayduinoState==ON] {
-//		Group item=gRelayduinoRelaysState label="Relays"
 //		Group item=gRelayduinoRelaysMode label="Relay mode"
 		Text item=RelayduinoRelayRunning label="Relay currently running"
 		Group item=gRelayduinoRelay1 label="Front grass" icon="switch" {
@@ -72,6 +71,9 @@ sitemap relayduino label="Irrigation"
 				Setpoint item=RelayduinoRelay6DefaultDuration label="Relay 6" icon="clock" minValue=0 maxValue=300 step=5
 				Setpoint item=RelayduinoRelay7DefaultDuration label="Relay 7" icon="clock" minValue=0 maxValue=300 step=5
 				Setpoint item=RelayduinoRelay8DefaultDuration label="Relay 8" icon="clock" minValue=0 maxValue=300 step=5
+			}
+			Frame label="Relay States" {
+				Group item=gRelayduinoRelaysState label="Relays"
 			}
 		}	// end Text label="Status and Configuration"
 	}	// end Frame label="Status and Configuration"

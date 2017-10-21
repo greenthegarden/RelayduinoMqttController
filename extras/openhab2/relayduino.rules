@@ -7,10 +7,11 @@ import java.util.Map
 
 var LinkedHashMap<Integer, Integer> RelayRequests = new LinkedHashMap<Integer, Integer>()
 
-val String relayduinosystemname = "Relayduino"
+// define name for notifications
+val String systemname = "Relayduino"
 
 // define name for logging
-val String relayduinologgingname = "relayduino"
+val String loggingname = "relayduino"
 
 // define address for notifications
 val String notificationto = "greenthegarden@gmail.com"
@@ -27,7 +28,7 @@ var int lastRelayRunning = 0
 val org.eclipse.xtext.xbase.lib.Functions$Function2 relayOnCommand = [
 	Integer relayIdx,
 	Integer duration |
-		var cmdStr = ""
+		var String cmdStr = ""
 		cmdStr = relayIdx.toString + "," + duration.toString
 		RelayduinoRelayControl.sendCommand(cmdStr)
 		Thread::sleep(1000)
@@ -39,7 +40,7 @@ val org.eclipse.xtext.xbase.lib.Functions$Function2 relayOnCommand = [
 
 val org.eclipse.xtext.xbase.lib.Functions$Function1 relayOffCommand = [
 	Integer relayIdx |
-		var cmdStr = ""
+		var String cmdStr = ""
 		if (RelayduinoUseMasterRelay.state == ON) {
 			cmdStr = RelayduinoMasterRelay.state.toString + "," + "0"
 			RelayduinoRelayControl.sendCommand(cmdStr)
@@ -99,7 +100,7 @@ then
 	postUpdate(RelayduinoLastStatusUpdate, new DateTimeType())
 	if (relayduinoUpdateTimer == null || relayduinoUpdateTimer.hasTerminated) {
 		relayduinoUpdateTimer = createTimer(now.plusMinutes(2*relayduinoUpdateAge), [|
-			relayduinoState.sendCommand(OFF)
+			RelayduinoState.sendCommand(OFF)
 			relayduinoUpdateTimer = null
 			])
 	} else {
@@ -111,8 +112,8 @@ rule "Relayduino state change notification"
 when
 	Item RelayduinoState changed
 then
-	val String message = relayduinosystemname + ": "  + RelayduinoState.state.toString + " at " + new DateTime().toString
-	logInfo(relayduinologgingname, message)
+	val String message = systemname + ": "  + RelayduinoState.state.toString + " at " + new DateTime().toString
+	logInfo(loggingname, message)
 	sendNotification(notificationto, message)
 end
 
@@ -150,7 +151,7 @@ when
 then
 	var String message = ""
 	message = "RelayduinoRelayRequest state changed to " + RelayduinoRelayRequest.state.toString + " at " + new DateTime().toString
-	logInfo(relayduinologgingname, message)
+	logInfo(loggingname, message)
 
 	val String[] messageParts = RelayduinoRelayRequest.state.toString.split(",");
 	val Integer relay = Integer::parseInt(messageParts.get(0))
@@ -159,15 +160,15 @@ then
 	if (duration > 0) {		// relay request to turn on
 		RelayRequests.put(relay, duration)
 		message = "RelayRequests.put with relay " + relay + " and duration " + duration + " at " + new DateTime().toString
-		logInfo(relayduinologgingname, message)
+		logInfo(loggingname, message)
 	} else {		// relay was turned on
 		RelayRequests.remove(relay)
 		message = "RelayRequests.remove with relay " + relay + " at " + new DateTime().toString
-		logInfo(relayduinologgingname, message)
+		logInfo(loggingname, message)
 	}
 	RelayRequestsSize.postUpdate(RelayRequests.size())
 	message = "RelayRequests.size is " + RelayRequests.size()
-	logInfo(relayduinologgingname, message)
+	logInfo(loggingname, message)
 end
 
 rule "Relayduino Relay 1 Request"
@@ -192,13 +193,13 @@ then
 			// relay request to turn on
 			RelayRequests.put(relay, duration)
 			message = "RelayRequests.put with relay " + relay + " and duration " + duration + " at " + new DateTime().toString
-			logInfo(relayduinologgingname, message)
+			logInfo(loggingname, message)
 		}
 	} else {
 		// relay was turned on
 		RelayRequests.remove(relay)
 		message = "RelayRequests.remove with relay " + relay + " at " + new DateTime().toString
-		logInfo(relayduinologgingname, message)
+		logInfo(loggingname, message)
 		if (lastRelayRunning == relay) {
 			relayOffCommand.apply(relay)
 		}
@@ -232,13 +233,13 @@ then
 			// relay request to turn on
 			RelayRequests.put(relay, duration)
 			message = "RelayRequests.put with relay " + relay + " and duration " + duration + " at " + new DateTime().toString
-			logInfo(relayduinologgingname, message)
+			logInfo(loggingname, message)
 		}
 	} else {
 		// relay was turned on
 		RelayRequests.remove(relay)
 		message = "RelayRequests.remove with relay " + relay + " at " + new DateTime().toString
-		logInfo(relayduinologgingname, message)
+		logInfo(loggingname, message)
 		if (lastRelayRunning == relay) {
 			relayOffCommand.apply(relay)
 		}
@@ -272,13 +273,13 @@ then
 			// relay request to turn on
 			RelayRequests.put(relay, duration)
 			message = "RelayRequests.put with relay " + relay + " and duration " + duration + " at " + new DateTime().toString
-			logInfo(relayduinologgingname, message)
+			logInfo(loggingname, message)
 		}
 	} else {
 		// relay was turned on
 		RelayRequests.remove(relay)
 		message = "RelayRequests.remove with relay " + relay + " at " + new DateTime().toString
-		logInfo(relayduinologgingname, message)
+		logInfo(loggingname, message)
 		if (lastRelayRunning == relay) {
 			relayOffCommand.apply(relay)
 		}
@@ -312,13 +313,13 @@ then
 			// relay request to turn on
 			RelayRequests.put(relay, duration)
 			message = "RelayRequests.put with relay " + relay + " and duration " + duration + " at " + new DateTime().toString
-			logInfo(relayduinologgingname, message)
+			logInfo(loggingname, message)
 		}
 	} else {
 		// relay was turned on
 		RelayRequests.remove(relay)
 		message = "RelayRequests.remove with relay " + relay + " at " + new DateTime().toString
-		logInfo(relayduinologgingname, message)
+		logInfo(loggingname, message)
 		if (lastRelayRunning == relay) {
 			relayOffCommand.apply(relay)
 		}
@@ -336,7 +337,7 @@ when
 then
 	var String message = ""
 	message = "RelayduinoRelayState state changed to " + RelayduinoRelayState.state.toString + " at " + new DateTime().toString
-	logInfo(relayduinologgingname, message)
+	logInfo(loggingname, message)
 	val String[] messageParts = RelayduinoRelayState.state.toString.split(",");
 	val Integer relay = Integer::parseInt(messageParts.get(0))
 	val Integer state = Integer::parseInt(messageParts.get(1))
@@ -359,6 +360,9 @@ then
 			RelayduinoRelay8State.sendCommand(ON)
 		}
 		RelayduinoRelayRunning.postUpdate(relay)
+		message = systemname + ": " + "relay " + relay + " on" + " at " + new DateTime().toString
+		logInfo(loggingname, message)
+		sendNotification(notificationto, message)
 	} else if (state == 0) {
 		if (relay == 1) {
 			RelayduinoRelay1State.sendCommand(OFF)
@@ -378,6 +382,9 @@ then
 			RelayduinoRelay8State.sendCommand(OFF)
 		}
 		RelayduinoRelayRunning.postUpdate(0)
+		message = systemname + ": " + "relay " + relay + " off" + " at " + new DateTime().toString
+		logInfo(loggingname, message)
+		sendNotification(notificationto, message)	
 	}
 end
 

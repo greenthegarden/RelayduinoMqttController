@@ -10,7 +10,7 @@ An Ocean Controls KTA-223 Relayduino with an ethernet shield installed.
 
 In addition, an MQTT broker is required to running and accessible from the Arduino.
 
-Example code is included in [extras](extras), for [openHAB](http://openhab.org) and Python, to generate the required MQTT messages to control the relays and monitor inputs.
+[Example code is included](extras), for [openHAB](http://openhab.org) and Python, to generate the required MQTT messages to control the relays and monitor inputs.
 
 ## Configuration
 
@@ -18,14 +18,16 @@ The MQTT broker address is required to be defined within the source code. Set th
 
 ## Compiling code
 
+The project is structured for use both with [PlatformIO](http://platformio.org) and the [Arduino IDE](https://www.arduino.cc/en/Main/Software).
+
 ### PlatformIO
 
-The project is structured for use with [PlatformIO](http://platformio.org). If using PlatformIO, the external libraries used in the project will be automatically added.
+If using PlatformIO, the external libraries used in the project will be automatically added.
 
 ### Arduino IDE
 
-When using the KTA-223 with the Arduino Environment select “Arduino Duemilenove w/ ATmega328”
-from the “Tools->Board” menu, and install the “AUTO” jumper on the PCB.
+When using the KTA-223 with the Arduino IDE select “Arduino Duemilenove w/ ATmega328”
+from the “Tools->Board” menu.
 
 In addition, the following libraries are required
 
@@ -35,7 +37,11 @@ In addition, the following libraries are required
 - [TimeAlarms](http://www.pjrc.com/teensy/td_libs_TimeAlarms.html)
 - [Relayduino](https://github.com/greenthegarden/Relayduino)
 
-# Using program
+### Uploading Code
+
+When uploading code to the Relayduino ensure the “AUTO” jumper is installed on the PCB.
+
+## Operation
 
 In order to make use of the program, MQTT structured messages must be generated.
 

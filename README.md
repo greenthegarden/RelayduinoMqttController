@@ -2,7 +2,7 @@
 
 An [Arduino](http://arduino.cc) project to control an [Ocean Controls KTA-223 Relayduino](https://oceancontrols.com.au/KTA-223.html) via [MQTT](http://mqtt.org).
 
-![relayduino installation](docs/images/relayduino-installation.jpg)
+![relayduino installation](docs/images/relayduino-installation-312.jpg)
 
 ## Requirements
 

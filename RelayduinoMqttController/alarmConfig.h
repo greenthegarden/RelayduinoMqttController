@@ -5,7 +5,8 @@
 
 byte currentTimerRef = dtINVALID_ALARM_ID;
 
-void publish_alarm_id(byte ref = dtINVALID_ALARM_ID) {
+void publish_alarm_id(byte ref = dtINVALID_ALARM_ID)
+{
   if (ref == dtINVALID_ALARM_ID) {
     ref = Alarm.getTriggeredAlarmId();
   }
@@ -16,7 +17,8 @@ void publish_alarm_id(byte ref = dtINVALID_ALARM_ID) {
   mqttClient.publish(topicBuffer, itoa(ref, str, 10));
 }
 
-void alarm_cancel() {
+void alarm_cancel()
+{
   // disable current alarm
   byte ref = Alarm.getTriggeredAlarmId();
   Alarm.disable(ref);

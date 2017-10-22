@@ -45,7 +45,8 @@ const byte ANALOG_INPUTS[] = {ANALOG_IN_1, ANALOG_IN_2, ANALOG_IN_3};
 unsigned long inputsPreviousMillis = 0UL;
 const unsigned long INPUT_READ_INTERVAL = 5UL * 60UL * 1000UL;
 
-void publish_reading(byte inputType, byte idx, byte reading) {
+void publish_reading(byte inputType, byte idx, byte reading)
+{
   topicBuffer[0] = '\0';
   strcpy_P(topicBuffer, (char *)pgm_read_word(&(INPUT_TOPICS[inputType])));
   payloadBuffer[0] = '\0';
@@ -53,7 +54,8 @@ void publish_reading(byte inputType, byte idx, byte reading) {
   mqttClient.publish(topicBuffer, payloadBuffer);
 }
 
-void read_inputs() {
+void read_inputs()
+{
   // read analog inputs
   for (byte idx = 0; idx < ARRAY_SIZE(ANALOG_INPUTS); idx++) {
     byte reading = analogRead(ANALOG_INPUTS[idx]);

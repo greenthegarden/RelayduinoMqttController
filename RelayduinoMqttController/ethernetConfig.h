@@ -20,7 +20,8 @@ EthernetClient ethernetClient;
 
 const unsigned long NETWORK_STARTUP_DELAY = 1500UL;
 
-void ethernet_init() {
+void ethernet_init()
+{
   // Configure Ethernet
   if (Ethernet.begin(mac) == 0) {
     DEBUG_LOG(1, "Failed to configure Ethernet using DHCP");

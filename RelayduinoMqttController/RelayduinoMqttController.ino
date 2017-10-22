@@ -3,7 +3,8 @@
 
 #include "config.h"
 
-boolean mqtt_connect() {
+boolean mqtt_connect()
+{
   DEBUG_LOG(1, "Attempting MQTT connection ...");
   if (mqttClient.connect(MQTT_CLIENT_ID, MQTT_USERNAME, MQTT_PASSWORD)) {
     DEBUG_LOG(1, "  connected");
@@ -21,18 +22,8 @@ boolean mqtt_connect() {
   return mqttClient.connected();
 }
 
-void callback(char *topic, uint8_t *payload, unsigned int payloadLength) {
-  // handle message arrived
-  /* topic = part of the variable header:has topic name of the topic where the
-     publish received
-       NOTE: variable header does not contain the 2 bytes with the
-            publish msg ID
-      payload = pointer to the first item of the buffer array that
-                contains the message tha was published
-               EXAMPLE of payload: lights,1
-      length = the length of the payload, until which index of payload
-  */
-
+void callback(char *topic, uint8_t *payload, unsigned int payloadLength)
+{
   DEBUG_LOG(1, "Payload length is");
   DEBUG_LOG(1, payloadLength);
 
@@ -124,7 +115,8 @@ void callback(char *topic, uint8_t *payload, unsigned int payloadLength) {
   setup()
   Called by the Arduino framework once, before the main loop begins
   --------------------------------------------------------------------------------------*/
-void setup() {
+void setup()
+{
 #if DEBUG_LEVEL > 0
   Serial.begin(BAUD_RATE);
 #endif
@@ -161,7 +153,8 @@ void setup() {
   loop()
   Arduino main loop
   --------------------------------------------------------------------------------------*/
-void loop() {
+void loop()
+{
   // require an Alarm.delay in order to allow alarms to work
   Alarm.delay(0);
 

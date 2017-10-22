@@ -20,11 +20,9 @@ const char COMMAND_SEPARATOR = ',';
 // callback function definition
 void callback(char *topic, uint8_t *payload, unsigned int length);
 
+// mqttclient definition
 PubSubClient mqttClient(mqttServerAddr, MQTT_PORT, callback, ethernetClient);
 
-// MQTT topic definitions
-
-// MQTT payloads
 const char MQTT_PAYLOAD_CONNECTED[] PROGMEM = "CONNECTED";
 const char MQTT_PAYLOAD_OK[] PROGMEM = "OK";
 const char MQTT_PAYLOAD_ERROR[] PROGMEM = "ERROR";
@@ -41,7 +39,6 @@ PGM_P const MQTT_PAYLOADS[] PROGMEM = {
     MQTT_PAYLOAD_SLEEP,     // idx = 5
 };
 
-/* MQTT_PAYLOADS indices, must match table above */
 typedef enum {
   MQTT_PAYLOAD_CONNECTED_IDX = 0,
   MQTT_PAYLOAD_OK_IDX = 1,
@@ -51,7 +48,6 @@ typedef enum {
   MQTT_PAYLOAD_SLEEP_IDX = 5,
 } mqtt_payloads;
 
-// Status topics
 const char MQTT_STATUS[] PROGMEM = "relayduino/status/mqtt";
 const char VERSION_STATUS[] PROGMEM = "relayduino/status/version";
 const char INTERVAL_STATUS[] PROGMEM = "relayduino/status/interval";
@@ -74,7 +70,6 @@ PGM_P const STATUS_TOPICS[] PROGMEM = {
     RELAY_STATUS,    // idx = 8
 };
 
-// STATUS_TOPICS indices, must match table above
 typedef enum {
   MQTT_STATUS_IDX = 0,
   VERSION_STATUS_IDX = 1,
@@ -87,8 +82,6 @@ typedef enum {
   RELAY_STATUS_IDX = 8,
 } status_topics;
 
-// Relayduino Input topics
-
 const char ANALOG_INPUT[] PROGMEM = "relayduino/input/analog";
 const char OPTO_INPUT[] PROGMEM = "relayduino/input/opto";
 
@@ -97,13 +90,10 @@ PGM_P const INPUT_TOPICS[] PROGMEM = {
     OPTO_INPUT,   // idx = 1
 };
 
-// INPUT_TOPICS indices, must match table above
 typedef enum {
   ANALOG_INPUT_IDX = 0,
   OPTO_INPUT_IDX = 1,
 } input_topics;
-
-// Request topics
 
 const char UPTIME_REQUEST[] PROGMEM = "relayduino/request/uptime";
 const char STATE_REQUEST[] PROGMEM = "relayduino/request/relay_state";
@@ -113,7 +103,6 @@ PGM_P const REQUEST_TOPICS[] PROGMEM = {
     STATE_REQUEST,  // idx = 1
 };
 
-// INPUT_TOPICS indices, must match table above
 typedef enum {
   UPTIME_REQUEST_IDX = 0,
   STATE_REQUEST_IDX = 1,
@@ -132,7 +121,8 @@ typedef enum {
   RELAY_CONTROL_IDX = 0,
 } control_topics;
 
-void publish_connected() {
+void publish_connected()
+{
   topicBuffer[0] = '\0';
   strcpy_P(topicBuffer,
            (char *)pgm_read_word(&(STATUS_TOPICS[MQTT_STATUS_IDX])));
@@ -142,7 +132,8 @@ void publish_connected() {
   mqttClient.publish(topicBuffer, payloadBuffer);
 }
 
-void publish_version() {
+void publish_version()
+{
   topicBuffer[0] = '\0';
   strcpy_P(topicBuffer,
            (char *)pgm_read_word(&(STATUS_TOPICS[VERSION_STATUS_IDX])));
@@ -151,7 +142,8 @@ void publish_version() {
   mqttClient.publish(topicBuffer, payloadBuffer);
 }
 
-void publish_status_interval() {
+void publish_status_interval()
+{
   topicBuffer[0] = '\0';
   strcpy_P(topicBuffer,
            (char *)pgm_read_word(&(STATUS_TOPICS[INTERVAL_STATUS_IDX])));
@@ -160,7 +152,8 @@ void publish_status_interval() {
                      ltoa(STATUS_UPDATE_INTERVAL, payloadBuffer, 10));
 }
 
-void publish_ip_address() {
+void publish_ip_address()
+{
   topicBuffer[0] = '\0';
   strcpy_P(topicBuffer,
            (char *)pgm_read_word(&(STATUS_TOPICS[IP_ADDR_STATUS_IDX])));
@@ -172,7 +165,8 @@ void publish_ip_address() {
   mqttClient.publish(topicBuffer, payloadBuffer);
 }
 
-void publish_uptime() {
+void publish_uptime()
+{
   topicBuffer[0] = '\0';
   strcpy_P(topicBuffer,
            (char *)pgm_read_word(&(STATUS_TOPICS[UPTIME_STATUS_IDX])));
@@ -180,7 +174,8 @@ void publish_uptime() {
   mqttClient.publish(topicBuffer, ltoa(millis(), payloadBuffer, 10));
 }
 
-void publish_memory() {
+void publish_memory()
+{
   topicBuffer[0] = '\0';
   strcpy_P(topicBuffer,
            (char *)pgm_read_word(&(STATUS_TOPICS[MEMORY_STATUS_IDX])));
@@ -190,7 +185,8 @@ void publish_memory() {
   mqttClient.publish(topicBuffer, itoa(getFreeMemory(), payloadBuffer, 10));
 }
 
-void publish_relay_state(byte relayIdx, boolean relayState) {
+void publish_relay_state(byte relayIdx, boolean relayState)
+{
   payloadBuffer[0] = '\0';
   if (relayState) { // relay ON
     DEBUG_LOG(1, "relay on");
@@ -211,13 +207,15 @@ void publish_relay_state(byte relayIdx, boolean relayState) {
   mqttClient.publish(topicBuffer, payloadBuffer);
 }
 
-void publish_configuration() {
+void publish_configuration()
+{
   publish_version();
   publish_status_interval();
   publish_ip_address();
 }
 
-void publish_status() {
+void publish_status()
+{
   publish_uptime();
   publish_memory();
 }

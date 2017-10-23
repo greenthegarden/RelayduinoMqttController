@@ -18,7 +18,7 @@ The MQTT broker address is required to be defined within the source code. Set th
 
 ## Compiling code
 
-The project is structured for use both with [PlatformIO](http://platformio.org) and the [Arduino IDE](https://www.arduino.cc/en/Main/Software).
+The project is structured for use with both [PlatformIO](http://platformio.org) and the [Arduino IDE](https://www.arduino.cc/en/Main/Software).
 
 ### PlatformIO
 

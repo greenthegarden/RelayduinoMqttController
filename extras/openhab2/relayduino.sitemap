@@ -1,0 +1,81 @@
+sitemap relayduino label="Irrigation"
+{
+	Frame label="Relays" visibility=[RelayduinoState==ON] {
+//		Group item=gRelayduinoRelaysMode label="Relay mode"
+		Text item=RelayduinoRelayRunning label="Currently running"
+		Group item=gRelayduinoRelay1 label="Front grass" icon="lawnmower" {
+			Selection item=RelayduinoRelay1Mode label="Mode" icon="settings" mappings=[0="off", 1="auto", 2="manual"]
+			Setpoint item=RelayduinoRelay1ManualDuration label="Duration" icon="clock" minValue=0 maxValue=60 step=1 visibility=[RelayduinoRelay1Mode==2]
+			Switch item=RelayduinoRelay1Request label="Request" visibility=[RelayduinoRelay1Mode==2]
+			Switch item=RelayduinoRelay1State label="Running"
+			Text item=RelayduinoRelay1LastOn label="Last on" icon="calendar"
+			Text item=RelayduinoRelay1LastOff label="Last off" icon="calendar"
+		}
+		Group item=gRelayduinoRelay2 label="Shrubs" icon="faucet" {
+			Selection item=RelayduinoRelay2Mode label="Mode" icon="settings" mappings=[0="off", 1="auto", 2="manual"]
+			Setpoint item=RelayduinoRelay2ManualDuration label="Duration" icon="clock" minValue=0 maxValue=60 step=5 visibility=[RelayduinoRelay2Mode==2]
+			Switch item=RelayduinoRelay2Request label="Request" visibility=[RelayduinoRelay2Mode==2]
+			Switch item=RelayduinoRelay2State label="Running"
+			Text item=RelayduinoRelay2LastOn label="Last on" icon="calendar"
+			Text item=RelayduinoRelay2LastOff label="Last off" icon="calendar"
+		}
+		Group item=gRelayduinoRelay3 label="Trees" icon="garden" {
+			Selection item=RelayduinoRelay3Mode label="Mode" icon="settings" mappings=[0="off", 1="auto", 2="manual"]
+			Setpoint item=RelayduinoRelay3ManualDuration label="Duration" icon="clock" minValue=0 maxValue=300 step=10 visibility=[RelayduinoRelay3Mode==2]
+			Switch item=RelayduinoRelay3Request label="Request" visibility=[RelayduinoRelay3Mode==2]
+			Switch item=RelayduinoRelay3State label="Running"
+			Text item=RelayduinoRelay3LastOn label="Last on" icon="calendar"
+			Text item=RelayduinoRelay3LastOff label="Last off" icon="calendar"
+		}
+		Group item=gRelayduinoRelay4 label="Vegetables" icon="faucet" {
+			Selection item=RelayduinoRelay4Mode label="Mode" icon="settings" mappings=[0="off", 1="auto", 2="manual"]
+			Setpoint item=RelayduinoRelay4ManualDuration label="Duration" icon="clock" minValue=0 maxValue=60 step=1 visibility=[RelayduinoRelay4Mode==2]
+			Switch item=RelayduinoRelay4Request label="Request" visibility=[RelayduinoRelay4Mode==2]
+			Switch item=RelayduinoRelay4State label="Running"
+			Text item=RelayduinoRelay4LastOn label="Last on" icon="calendar"
+			Text item=RelayduinoRelay4LastOff label="Last off" icon="calendar"
+		}
+		Group item=gRelayduinoRelay8 label="Master" icon="faucet" visibility=[RelayduinoUseMasterRelay==OFF] {
+			Selection item=RelayduinoRelay8Mode label="Mode" icon="settings" mappings=[0="off", 1="auto", 2="manual"]
+			Setpoint item=RelayduinoRelay8ManualDuration label="Duration" icon="clock" minValue=0 maxValue=300 step=1 visibility=[RelayduinoRelay8Mode==2]
+			Switch item=RelayduinoRelay8Request label="Request" visibility=[RelayduinoRelay8Mode==2]
+			Switch item=RelayduinoRelay8State label="Running"
+			Text item=RelayduinoRelay8LastOn label="Last on" icon="calendar"
+			Text item=RelayduinoRelay8LastOff label="Last off" icon="calendar"
+		}
+  }	// end Frame label="Relays"
+	Frame label="Status and Configuration" {
+		Text label="Status and Configuration" icon="settings" {
+			Frame label="Status" {
+				Switch item=RelayduinoState label="Connected"
+				Text item=RelayduinoUptime label="Uptime" icon="clock"
+				Text item=RelayduinoMemory label="Memory" icon="chart"
+				Text item=RelayduinoLastStatusUpdate label="Last Status Update" icon="calendar"
+			}
+			Frame label="Configuration" {
+				Text item=RelayduinoLastConnected label="Last Connected" icon="calendar"
+				Text item=RelayduinoStatusInterval label="Status Interval" icon="clock"
+				Text item=RelayduinoIpAddress label="IP Address" icon="network"
+			}
+			Frame label="Settings" {
+				Switch item=RelayduinoUseMasterRelay label="Use Master Relay" icon="switch"
+				Setpoint item=RelayduinoMasterRelay label="Master Relay" icon="settings" minValue=1 maxValue=8 step=1 visibility=[RelayduinoUseMasterRelay==ON]
+			}
+			Frame label="Default Durations" {
+				Setpoint item=RelayduinoRelay1DefaultDuration label="Relay 1" icon="clock" minValue=0 maxValue=300 step=5
+				Setpoint item=RelayduinoRelay2DefaultDuration label="Relay 2" icon="clock" minValue=0 maxValue=300 step=5
+				Setpoint item=RelayduinoRelay3DefaultDuration label="Relay 3" icon="clock" minValue=0 maxValue=300 step=5
+				Setpoint item=RelayduinoRelay4DefaultDuration label="Relay 4" icon="clock" minValue=0 maxValue=300 step=5
+				Setpoint item=RelayduinoRelay5DefaultDuration label="Relay 5" icon="clock" minValue=0 maxValue=300 step=5
+				Setpoint item=RelayduinoRelay6DefaultDuration label="Relay 6" icon="clock" minValue=0 maxValue=300 step=5
+				Setpoint item=RelayduinoRelay7DefaultDuration label="Relay 7" icon="clock" minValue=0 maxValue=300 step=5
+				Setpoint item=RelayduinoRelay8DefaultDuration label="Relay 8" icon="clock" minValue=0 maxValue=300 step=5
+			}
+			Frame label="Relay States" {
+				Text item=RelayduinoAlarmId label="Alarm" icon="error"
+				Text item=RelayRequestsSize label="Requests Length" icon="rain"
+				Group item=gRelayduinoRelaysState label="Relays" icon="water"
+			}
+		}	// end Text label="Status and Configuration"
+	}	// end Frame label="Status and Configuration"
+}

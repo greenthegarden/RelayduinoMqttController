@@ -22,7 +22,7 @@ With the relay in automatic mode only the current running status and Last on and
 
 ### Relay Mode Manual
 
-With the relay in manual mode the duration can be set and a request for the relay to be switched on made.
+With the relay in manual mode, the duration can be set and a request for the relay to be switched on made.
 
 ![Relay Mode Manual screen](screenshots/relay-mode-manual.png)
 

@@ -1,0 +1,121 @@
+Group     gRelayduino
+
+// configuration items
+Group     gRelayduinoConfig
+String    RelayduinoConnectedMessage      "[%s]"                          (gRelayduino, gRelayduinoConfig)  {mqtt="<[emonpi:relayduino/status/mqtt:state:default]"}
+DateTime  RelayduinoLastConnected         "[%1$tT, %1$td.%1$tm.%1$tY]"    (gRelayduino, gRelayduinoConfig)
+Number    RelayduinoStatusInterval        "[%d mSecs]"                    (gRelayduino, gRelayduinoConfig)  {mqtt="<[emonpi:relayduino/status/interval:state:default]"}
+String    RelayduinoIpAddress             "[%s]"                          (gRelayduino, gRelayduinoConfig)  {mqtt="<[emonpi:relayduino/status/ip_addr:state:default]"}
+
+// status items
+Group     gRelayduinoStatus
+Number    RelayduinoUptimeRaw             "[%d]"                          (gRelayduino, gRelayduinoStatus)  {mqtt="<[emonpi:relayduino/status/uptime:state:default]"}
+String    RelayduinoUptime                "[%s]"                          (gRelayduino, gRelayduinoStatus)  {mqtt="<[emonpi:relayduino/status/uptime:state:JS(uptimeFromMilliSeconds.js)]"}
+Number    RelayduinoMemory                "[%d bytes]"                    (gRelayduino, gRelayduinoStatus)  {mqtt="<[emonpi:relayduino/status/memory:state:default]"}
+DateTime  RelayduinoLastStatusUpdate      "[%1$tT, %1$td.%1$tm.%1$tY]"    (gRelayduino, gRelayduinoStatus)
+Switch    RelayduinoState                                                 (gRelayduino, gRelayduinoStatus)
+
+// settings items
+Group     gRelayduinoSettings
+Switch    RelayduinoUseMasterRelay                                        (gRelayduino, gRelayduinoSettings)
+Number    RelayduinoMasterRelay           "Master relay [%d]"                          (gRelayduino, gRelayduinoSettings)
+
+// default durations
+Group     gRelayduinoDefaultDurations
+Number    RelayduinoRelay_1_DefaultDuration "[%d minutes]"                  (gRelayduino, gRelayduinoDefaultDurations, gRelayduinoRelay1)
+Number    RelayduinoRelay_2_DefaultDuration "[%d minutes]"                  (gRelayduino, gRelayduinoDefaultDurations, gRelayduinoRelay2)
+Number    RelayduinoRelay_3_DefaultDuration "[%d minutes]"                  (gRelayduino, gRelayduinoDefaultDurations, gRelayduinoRelay3)
+Number    RelayduinoRelay_4_DefaultDuration "[%d minutes]"                  (gRelayduino, gRelayduinoDefaultDurations, gRelayduinoRelay4)
+Number    RelayduinoRelay_5_DefaultDuration "[%d minutes]"                  (gRelayduino, gRelayduinoDefaultDurations, gRelayduinoRelay5)
+Number    RelayduinoRelay_6_DefaultDuration "[%d minutes]"                  (gRelayduino, gRelayduinoDefaultDurations, gRelayduinoRelay6)
+Number    RelayduinoRelay_7_DefaultDuration "[%d minutes]"                  (gRelayduino, gRelayduinoDefaultDurations, gRelayduinoRelay7)
+Number    RelayduinoRelay_8_DefaultDuration "[%d minutes]"                  (gRelayduino, gRelayduinoDefaultDurations, gRelayduinoRelay8)
+
+// input values from Relayduino
+String    RelayduinoRelayState            "[%s]"                          (gRelayduino)                     {mqtt="<[emonpi:relayduino/status/relay:state:default]"}
+Number    RelayduinoAlarmId               "[%d]"                          (gRelayduino)                     {mqtt="<[emonpi:relayduino/status/alarm:state:default]"}
+String    RelayduinoRelayRequest          "[%s]"                          (gRelayduino)                     {mqtt="<[emonpi:relayduino/status/request:state:default]"}
+
+// analog input values
+String    RelayduinoAnalogInput           "[%s]"                          (gRelayduino)                     {mqtt="<[emonpi:relayduino/input/analog:state:default]"}
+
+// digital input values
+String	  RelayduinoDigitalInput          "[%s]"                          (gRelayduino)                     {mqtt="<[emonpi:relayduino/input/digital:state:default]"}
+
+// relay control messages to Relayduino
+String    RelayduinoRelayControl          "[%s]"                          (gRelayduino)                     {mqtt=">[emonpi:relayduino/control/relay:command:*:default]"}
+Number    RelayRequestsSize               "[%d]"                          (gRelayduino)
+
+Group:Switch:OR(ON, OFF)  gRelayduinoRelaysRequest
+Group:Switch:OR(ON, OFF)  gRelayduinoRelaysState "State"
+Group:Switch:AND(ON, OFF) gRelayduinoRelaysEnable
+Group:Number              gRelayduinoRelaysMode
+Group:Number              gRelayduinoRelaysManualDuration
+Group:Switch:OR(ON, OFF)  gRelayduinoRelaysRun
+Group:DateTime:MAX        gRelayduinoRelaysLastOn "The last relay on at [%1$tm/%1$td %1$tH:%1$tM]"
+
+Number    RelayduinoRelayRunning          "[%d]"                          (gRelayduino)
+Switch    RelaysEnable                                                    (gRelayduino)
+
+// relay states
+Group     gRelayduinoRelay1
+Switch    RelayduinoRelay_1_Enable                                          (gRelayduino, gRelayduinoRelay1, gRelayduinoRelaysEnable)
+Number 	  RelayduinoRelay_1_Mode			                                (gRelayduino, gRelayduinoRelay1, gRelayduinoRelaysMode)
+Number    RelayduinoRelay_1_ManualDuration  "Manual duration [%d minutes]"  (gRelayduino, gRelayduinoRelay1, gRelayduinoRelaysManualDuration)
+Switch    RelayduinoRelay_1_Request                                         (gRelayduino, gRelayduinoRelay1, gRelayduinoRelaysRequest)
+DateTime  RelayduinoRelay_1_LastRequestOn   "[%1$tT, %1$td.%1$tm.%1$tY]"    (gRelayduino, gRelayduinoRelay1)
+DateTime  RelayduinoRelay_1_LastRequestOff  "[%1$tT, %1$td.%1$tm.%1$tY]"    (gRelayduino, gRelayduinoRelay1)
+Switch    RelayduinoRelay_1_State                                           (gRelayduino, gRelayduinoRelay1, gRelayduinoRelaysState)
+DateTime  RelayduinoRelay_1_LastOn          "[%1$tT, %1$td.%1$tm.%1$tY]"    (gRelayduino, gRelayduinoRelay1)
+DateTime  RelayduinoRelay_1_LastOff         "[%1$tT, %1$td.%1$tm.%1$tY]"    (gRelayduino, gRelayduinoRelay1)
+
+Group     gRelayduinoRelay2
+Switch    RelayduinoRelay_2_Enable                                          (gRelayduino, gRelayduinoRelay2, gRelayduinoRelaysEnable)
+Number 	  RelayduinoRelay_2_Mode			                                (gRelayduino, gRelayduinoRelay2, gRelayduinoRelaysMode)
+Number    RelayduinoRelay_2_ManualDuration  "[%d minutes]"                  (gRelayduino, gRelayduinoRelay2, gRelayduinoRelaysManualDuration)
+Switch    RelayduinoRelay_2_Request                                         (gRelayduino, gRelayduinoRelay2, gRelayduinoRelaysRequest)
+DateTime  RelayduinoRelay_2_LastRequestOn   "[%1$tT, %1$td.%1$tm.%1$tY]"    (gRelayduino, gRelayduinoRelay2)
+DateTime  RelayduinoRelay_2_LastRequestOff  "[%1$tT, %1$td.%1$tm.%1$tY]"    (gRelayduino, gRelayduinoRelay2)
+Switch    RelayduinoRelay_2_State                                           (gRelayduino, gRelayduinoRelay2, gRelayduinoRelaysState)
+DateTime  RelayduinoRelay_2_LastOn          "[%1$tT, %1$td.%1$tm.%1$tY]"    (gRelayduino, gRelayduinoRelay2)
+DateTime  RelayduinoRelay_2_LastOff         "[%1$tT, %1$td.%1$tm.%1$tY]"    (gRelayduino, gRelayduinoRelay2)
+
+Group     gRelayduinoRelay3
+Switch    RelayduinoRelay_3_Enable                                          (gRelayduino, gRelayduinoRelay3, gRelayduinoRelaysEnable)
+Number 	  RelayduinoRelay_3_Mode			                                (gRelayduino, gRelayduinoRelay3, gRelayduinoRelaysMode)
+Number    RelayduinoRelay_3_ManualDuration  "[%d minutes]"                  (gRelayduino, gRelayduinoRelay3, gRelayduinoRelaysManualDuration)
+Switch    RelayduinoRelay_3_Request                                         (gRelayduino, gRelayduinoRelay3, gRelayduinoRelaysRequest)
+DateTime  RelayduinoRelay_3_LastRequestOn   "[%1$tT, %1$td.%1$tm.%1$tY]"    (gRelayduino, gRelayduinoRelay3)
+DateTime  RelayduinoRelay_3_LastRequestOff  "[%1$tT, %1$td.%1$tm.%1$tY]"    (gRelayduino, gRelayduinoRelay3)
+Switch    RelayduinoRelay_3_State                                           (gRelayduino, gRelayduinoRelay3, gRelayduinoRelaysState)
+DateTime  RelayduinoRelay_3_LastOn          "[%1$tT, %1$td.%1$tm.%1$tY]"    (gRelayduino, gRelayduinoRelay3)
+DateTime  RelayduinoRelay_3_LastOff         "[%1$tT, %1$td.%1$tm.%1$tY]"    (gRelayduino, gRelayduinoRelay3)
+
+Group     gRelayduinoRelay4
+Switch    RelayduinoRelay_4_Enable                                          (gRelayduino, gRelayduinoRelay4, gRelayduinoRelaysEnable)
+Number 	  RelayduinoRelay_4_Mode			                                (gRelayduino, gRelayduinoRelay4, gRelayduinoRelaysMode)
+Number    RelayduinoRelay_4_ManualDuration  "[%d minutes]"                  (gRelayduino, gRelayduinoRelay4, gRelayduinoRelaysManualDuration)
+Switch    RelayduinoRelay_4_Request                                         (gRelayduino, gRelayduinoRelay4, gRelayduinoRelaysRequest)
+DateTime  RelayduinoRelay_4_LastRequestOn   "[%1$tT, %1$td.%1$tm.%1$tY]"    (gRelayduino, gRelayduinoRelay4)
+DateTime  RelayduinoRelay_4_LastRequestOff  "[%1$tT, %1$td.%1$tm.%1$tY]"    (gRelayduino, gRelayduinoRelay4)
+Switch    RelayduinoRelay_4_State                                           (gRelayduino, gRelayduinoRelay4, gRelayduinoRelaysState)
+DateTime  RelayduinoRelay_4_LastOn          "[%1$tT, %1$td.%1$tm.%1$tY]"    (gRelayduino, gRelayduinoRelay4)
+DateTime  RelayduinoRelay_4_LastOff         "[%1$tT, %1$td.%1$tm.%1$tY]"    (gRelayduino, gRelayduinoRelay4)
+
+Group     gRelayduinoRelay8
+Switch    RelayduinoRelay_8_Enable                                          (gRelayduino, gRelayduinoRelay8, gRelayduinoRelaysEnable)
+Number 	  RelayduinoRelay_8_Mode			                                 (gRelayduino, gRelayduinoRelay8, gRelayduinoRelaysMode)
+Number    RelayduinoRelay_8_ManualDuration  "[%d minutes]"                  (gRelayduino, gRelayduinoRelay8, gRelayduinoRelaysManualDuration)
+Switch    RelayduinoRelay_8_Request                                         (gRelayduino, gRelayduinoRelay8, gRelayduinoRelaysRequest)
+DateTime  RelayduinoRelay_8_LastRequestOn   "[%1$tT, %1$td.%1$tm.%1$tY]"    (gRelayduino, gRelayduinoRelay8)
+DateTime  RelayduinoRelay_8_LastRequestOff  "[%1$tT, %1$td.%1$tm.%1$tY]"    (gRelayduino, gRelayduinoRelay8)
+Switch    RelayduinoRelay_8_State                                           (gRelayduino, gRelayduinoRelay8, gRelayduinoRelaysState)
+DateTime  RelayduinoRelay_8_LastOn          "[%1$tT, %1$td.%1$tm.%1$tY]"    (gRelayduino, gRelayduinoRelay8)
+DateTime  RelayduinoRelay_8_LastOff         "[%1$tT, %1$td.%1$tm.%1$tY]"    (gRelayduino, gRelayduinoRelay8)
+
+Group    gIrrigationEvents
+String   IrrigationEvent_1_Name  "Event [%s]"                         <calendar>  (gEvents, gIrrigationEvents)  {caldavPersonal="calendar:irrigation type:EVENT eventNr:1 value:NAME"}
+String   IrrigationEvent_1_Desc  "Description [%s]"                   <calendar>  (gEvents, gIrrigationEvents)  {caldavPersonal="calendar:irrigation type:EVENT eventNr:1 value:DESCRIPTION"}
+String   IrrigationEvent_1_Place "Place [%s]"                         <calendar>  (gEvents, gIrrigationEvents)  {caldavPersonal="calendar:irrigation type:EVENT eventNr:1 value:PLACE"}
+DateTime IrrigationEvent_1_Start "Start [%1$tT, %1$td.%1$tm.%1$tY]"   <calendar>  (gEvents, gIrrigationEvents)  {caldavPersonal="calendar:irrigation type:EVENT eventNr:1 value:START"}
+DateTime IrrigationEvent_1_End   "End [%1$tT, %1$td.%1$tm.%1$tY]"     <calendar>  (gEvents, gIrrigationEvents)  {caldavPersonal="calendar:irrigation type:EVENT eventNr:1 value:END"}

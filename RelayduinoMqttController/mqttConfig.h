@@ -57,6 +57,7 @@ const char MEMORY_STATUS[] PROGMEM = "relayduino/status/memory";
 const char TIME_STATUS[] PROGMEM = "relayduino/status/time";
 const char ALARM_STATUS[] PROGMEM = "relayduino/status/alarm";
 const char RELAY_STATUS[] PROGMEM = "relayduino/status/relay";
+const char FLOWRATE_STATUS[] PROGMEM = "relayduino/status/flowrate";
 
 PGM_P const STATUS_TOPICS[] PROGMEM = {
     MQTT_STATUS,     // idx = 0
@@ -68,6 +69,7 @@ PGM_P const STATUS_TOPICS[] PROGMEM = {
     TIME_STATUS,     // idx = 6
     ALARM_STATUS,    // idx = 7
     RELAY_STATUS,    // idx = 8
+    FLOWRATE_STATUS,
 };
 
 typedef enum {
@@ -80,6 +82,7 @@ typedef enum {
   TIME_STATUS_IDX = 6,
   ALARM_STATUS_IDX = 7,
   RELAY_STATUS_IDX = 8,
+  FLOWRATE_STATUS_IDX = 9,
 } status_topics;
 
 const char ANALOG_INPUT[] PROGMEM = "relayduino/input/analog";

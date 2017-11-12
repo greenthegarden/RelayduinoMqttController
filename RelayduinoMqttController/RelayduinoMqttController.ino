@@ -117,9 +117,9 @@ void callback(char *topic, uint8_t *payload, unsigned int payloadLength)
   --------------------------------------------------------------------------------------*/
 void setup()
 {
-#if DEBUG_LEVEL > 0
   Serial.begin(BAUD_RATE);
-#endif
+  icsc.begin();
+  icsc.registerCommand('F', &flowrate);
 
   DEBUG_LOG(1, "RELAYDUINO");
 
@@ -155,6 +155,8 @@ void setup()
   --------------------------------------------------------------------------------------*/
 void loop()
 {
+  icsc.process();
+
   // require an Alarm.delay in order to allow alarms to work
   Alarm.delay(0);
 
@@ -179,6 +181,13 @@ void loop()
     if (mqttClientConnected) {
       statusPreviousMillis = now;
       publish_status();
+    }
+  }
+
+  if (now - flowratePreviousMillis >= FLOWRATE_UPDATE_INTERVAL) {
+    if (mqttClientConnected) {
+      statusPreviousMillis = now;
+      publish_flowrate();
     }
   }
 

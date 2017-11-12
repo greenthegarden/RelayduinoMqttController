@@ -16,7 +16,7 @@
 
 // global variable definitions
 #if DEBUG_LEVEL > 0
-const int BAUD_RATE = 9600;
+#define BAUD_RATE 9600
 #endif
 
 const byte BUFFER_SIZE = 32;
@@ -29,8 +29,11 @@ unsigned long statusPreviousMillis = 0UL;
 #include "ethernetConfig.h"
 #include "mqttConfig.h"
 
+#include "icscConfig.h"
+
 #include "alarmConfig.h"
 #include "relayConfig.h"
+#include "flowrateConfig.h"
 
 void no_network_behaviour() { relays_switch_off(); }
 

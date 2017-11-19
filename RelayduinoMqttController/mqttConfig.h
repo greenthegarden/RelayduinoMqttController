@@ -213,16 +213,16 @@ void publish_relay_state(byte relayIdx, boolean relayState)
   mqttClient.publish(topicBuffer, payloadBuffer);
 }
 
-void publish_temperature()
-{
-  topicBuffer[0] = '\0';
-  strcpy_P(topicBuffer,
-           (char *)pgm_read_word(&(STATUS_TOPICS[TEMPERATURE_STATUS_IDX])));
-  payloadBuffer[0] = '\0';
-  getCurrentTemp(temp_string);
-  strcpy(payloadBuffer, temp_string);
-  mqttClient.publish(topicBuffer, payloadBuffer);
-}
+// void publish_temperature()
+// {
+//   topicBuffer[0] = '\0';
+//   strcpy_P(topicBuffer,
+//            (char *)pgm_read_word(&(STATUS_TOPICS[TEMPERATURE_STATUS_IDX])));
+//   payloadBuffer[0] = '\0';
+//   getCurrentTemp(temp_string);
+//   strcpy(payloadBuffer, temp_string);
+//   mqttClient.publish(topicBuffer, payloadBuffer);
+// }
 
 void publish_configuration()
 {
@@ -235,7 +235,7 @@ void publish_status()
 {
   publish_uptime();
   publish_memory();
-  publish_temperature();
+  // publish_temperature();
 }
 
 #endif /* RELAYDUINOMQTTCONTROLLER_MQTT_CONFIG_H_ */

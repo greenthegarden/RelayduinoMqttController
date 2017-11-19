@@ -1,6 +1,8 @@
+#ifndef RELAYDUINOMQTTCONTROLLER_FLOWRATE_CONFIG_H_
+#define RELAYDUINOMQTTCONTROLLER_FLOWRATE_CONFIG_H_
+
 const unsigned long FLOWRATE_UPDATE_INTERVAL = 60UL * 1000UL; // 1 minute
 unsigned long flowratePreviousMillis = 0UL;
-
 
 unsigned long volumeCumulative = 0UL;
 int volume = 0;
@@ -33,3 +35,5 @@ void publish_flowrate()
   ltoa(volumeCumulative, payloadBuffer, 10);
   mqttClient.publish(topicBuffer, payloadBuffer);
 }
+
+#endif /* RELAYDUINOMQTTCONTROLLER_FLOWRATE_CONFIG_H_ */

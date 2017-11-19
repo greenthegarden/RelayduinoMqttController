@@ -1,0 +1,9 @@
+#ifndef RELAYDUINOMQTTCONTROLLER_ONEWIRE_CONFIG_H_
+#define RELAYDUINOMQTTCONTROLLER_ONEWIRE_CONFIG_H_
+
+#include <OneWire.h>
+
+// DS18S20 Temperature chip i/o
+OneWire ds(10);  // on pin 10
+
+#endif /* RELAYDUINOMQTTCONTROLLER_ONEWIRE_CONFIG_H_ */

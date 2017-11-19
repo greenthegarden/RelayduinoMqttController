@@ -57,6 +57,7 @@ const char MEMORY_STATUS[] PROGMEM = "relayduino/status/memory";
 const char TIME_STATUS[] PROGMEM = "relayduino/status/time";
 const char ALARM_STATUS[] PROGMEM = "relayduino/status/alarm";
 const char RELAY_STATUS[] PROGMEM = "relayduino/status/relay";
+const char TEMPERATURE_STATUS[] PROGMEM = "relayduino/status/temperature";
 const char FLOWRATE_STATUS[] PROGMEM = "relayduino/status/flowrate";
 
 PGM_P const STATUS_TOPICS[] PROGMEM = {
@@ -69,6 +70,7 @@ PGM_P const STATUS_TOPICS[] PROGMEM = {
     TIME_STATUS,     // idx = 6
     ALARM_STATUS,    // idx = 7
     RELAY_STATUS,    // idx = 8
+    TEMPERATURE_STATUS,    // idx = 9
     FLOWRATE_STATUS,
 };
 
@@ -82,7 +84,8 @@ typedef enum {
   TIME_STATUS_IDX = 6,
   ALARM_STATUS_IDX = 7,
   RELAY_STATUS_IDX = 8,
-  FLOWRATE_STATUS_IDX = 9,
+  TEMPERATURE_STATUS_IDX = 9,
+  FLOWRATE_STATUS_IDX = 10,
 } status_topics;
 
 const char ANALOG_INPUT[] PROGMEM = "relayduino/input/analog";
@@ -190,6 +193,13 @@ void publish_memory()
 
 void publish_relay_state(byte relayIdx, boolean relayState)
 {
+  topicBuffer[0] = '\0';
+  strcpy_P(topicBuffer,
+           (char *)pgm_read_word(&(STATUS_TOPICS[RELAY_STATUS_IDX])));
+  // create message in format "idx,ON"
+  // add relay index
+  DEBUG_LOG(1, "topicBuffer: ");
+  DEBUG_LOG(1, topicBuffer);
   payloadBuffer[0] = '\0';
   if (relayState) { // relay ON
     DEBUG_LOG(1, "relay on");
@@ -200,14 +210,18 @@ void publish_relay_state(byte relayIdx, boolean relayState)
   }
   DEBUG_LOG(1, "payloadBuffer: ");
   DEBUG_LOG(1, payloadBuffer);
+  mqttClient.publish(topicBuffer, payloadBuffer);
+}
+
+void publish_temperature()
+{
   topicBuffer[0] = '\0';
   strcpy_P(topicBuffer,
-           (char *)pgm_read_word(&(STATUS_TOPICS[RELAY_STATUS_IDX])));
-  // create message in format "idx,ON"
-  // add relay index
-  DEBUG_LOG(1, "topicBuffer: ");
-  DEBUG_LOG(1, topicBuffer);
-  mqttClient.publish(topicBuffer, payloadBuffer);
+           (char *)pgm_read_word(&(STATUS_TOPICS[TEMPERATURE_STATUS_IDX])));
+  payloadBuffer[0] = '\0';
+  //  itoa(getFreeMemory(), payloadBuffer, 10);
+  //  mqttClient.publish(topicBuffer, payloadBuffer);
+  mqttClient.publish(topicBuffer, itoa(getFreeMemory(), payloadBuffer, 10));
 }
 
 void publish_configuration()
@@ -221,6 +235,7 @@ void publish_status()
 {
   publish_uptime();
   publish_memory();
+  publish_temperature();
 }
 
 #endif /* RELAYDUINOMQTTCONTROLLER_MQTT_CONFIG_H_ */

@@ -26,6 +26,8 @@ char payloadBuffer[BUFFER_SIZE];
 const unsigned long STATUS_UPDATE_INTERVAL = 5UL * 60UL * 1000UL; // 5 minutes
 unsigned long statusPreviousMillis = 0UL;
 
+#include "onewireConfig.h"
+
 #include "ethernetConfig.h"
 #include "mqttConfig.h"
 

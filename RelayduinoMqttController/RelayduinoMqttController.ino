@@ -121,6 +121,8 @@ void setup()
   icsc.begin();
   icsc.registerCommand('F', &flowrate);
 
+  onewire_init();
+
   DEBUG_LOG(1, "RELAYDUINO");
 
   // configure ethernet

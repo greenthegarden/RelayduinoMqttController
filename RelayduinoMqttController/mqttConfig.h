@@ -219,9 +219,9 @@ void publish_temperature()
   strcpy_P(topicBuffer,
            (char *)pgm_read_word(&(STATUS_TOPICS[TEMPERATURE_STATUS_IDX])));
   payloadBuffer[0] = '\0';
-  //  itoa(getFreeMemory(), payloadBuffer, 10);
-  //  mqttClient.publish(topicBuffer, payloadBuffer);
-  mqttClient.publish(topicBuffer, itoa(getFreeMemory(), payloadBuffer, 10));
+  getCurrentTemp(temp_string);
+  strcpy(payloadBuffer, temp_string);
+  mqttClient.publish(topicBuffer, payloadBuffer);
 }
 
 void publish_configuration()

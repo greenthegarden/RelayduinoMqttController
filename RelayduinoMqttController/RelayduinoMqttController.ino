@@ -186,10 +186,10 @@ void loop()
     }
   }
 
-  if (now - flowratePreviousMillis >= FLOWRATE_UPDATE_INTERVAL) {
+  if (now - volumePreviousMillis >= VOLUME_UPDATE_INTERVAL) {
     if (mqttClientConnected) {
-      statusPreviousMillis = now;
-      publish_flowrate();
+      volumePreviousMillis = now;
+      publish_volume();
     }
   }
 

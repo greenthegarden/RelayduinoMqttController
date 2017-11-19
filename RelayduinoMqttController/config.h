@@ -35,7 +35,7 @@ unsigned long statusPreviousMillis = 0UL;
 
 #include "alarmConfig.h"
 #include "relayConfig.h"
-#include "flowrateConfig.h"
+#include "flowConfig.h"
 
 void no_network_behaviour() { relays_switch_off(); }
 

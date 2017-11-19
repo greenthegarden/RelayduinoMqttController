@@ -104,7 +104,7 @@ DateTime  RelayduinoRelay_4_LastOff         "[%1$tT, %1$td.%1$tm.%1$tY]"    (gRe
 
 Group     gRelayduinoRelay8
 Switch    RelayduinoRelay_8_Enable                                          (gRelayduino, gRelayduinoRelay8, gRelayduinoRelaysEnable)
-Number 	  RelayduinoRelay_8_Mode			                                 (gRelayduino, gRelayduinoRelay8, gRelayduinoRelaysMode)
+Number 	  RelayduinoRelay_8_Mode			                                (gRelayduino, gRelayduinoRelay8, gRelayduinoRelaysMode)
 Number    RelayduinoRelay_8_ManualDuration  "[%d minutes]"                  (gRelayduino, gRelayduinoRelay8, gRelayduinoRelaysManualDuration)
 Switch    RelayduinoRelay_8_Request                                         (gRelayduino, gRelayduinoRelay8, gRelayduinoRelaysRequest)
 DateTime  RelayduinoRelay_8_LastRequestOn   "[%1$tT, %1$td.%1$tm.%1$tY]"    (gRelayduino, gRelayduinoRelay8)

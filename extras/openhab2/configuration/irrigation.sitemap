@@ -1,10 +1,13 @@
 sitemap irrigation label="Irrigation"
 {
-	Frame label="Zones" visibility=[RelayduinoState==ON] {
-		
+	Frame label="Zones" visibility=[RelayduinoState==ON]
+	{	
 		Text item=RelayduinoRelayRunning label="Zone currently running" visibility=[gRelayduinoRelaysEnable==ON]
+		Text item=RelayduinoFlowrate label="Flowrate" visibility=[gRelayduinoRelaysEnable==ON]
+		Text item=RelayduinoVolume label="Volume" visibility=[gRelayduinoRelaysEnable==ON]
 		
-		Group item=gRelayduinoRelay1 label="Front grass" icon="faucet" visibility=[RelayduinoRelay_1_Enable==ON] {
+		Group item=gRelayduinoRelay1 label="Front grass" icon="faucet" visibility=[RelayduinoRelay_1_Enable==ON]
+		{
 			Selection item=RelayduinoRelay_1_Mode label="Mode" icon="settings" mappings=[0="auto", 1="manual", 2="off"]
 			Setpoint item=RelayduinoRelay_1_ManualDuration label="Duration" icon="clock" minValue=0 maxValue=60 step=5 visibility=[RelayduinoRelay_1_Mode==1]
 			Switch item=RelayduinoRelay_1_Request label="Request" visibility=[RelayduinoRelay_1_Mode==1]
@@ -14,8 +17,8 @@ sitemap irrigation label="Irrigation"
 			Text item=RelayduinoRelay_1_LastOn label="Last on" icon="calendar"
 			Text item=RelayduinoRelay_1_LastOff label="Last off" icon="calendar"
 		}
-		
-		Group item=gRelayduinoRelay2 label="Shrubs" icon="faucet" visibility=[RelayduinoRelay_2_Enable==ON] {
+		Group item=gRelayduinoRelay2 label="Shrubs" icon="faucet" visibility=[RelayduinoRelay_2_Enable==ON]
+		{
 			Selection item=RelayduinoRelay_2_Mode label="Mode" icon="settings" mappings=[0="auto", 1="manual", 2="off"]
 			Setpoint item=RelayduinoRelay_2_ManualDuration label="Duration" icon="clock" minValue=0 maxValue=60 step=5 visibility=[RelayduinoRelay_2_Mode==1]
 			Switch item=RelayduinoRelay_2_Request label="Request" visibility=[RelayduinoRelay_2_Mode==1]
@@ -25,8 +28,8 @@ sitemap irrigation label="Irrigation"
 			Text item=RelayduinoRelay_2_LastOn label="Last on" icon="calendar"
 			Text item=RelayduinoRelay_2_LastOff label="Last off" icon="calendar"
 		}
-		
-		Group item=gRelayduinoRelay3 label="Trees" icon="faucet" visibility=[RelayduinoRelay_3_Enable==ON] {
+		Group item=gRelayduinoRelay3 label="Trees" icon="faucet" visibility=[RelayduinoRelay_3_Enable==ON]
+		{
 			Selection item=RelayduinoRelay_3_Mode label="Mode" icon="settings" mappings=[0="auto", 1="manual", 2="off"]
 			Setpoint item=RelayduinoRelay_3_ManualDuration label="Duration" icon="clock" minValue=0 maxValue=300 step=10 visibility=[RelayduinoRelay_3_Mode==1]
 			Switch item=RelayduinoRelay_3_Request label="Request" visibility=[RelayduinoRelay_3_Mode==1]
@@ -47,8 +50,8 @@ sitemap irrigation label="Irrigation"
 			Text item=RelayduinoRelay_4_LastOn label="Last on" icon="calendar"
 			Text item=RelayduinoRelay_4_LastOff label="Last off" icon="calendar"
 		}
-		
-		Group item=gRelayduinoRelay8 label="Master" icon="faucet" visibility=[RelayduinoUseMasterRelay==OFF] {
+		Group item=gRelayduinoRelay8 label="Master" icon="faucet" visibility=[RelayduinoUseMasterRelay==OFF]
+		{
 			Selection item=RelayduinoRelay_8_Mode label="Mode" icon="settings" mappings=[0="auto", 1="manual", 2="off"]
 			Setpoint item=RelayduinoRelay_8_ManualDuration label="Duration" icon="clock" minValue=0 maxValue=300 step=1 visibility=[RelayduinoRelay_8_Mode==1]
 			Switch item=RelayduinoRelay_8_Request label="Request" visibility=[RelayduinoRelay_8_Mode==1]
@@ -58,10 +61,10 @@ sitemap irrigation label="Irrigation"
 			Text item=RelayduinoRelay_8_LastOn label="Last on" icon="calendar"
 			Text item=RelayduinoRelay_8_LastOff label="Last off" icon="calendar"
 		}
-		
   	}	// end Frame label="Relays"
   	
-  	Frame label="Zone Control" {
+  	Frame label="Zone Control"
+  	{
   		Switch item=RelayduinoRelay_1_Enable label="Front grass"
 		Switch item=RelayduinoRelay_2_Enable label="Shrubs"
   		Switch item=RelayduinoRelay_3_Enable label="Trees"
@@ -74,29 +77,30 @@ sitemap irrigation label="Irrigation"
   		Group item=gIrrigationEvents label="Events" icon="calendar"
   	}
 	
-	Frame label="Status and Configuration" {
-		
-		Text label="Status and Configuration" icon="settings" {
-			
-			Frame label="Status" {
+	Frame label="Status and Configuration"
+	{	
+		Text label="Status and Configuration" icon="settings"
+		{	
+			Frame label="Status"
+			{
 				Switch item=RelayduinoState label="Connected"
 				Text item=RelayduinoUptime label="Uptime" icon="clock"
 				Text item=RelayduinoMemory label="Memory" icon="chart"
 				Text item=RelayduinoLastStatusUpdate label="Last Status Update" icon="calendar"
-			}
-			
-			Frame label="Configuration" {
+			}	
+			Frame label="Configuration"
+			{
 				Text item=RelayduinoLastConnected label="Last Connected" icon="calendar"
 				Text item=RelayduinoStatusInterval label="Status Interval" icon="clock"
 				Text item=RelayduinoIpAddress label="IP Address" icon="network"
 			}
-			
-			Frame label="Settings" {
+			Frame label="Settings"
+			{
 				Switch item=RelayduinoUseMasterRelay label="Use Master Relay" icon="switch"
 				Setpoint item=RelayduinoMasterRelay label="Master Relay" icon="settings" minValue=1 maxValue=8 step=1 visibility=[RelayduinoUseMasterRelay==ON]
 			}
-			
-			Frame label="Default Durations" {
+			Frame label="Default Durations"
+			{
 				Setpoint item=RelayduinoRelay_1_DefaultDuration label="Zone 1" icon="clock" minValue=0 maxValue=300 step=5
 				Setpoint item=RelayduinoRelay_2_DefaultDuration label="Zone 2" icon="clock" minValue=0 maxValue=300 step=5
 				Setpoint item=RelayduinoRelay_3_DefaultDuration label="Zone 3" icon="clock" minValue=0 maxValue=300 step=5
@@ -106,15 +110,12 @@ sitemap irrigation label="Irrigation"
 				Setpoint item=RelayduinoRelay_7_DefaultDuration label="Zone 7" icon="clock" minValue=0 maxValue=300 step=5
 				Setpoint item=RelayduinoRelay_8_DefaultDuration label="Zone 8" icon="clock" minValue=0 maxValue=300 step=5
 			}
-			
-			Frame label="Relay States" {
+			Frame label="Relay States"
+			{
 				Text item=RelayduinoAlarmId label="Alarm" icon="error"
 				Text item=RelayRequestsSize label="Requests Length" icon="rain"
 				Group item=gRelayduinoRelaysState label="Relays" icon="water"
 			}
-			
 		}	// end Text label="Status and Configuration"
-		
 	}	// end Frame label="Status and Configuration"
-
 }

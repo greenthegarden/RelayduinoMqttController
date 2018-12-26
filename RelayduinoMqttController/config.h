@@ -16,7 +16,7 @@
 
 // global variable definitions
 #if DEBUG_LEVEL > 0
-#define BAUD_RATE 9600
+#define BAUD_RATE 115200
 #endif
 
 const byte BUFFER_SIZE = 32;
@@ -26,16 +26,23 @@ char payloadBuffer[BUFFER_SIZE];
 const unsigned long STATUS_UPDATE_INTERVAL = 5UL * 60UL * 1000UL; // 5 minutes
 unsigned long statusPreviousMillis = 0UL;
 
-//#include "onewireConfig.h"
+#if USE_ONEWIRE
+#include "onewireConfig.h"
+#endif
 
 #include "ethernetConfig.h"
 #include "mqttConfig.h"
 
+#if USE_ICSC
 #include "icscConfig.h"
+#endif
 
 #include "alarmConfig.h"
 #include "relayConfig.h"
+
+#if USE_ICSC
 #include "flowConfig.h"
+#endif
 
 void no_network_behaviour() { relays_switch_off(); }
 

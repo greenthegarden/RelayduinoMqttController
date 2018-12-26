@@ -14,6 +14,8 @@ void flowrate(unsigned char src, char command, unsigned char len, char *data)
 {
   unsigned long now = millis();   // consider using micros()
   int flowrate = atoi(data);
+  DEBUG_LOG(1, "flowrate: ");
+  DEBUG_LOG(1, flowrate);
   if (!flowOn && flowrate > 0) {
     flowOn = true;
   }
@@ -26,6 +28,8 @@ void flowrate(unsigned char src, char command, unsigned char len, char *data)
     if (flowrate > 0) {
       volumeCumulative += flowrate * (now - previousFlowrate) / 1000;
     }
+    DEBUG_LOG(1, "volumeCumulative: ");
+    DEBUG_LOG(1, volumeCumulative);
     topicBuffer[0] = '\0';
     strcpy_P(topicBuffer,
              (char *)pgm_read_word(&(STATUS_TOPICS[FLOWRATE_STATUS_IDX])));

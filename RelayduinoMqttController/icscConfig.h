@@ -10,7 +10,7 @@
 
 const byte RS485_RO_PIN = 0; // D0
 const byte RS485_DI_PIN = 1; // D1
-const byte RS485_DE_PIN = 19; // D19/A5
+const byte RS485_DE_PIN = A5; // D19/A5
 
 const char station = 3;
 
@@ -19,5 +19,10 @@ const char station = 3;
 #endif
 
 ICSC icsc(Serial, station, RS485_DE_PIN);
+
+void print_data(unsigned char src, char command, unsigned char len, char *data)
+{
+  Serial.println(data);
+}
 
 #endif /* RELAYDUINOMQTTCONTROLLER_ICSC_CONFIG_H_ */

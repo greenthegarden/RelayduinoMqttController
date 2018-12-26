@@ -118,10 +118,18 @@ void callback(char *topic, uint8_t *payload, unsigned int payloadLength)
 void setup()
 {
   Serial.begin(BAUD_RATE);
-  icsc.begin();
-  icsc.registerCommand('F', &flowrate);
 
-  //onewire_init();
+#if USE_ICSC
+  pinMode(RS485_DE_PIN, OUTPUT);
+  icsc.begin();
+  icsc.registerCommand('P', &print_data);
+  icsc.registerCommand('F', &flowrate);
+  digitalWrite(RS485_DE_PIN, LOW);
+#endif
+
+#if USE_ONEWIRE
+  onewire_init();
+#endif
 
   DEBUG_LOG(1, "RELAYDUINO");
 
@@ -149,6 +157,7 @@ void setup()
   DEBUG_LOG(1, "Number of optical (digital) inputs is ");
   DEBUG_LOG(1, ARRAY_SIZE(OPTICAL_INPUTS));
 #endif
+
 }
 
 /*--------------------------------------------------------------------------------------
@@ -157,7 +166,9 @@ void setup()
   --------------------------------------------------------------------------------------*/
 void loop()
 {
+#if USE_ICSC
   icsc.process();
+#endif
 
   // require an Alarm.delay in order to allow alarms to work
   Alarm.delay(0);
@@ -183,13 +194,6 @@ void loop()
     if (mqttClientConnected) {
       statusPreviousMillis = now;
       publish_status();
-    }
-  }
-
-  if (now - volumePreviousMillis >= VOLUME_UPDATE_INTERVAL) {
-    if (mqttClientConnected) {
-      volumePreviousMillis = now;
-      publish_volume();
     }
   }
 

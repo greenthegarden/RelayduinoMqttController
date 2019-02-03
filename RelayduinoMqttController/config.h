@@ -1,7 +1,9 @@
 #ifndef RELAYDUINOMQTTCONTROLLER_CONFIG_H_
 #define RELAYDUINOMQTTCONTROLLER_CONFIG_H_
 
+#if defined(DEBUG_LEVEL) && (DEBUG_LEVEL > 0)
 #include "Debug.h"
+#endif
 
 #ifndef VERSION
 #define VERSION "1.0"
@@ -15,8 +17,10 @@
 #define ARRAY_SIZE(x) (sizeof(x) / sizeof((x)[0]))
 
 // global variable definitions
-#if DEBUG_LEVEL > 0
+#if USE_ICSC
 #define BAUD_RATE 115200
+#elif defined(DEBUG_LEVEL) && DEBUG_LEVEL > 0
+#define BAUD_RATE 9600
 #endif
 
 const byte BUFFER_SIZE = 32;

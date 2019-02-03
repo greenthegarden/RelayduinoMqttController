@@ -117,7 +117,9 @@ void callback(char *topic, uint8_t *payload, unsigned int payloadLength)
   --------------------------------------------------------------------------------------*/
 void setup()
 {
+#if (DEBUG_LEVEL > 0) || USE_ICSC
   Serial.begin(BAUD_RATE);
+#endif
 
 #if USE_ICSC
   pinMode(RS485_DE_PIN, OUTPUT);

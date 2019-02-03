@@ -12,8 +12,8 @@
             "type": "platformio-debug",
             "request": "launch",
             "name": "PIO Debug",
-            "executable": "/Users/cutlervufamily/Development/Arduino/RelayduinoMqttController/.pioenvs/diecimilaatmega328/firmware.elf",
-            "toolchainBinDir": "/Users/cutlervufamily/.platformio/packages/toolchain-atmelavr/bin",
+            "executable": "/home/philip/iot/RelayduinoMqttController/.pioenvs/diecimilaatmega328/firmware.elf",
+            "toolchainBinDir": "/home/philip/.platformio/packages/toolchain-atmelavr/bin",
             "preLaunchTask": {
                 "type": "PlatformIO",
                 "task": "Pre-Debug"
@@ -24,8 +24,8 @@
             "type": "platformio-debug",
             "request": "launch",
             "name": "PIO Debug (skip Pre-Debug)",
-            "executable": "/Users/cutlervufamily/Development/Arduino/RelayduinoMqttController/.pioenvs/diecimilaatmega328/firmware.elf",
-            "toolchainBinDir": "/Users/cutlervufamily/.platformio/packages/toolchain-atmelavr/bin",
+            "executable": "/home/philip/iot/RelayduinoMqttController/.pioenvs/diecimilaatmega328/firmware.elf",
+            "toolchainBinDir": "/home/philip/.platformio/packages/toolchain-atmelavr/bin",
             "internalConsoleOptions": "openOnSessionStart"
         }
     ]

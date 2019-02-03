@@ -11,8 +11,7 @@ void publish_alarm_id(byte ref = dtINVALID_ALARM_ID)
     ref = Alarm.getTriggeredAlarmId();
   }
   topicBuffer[0] = '\0';
-  strcpy_P(topicBuffer,
-           (char *)pgm_read_word(&(STATUS_TOPICS[ALARM_STATUS_IDX])));
+  strcpy_P(topicBuffer, (char *)pgm_read_word(&(STATUS_TOPICS[ALARM_STATUS_IDX])));
   char str[4];
   mqttClient.publish(topicBuffer, itoa(ref, str, 10));
 }

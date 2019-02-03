@@ -1,9 +1,9 @@
 #ifndef RELAYDUINOMQTTCONTROLLER_CONFIG_H_
 #define RELAYDUINOMQTTCONTROLLER_CONFIG_H_
 
-#if defined(DEBUG_LEVEL) && (DEBUG_LEVEL > 0)
-#include "Debug.h"
-#endif
+// always need to include Debug.h
+// DEBUG_LOG defines will be removed when DEBUG_LEVEL=0
+#include "debug.h"
 
 #ifndef VERSION
 #define VERSION "1.0"

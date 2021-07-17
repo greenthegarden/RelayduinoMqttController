@@ -26,7 +26,7 @@ void ethernet_init()
   if (Ethernet.begin(mac) == 0) {
     DEBUG_LOG(1, "Failed to configure Ethernet using DHCP");
     // try to configure using IP address instead of DHCP:
-    IPAddress ip(192, 168, 1, 29);
+    IPAddress ip(192, 168, 1, 50);
     Ethernet.begin(mac, ip);
   }
   delay(NETWORK_STARTUP_DELAY);

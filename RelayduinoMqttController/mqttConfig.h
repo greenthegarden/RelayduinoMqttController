@@ -4,7 +4,7 @@
 #include <PubSubClient.h>
 
 // MQTT parameters
-IPAddress mqttServerAddr(192, 168, 1, 50); // emonPi
+IPAddress mqttServerAddr(192, 168, 1, 186); // emonPi
 const char MQTT_CLIENT_ID[] = "relayduino";
 // const char MQTT_USERNAME[]  = "emonpi";
 // const char MQTT_PASSWORD[]  = "emonpimqtt2016";
